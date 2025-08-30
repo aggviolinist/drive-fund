@@ -1,24 +1,25 @@
-package com.authorizen.userauthh.admin;
+package com.drivefundproject.drive_fund.catalogue;
 
-import com.authorizen.userauthh.dto.CarRequest;
-import com.authorizen.userauthh.model.Admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.drivefundproject.drive_fund.dto.CatalogueAddition;
+import com.drivefundproject.drive_fund.model.Catalogue;
+
 @RestController
 @RequestMapping("/api/v1/add-item")
 @RequiredArgsConstructor
-public class AdminController {
+public class CatalogueController {
 
     private final CatalogueService catalogueService;
 
     @PostMapping("/add-stuff")
-    public ResponseEntity<Admin> addCar(@ModelAttribute CarRequest carRequest) {
+    public ResponseEntity<Catalogue> addProduct(@RequestBody CatalogueAddition catalogueAddition) {
         // Delegate all logic to the service layer
-        Admin newCar = adminService.addCar(carRequest);
-        return new ResponseEntity<>(newCar, HttpStatus.CREATED);
+        Catalogue newProduct = catalogueService.addProduct(catalogueAddition);
+        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
     }
 }
