@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth/user")
+@RequestMapping("/api/v1/user")
 public class ProfileViewController {
 
     private final ProfileViewService profileViewService;
