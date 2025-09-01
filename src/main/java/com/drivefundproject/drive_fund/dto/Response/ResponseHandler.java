@@ -2,7 +2,6 @@ package com.drivefundproject.drive_fund.dto.Response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
