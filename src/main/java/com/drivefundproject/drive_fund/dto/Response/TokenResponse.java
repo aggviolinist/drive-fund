@@ -1,13 +1,16 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class CatalogueAddition {
-    private String productname;
-    private String productdesc;
+@NoArgsConstructor
+public class TokenResponse {
+
+    private String token;
+
 }

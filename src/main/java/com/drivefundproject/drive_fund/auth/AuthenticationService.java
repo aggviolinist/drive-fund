@@ -9,10 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.auth.image.S3Service;
-import com.drivefundproject.drive_fund.dto.Request.ResponseHandler;
-import com.drivefundproject.drive_fund.dto.Request.TokenResponse;
-import com.drivefundproject.drive_fund.dto.Response.RegisterRequest;
-import com.drivefundproject.drive_fund.dto.Response.loginRequest;
+import com.drivefundproject.drive_fund.dto.Request.RegisterRequest;
+import com.drivefundproject.drive_fund.dto.Request.loginRequest;
+import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.TokenResponse;
 import com.drivefundproject.drive_fund.jwt.JwtService;
 import com.drivefundproject.drive_fund.model.Role;
 import com.drivefundproject.drive_fund.model.User;
@@ -63,7 +63,7 @@ public class AuthenticationService {
     // return TokenResponse.builder()
     //     .token(jwtToken)
     //     .build();
-    return ResponseHandler.generateResponse("Registration Successful", HttpStatus.CREATED,tokenResponse);
+    return ResponseHandler.generateResponse(HttpStatus.CREATED,"Registration Successful", tokenResponse);
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'register'");
     }
@@ -85,7 +85,7 @@ public ResponseEntity<Object> login(loginRequest request) {
     TokenResponse tokenResponse = TokenResponse.builder()
     .token(jwtToken)
     .build();
-    return ResponseHandler.generateResponse("Login Successful", HttpStatus.OK,tokenResponse);
+    return ResponseHandler.generateResponse(HttpStatus.OK,"Login Successful",tokenResponse);
     // TODO Auto-generated method stub
     //throw new UnsupportedOperationException("Unimplemented method 'login'");
 }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Response.UserProfileRequest;
+import com.drivefundproject.drive_fund.dto.Request.UserProfileRequest;
 
 import lombok.RequiredArgsConstructor;
 

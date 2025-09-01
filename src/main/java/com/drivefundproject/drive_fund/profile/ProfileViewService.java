@@ -5,7 +5,7 @@ import com.drivefundproject.drive_fund.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
-import com.drivefundproject.drive_fund.dto.Response.UserProfileRequest;
+import com.drivefundproject.drive_fund.dto.Request.UserProfileRequest;
 import com.drivefundproject.drive_fund.model.User;
 
 @Service

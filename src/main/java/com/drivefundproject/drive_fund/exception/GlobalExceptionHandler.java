@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.drivefundproject.drive_fund.dto.Request.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,11 +21,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST,null);
+        return ResponseHandler.generateResponse( HttpStatus.BAD_REQUEST,ex.getMessage(),null);
     }
      @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
-        return ResponseHandler.generateResponse(invalidCredentialsMessage, HttpStatus.UNAUTHORIZED,null);
+        return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,invalidCredentialsMessage, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -36,6 +36,6 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return ResponseHandler.generateResponse("Validation failed",HttpStatus.BAD_REQUEST,errors);
+        return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,"Validation failed",errors);
     }
 }

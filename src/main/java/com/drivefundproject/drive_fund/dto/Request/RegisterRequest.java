@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.dto.Response;
+package com.drivefundproject.drive_fund.dto.Request;
 
 import org.springframework.web.multipart.MultipartFile;
 

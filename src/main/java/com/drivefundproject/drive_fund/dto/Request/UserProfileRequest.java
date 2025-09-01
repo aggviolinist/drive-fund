@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.dto.Response;
+package com.drivefundproject.drive_fund.dto.Request;
 
 import lombok.Builder;
 import lombok.Data;

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Response.RegisterRequest;
-import com.drivefundproject.drive_fund.dto.Response.loginRequest;
+import com.drivefundproject.drive_fund.dto.Request.RegisterRequest;
+import com.drivefundproject.drive_fund.dto.Request.loginRequest;
 
 import jakarta.validation.Valid;
 
