@@ -76,13 +76,13 @@ public ResponseEntity<Object> login(loginRequest request) {
     var user = repository.findByEmail(request.getEmail())
       .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
+    TokenResponse tokenResponse = TokenResponse.builder()
+    .token(jwtToken)
+    .build();
 
     // return TokenResponse.builder()
     //     .token(jwtToken)
     //     .build();
-    TokenResponse tokenResponse = TokenResponse.builder()
-    .token(jwtToken)
-    .build();
     return ResponseHandler.generateResponse(HttpStatus.OK,"Login Successful",tokenResponse);
     // TODO Auto-generated method stub
     //throw new UnsupportedOperationException("Unimplemented method 'login'");
