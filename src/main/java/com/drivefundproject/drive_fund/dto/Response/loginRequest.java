@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.dto;
+package com.drivefundproject.drive_fund.dto.Response;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

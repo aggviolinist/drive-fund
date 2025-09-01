@@ -1,12 +1,8 @@
-package com.drivefundproject.drive_fund.dto;
+package com.drivefundproject.drive_fund.dto.Response;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.drivefundproject.drive_fund.auth.PasswordMatches;
-import org.springframework.web.multipart.MultipartFile; // 👈 Import this
-
-
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

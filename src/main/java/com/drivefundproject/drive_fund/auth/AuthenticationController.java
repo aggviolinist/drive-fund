@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.AuthenticationResponse;
-import com.drivefundproject.drive_fund.dto.RegisterRequest;
-import com.drivefundproject.drive_fund.dto.loginRequest;
+import com.drivefundproject.drive_fund.dto.Response.RegisterRequest;
+import com.drivefundproject.drive_fund.dto.Response.loginRequest;
 
 import jakarta.validation.Valid;
 
@@ -23,16 +22,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<Object> register(
         @Valid
         @ModelAttribute RegisterRequest request
     ){
-        return ResponseEntity.ok(service.register(request));
+        return service.register(request);
 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(
+    public ResponseEntity<ResponseEntity<Object>> login(
         @RequestBody loginRequest request
     ){
         return ResponseEntity.ok(service.login(request));

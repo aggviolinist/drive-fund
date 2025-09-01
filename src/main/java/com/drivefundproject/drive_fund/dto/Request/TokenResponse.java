@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.dto;
+package com.drivefundproject.drive_fund.dto.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class TokenResponse {
 
     private String token;
 

@@ -3,7 +3,7 @@ package com.drivefundproject.drive_fund.catalogue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.dto.CatalogueAddition;
+import com.drivefundproject.drive_fund.dto.Response.CatalogueAddition;
 import com.drivefundproject.drive_fund.model.Catalogue;
 import com.drivefundproject.drive_fund.repository.CatalogueRepository;
 
