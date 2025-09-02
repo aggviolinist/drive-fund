@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.drivefundproject.drive_fund.dto.Request.CatalogueAddition;
+import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.model.Catalogue;
 
 @RestController
@@ -17,9 +18,9 @@ public class CatalogueController {
     private final CatalogueService catalogueService;
 
     @PostMapping("/add-stuff")
-    public ResponseEntity<Catalogue> addProduct(@RequestBody CatalogueAddition catalogueAddition) {
+    public ResponseEntity<Object> addProduct(@RequestBody CatalogueAddition catalogueAddition) {
         // Delegate all logic to the service layer
         Catalogue newProduct = catalogueService.addProduct(catalogueAddition);
-        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+        return ResponseHandler.generateResponse(HttpStatus.CREATED,"Product added successfully",newProduct);
     }
 }

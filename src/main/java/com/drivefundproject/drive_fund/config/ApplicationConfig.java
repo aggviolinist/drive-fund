@@ -22,6 +22,7 @@ public class ApplicationConfig {
 
     private final UserRepository repository;
 
+   //Responsible for finding a user by their username (email)
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> repository.findByEmail(username)
