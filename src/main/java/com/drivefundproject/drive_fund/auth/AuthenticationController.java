@@ -31,10 +31,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseEntity<Object>> login(
+    public ResponseEntity<Object> login(
         @RequestBody loginRequest request
     ){
-        return ResponseEntity.ok(service.login(request));
+        return service.login(request);
+        //return ResponseEntity.ok(service.login(request));
+
 
     }
     
