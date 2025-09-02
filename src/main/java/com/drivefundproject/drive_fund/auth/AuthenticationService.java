@@ -29,7 +29,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final S3Service s3Service;
 
-    public ResponseEntity<Object> register(RegisterRequest request) {
+    public TokenResponse register(RegisterRequest request) {
         // Check if a user with this email already exists
     if (repository.findByEmail(request.getEmail()).isPresent()) {
         // If an account with the email is found, throw an exception
@@ -55,18 +55,17 @@ public class AuthenticationService {
         .build();
     repository.save(user);
     var jwtToken = jwtService.generateToken(user);
-    TokenResponse tokenResponse = TokenResponse.builder()
+// Moving this to controller seperation of concerns principle -------->TokenResponse tokenResponse = TokenResponse.builder()
+    return TokenResponse.builder()
     .token(jwtToken)
     .build();
     // return TokenResponse.builder()
     //     .token(jwtToken)
     //     .build();
-    return ResponseHandler.generateResponse(HttpStatus.CREATED,"Registration Successful", tokenResponse);
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'register'");
+//Moving this to Controller seperation of concerns principle ------>>return ResponseHandler.generateResponse(HttpStatus.CREATED,"Registration Successful", tokenResponse);
     }
 
-public ResponseEntity<Object> login(loginRequest request) {
+public TokenResponse login(loginRequest request) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             request.getEmail(),
@@ -76,16 +75,14 @@ public ResponseEntity<Object> login(loginRequest request) {
     var user = repository.findByEmail(request.getEmail())
       .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
-    TokenResponse tokenResponse = TokenResponse.builder()
+//Moving this to Controller seperation of concerns principle ----------->> TokenResponse tokenResponse = TokenResponse.builder()
+    return TokenResponse.builder()
     .token(jwtToken)
     .build();
 
     // return TokenResponse.builder()
     //     .token(jwtToken)
     //     .build();
-    return ResponseHandler.generateResponse(HttpStatus.OK,"Login Successful",tokenResponse);
-    // TODO Auto-generated method stub
-    //throw new UnsupportedOperationException("Unimplemented method 'login'");
-}
-    
+//Moving this to controller for seperation of concerns principle ------------------->>return ResponseHandler.generateResponse(HttpStatus.OK,"Login Successful",tokenResponse);
+}   
 }

@@ -1,5 +1,6 @@
 package com.drivefundproject.drive_fund.auth;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.drivefundproject.drive_fund.dto.Request.RegisterRequest;
 import com.drivefundproject.drive_fund.dto.Request.loginRequest;
+import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.TokenResponse;
 
 import jakarta.validation.Valid;
 
@@ -26,7 +29,9 @@ public class AuthenticationController {
         @Valid
         @ModelAttribute RegisterRequest request
     ){
-        return service.register(request);
+       // return service.register(request);
+       TokenResponse tokenResponse = service.register(request);
+       return ResponseHandler.generateResponse(HttpStatus.CREATED,"Registration Successfull", tokenResponse);
 
     }
 
@@ -34,8 +39,10 @@ public class AuthenticationController {
     public ResponseEntity<Object> login(
         @RequestBody loginRequest request
     ){
-        return service.login(request);
-        //return ResponseEntity.ok(service.login(request));
+        TokenResponse tokenResponse = service.login(request);
+        return ResponseHandler.generateResponse(HttpStatus.OK,"Login Successful",tokenResponse);
+       // return service.login(request);
+       //return ResponseEntity.ok(service.login(request));
 
 
     }
