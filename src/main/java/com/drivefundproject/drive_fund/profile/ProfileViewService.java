@@ -15,16 +15,12 @@ public class ProfileViewService {
     private final UserRepository userRepository;
 
     public UserProfileRequest getProfileViewDetails(Integer userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return UserProfileRequest.builder()
+        //Optional<User> userOptional = userRepository.findById(userId);
+        return userRepository.findById(userId)
+          .map(user -> UserProfileRequest.builder()
                 .firstname(user.getFirstname())
                 .imageUrl(user.getImageUrl())
-                .build();
-        } else {
-            throw new RuntimeException("User not found");
+                .build())
+                .orElseThrow(() -> new RuntimeException("User not found with ID " + userId));
         }
     }
-}

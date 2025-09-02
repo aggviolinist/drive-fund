@@ -19,15 +19,19 @@ public class GlobalExceptionHandler {
     @Value("${error.auth.invalid_credentials}")
     private String invalidCredentialsMessage;
 
+    //Throws IllegalArgumentException when it gets a bad error
+    
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         return ResponseHandler.generateResponse( HttpStatus.BAD_REQUEST,ex.getMessage(),null);
     }
+    //Login exception to imporove security, tells user either email or password is wrong not exactly what is wrong
      @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
         return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,invalidCredentialsMessage, null);
     }
 
+    //Exception for Registration, in input fields, it prints out text box bringing error
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new LinkedHashMap<>();
@@ -37,5 +41,14 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,"Validation failed",errors);
+    }
+
+    //User not found exception
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        if (ex.getMessage().contains("User not found")) {
+            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
+        }
+        return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", null);
     }
 }
