@@ -61,8 +61,10 @@ public class SecurityConfiguration {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Allows all endpoints
                         .allowedOrigins("http://localhost:4200") // Front-end URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*");
+                        .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+
             }
         };
     }
