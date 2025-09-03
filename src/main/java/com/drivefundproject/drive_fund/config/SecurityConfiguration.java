@@ -78,17 +78,6 @@ public class SecurityConfiguration {
 
     return http.build();
 }
-    //  @Bean
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration configuration = new CorsConfiguration();
-    //     configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Your frontend URL
-    //     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    //     configuration.setAllowedHeaders(Arrays.asList("*"));
-    //     configuration.setAllowCredentials(true);
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", configuration); // Apply this CORS config to all paths
-    //     return source;
-    // }
     @Bean
     public CorsFilter corsFilter() {
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -96,7 +85,7 @@ public class SecurityConfiguration {
     config.setAllowCredentials(true);
     // Don't do this in production, use a proper list  of allowed origins
     config.setAllowedOrigins(Collections.singletonList("*"));
-    config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+    config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept","Authorization"));
     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
     source.registerCorsConfiguration("/**", config);
     return new CorsFilter(source);

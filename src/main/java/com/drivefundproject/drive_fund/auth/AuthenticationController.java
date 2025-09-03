@@ -16,7 +16,6 @@ import com.drivefundproject.drive_fund.dto.Response.TokenResponse;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
