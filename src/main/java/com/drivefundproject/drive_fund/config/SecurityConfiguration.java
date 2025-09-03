@@ -14,12 +14,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import static org.springframework.security.config.Customizer.withDefaults; // Add this line
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
@@ -76,30 +78,27 @@ public class SecurityConfiguration {
 
     return http.build();
 }
-
-    // @Bean
-    // public WebMvcConfigurer corsConfigurer() {
-    //     return new WebMvcConfigurer() {
-    //         @Override
-    //         public void addCorsMappings(CorsRegistry registry) {
-    //             registry.addMapping("/**") // Allows all endpoints
-    //                     .allowedOrigins("http://localhost:4200") // Front-end URL
-    //                     .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
-    //                     .allowedHeaders("*")
-    //                     .allowCredentials(true);
-
-    //         }
-    //     };
+    //  @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration configuration = new CorsConfiguration();
+    //     configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Your frontend URL
+    //     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    //     configuration.setAllowedHeaders(Arrays.asList("*"));
+    //     configuration.setAllowCredentials(true);
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", configuration); // Apply this CORS config to all paths
+    //     return source;
     // }
-     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Your frontend URL
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply this CORS config to all paths
-        return source;
-    }
+    @Bean
+    public CorsFilter corsFilter() {
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    final CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    // Don't do this in production, use a proper list  of allowed origins
+    config.setAllowedOrigins(Collections.singletonList("*"));
+    config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+}
 }
