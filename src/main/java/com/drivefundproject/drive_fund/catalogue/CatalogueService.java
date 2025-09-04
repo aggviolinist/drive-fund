@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.dto.Request.CatalogueAddition;
+import com.drivefundproject.drive_fund.dto.Request.CatalogueRequest;
 import com.drivefundproject.drive_fund.dto.Request.UserProfileRequest;
 import com.drivefundproject.drive_fund.model.Catalogue;
 import com.drivefundproject.drive_fund.repository.CatalogueRepository;
@@ -17,7 +17,7 @@ public class CatalogueService {
 
     private final CatalogueRepository catalogueRepository;
 //Adding the product. Both Admin and user can add a product
-    public Catalogue addProduct(CatalogueAddition request) {
+    public Catalogue addProduct(CatalogueRequest request) {
 
         // 1. Create the Admin object
         Catalogue newProduct = Catalogue.builder()
