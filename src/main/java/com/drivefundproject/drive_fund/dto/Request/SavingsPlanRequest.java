@@ -1,5 +1,7 @@
 package com.drivefundproject.drive_fund.dto.Request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SavingsPlanRequest {
     private Integer productId;
-    private String timeline;
+
+    @NotNull(message = "Amount is required")  
     private Double amount;
-    
+
+    @NotBlank(message = "Timeline is required")  
+    private String timeline;
+       
 }

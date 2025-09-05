@@ -21,9 +21,7 @@ public class Catalogue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String productname;
-
     private String productdesc;
     
 }

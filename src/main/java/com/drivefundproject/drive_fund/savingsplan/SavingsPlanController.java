@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
+import com.drivefundproject.drive_fund.dto.Response.CustomCatalogueResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.CustomSavingsPlanResponse;
+import com.drivefundproject.drive_fund.dto.Response.CustomUserSavingsPlanResponse;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,13 +30,34 @@ public class SavingsPlanController {
     private final SavingsPlanService savingsPlanService;
 
     @PostMapping("/add-plan")
-    public ResponseEntity<Object> addSavingsPlan(@RequestBody SavingsPlanRequest savingsPlanRequest, @AuthenticationPrincipal User user){
+    public ResponseEntity<Object> addSavingsPlan(@Valid @RequestBody SavingsPlanRequest savingsPlanRequest, @AuthenticationPrincipal User user){
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       //  User currentUser = (User) authentication.getPrincipal();
         Integer userId = user.getId();
         
         SavingsPlan newSavingsPlan = savingsPlanService.addSavingsPlan(savingsPlanRequest, userId);
-        return ResponseHandler.generateResponse(HttpStatus.CREATED, "Savings plan added successfully", newSavingsPlan);
+
+        CustomUserSavingsPlanResponse userSavingsPlanResponseDTO = new CustomUserSavingsPlanResponse(
+          user.getId(),
+          user.getFirstname(),
+          user.getImageUrl()
+          );
+
+        CustomCatalogueResponse catalogueResponseDTO = new CustomCatalogueResponse(
+          newSavingsPlan.getCatalogue().getId(),
+          newSavingsPlan.getCatalogue().getProductname(),
+          newSavingsPlan.getCatalogue().getProductdesc()
+        );
+        CustomSavingsPlanResponse savingsPlanResponseDTO = new CustomSavingsPlanResponse(
+          newSavingsPlan.getId(),
+          newSavingsPlan.getAmount(),
+          newSavingsPlan.getTimeline(),
+          catalogueResponseDTO,
+          userSavingsPlanResponseDTO
+        );
+        
+
+        return ResponseHandler.generateResponse(HttpStatus.CREATED, "Savings plan created successfully", savingsPlanResponseDTO);
 
     }
     
