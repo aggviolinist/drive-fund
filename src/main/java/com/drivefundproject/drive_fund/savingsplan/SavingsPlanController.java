@@ -37,13 +37,13 @@ public class SavingsPlanController {
         
         SavingsPlan newSavingsPlan = savingsPlanService.addSavingsPlan(savingsPlanRequest, userId);
 
-        CustomUserSavingsPlanResponse userSavingsPlanResponseDTO = new CustomUserSavingsPlanResponse(
+        CustomUserSavingsPlanResponse userSavingsPlanResponse = new CustomUserSavingsPlanResponse(
           user.getId(),
           user.getFirstname(),
           user.getImageUrl()
           );
 
-        CustomCatalogueResponse catalogueResponseDTO = new CustomCatalogueResponse(
+        CustomCatalogueResponse catalogueResponse = new CustomCatalogueResponse(
           newSavingsPlan.getCatalogue().getId(),
           newSavingsPlan.getCatalogue().getProductname(),
           newSavingsPlan.getCatalogue().getProductdesc()
@@ -52,8 +52,8 @@ public class SavingsPlanController {
           newSavingsPlan.getId(),
           newSavingsPlan.getAmount(),
           newSavingsPlan.getTimeline(),
-          catalogueResponseDTO,
-          userSavingsPlanResponseDTO
+          catalogueResponse,
+          userSavingsPlanResponse
         );
         
 

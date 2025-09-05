@@ -84,10 +84,14 @@ public class SecurityConfiguration {
     final CorsConfiguration config = new CorsConfiguration();
    // config.setAllowCredentials(true);
     // Don't do this in production, use a proper list  of allowed origins
-    config.setAllowedOrigins(Arrays.asList("https://10670fce360d.ngrok-free.app","http://localhost:4200"));
+    config.setAllowedOrigins(Arrays.asList("https://10670fce360d.ngrok-free.app","http://10.20.33.69:4200","http://10.0.2.133:8080","http://localhost:4200"));
     config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept","Authorization"));
     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+    //config.setAllowedHeaders("*");
+    config.setAllowedHeaders(Arrays.asList("*"));
     source.registerCorsConfiguration("/**", config);
     return new CorsFilter(source);
 }
 }
+
+
