@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SavingsPlanRequest {
-    private Integer productID;
+    private Integer productId;
     private String timeline;
     private Double amount;
     

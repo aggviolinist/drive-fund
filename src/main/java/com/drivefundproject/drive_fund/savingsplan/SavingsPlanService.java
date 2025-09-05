@@ -22,7 +22,7 @@ public class SavingsPlanService  {
     private final UserRepository userRepository;
 
     public SavingsPlan addSavingsPlan(SavingsPlanRequest savingsPlanRequest, Integer userId){
-        Catalogue catalogueItem = catalogueRepository.findById(savingsPlanRequest.getProductID())
+        Catalogue catalogueItem = catalogueRepository.findById(savingsPlanRequest.getProductId())
             .orElseThrow(() -> new RuntimeException("Product not found"));
 
 

@@ -51,4 +51,14 @@ public class GlobalExceptionHandler {
         }
         return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", null);
     }
+//Debugging database issues
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleException(Exception ex) {
+        ex.printStackTrace(); // <-- prints full stacktrace to terminal
+        return ResponseHandler.generateResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ex.getMessage(),   // <-- include real message in response
+            null
+        );
+    }
 }

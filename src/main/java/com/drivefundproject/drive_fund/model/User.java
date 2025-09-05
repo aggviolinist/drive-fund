@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user-table")
+@Table(name = "user_table")
 public class User implements UserDetails {
 
     @Id
