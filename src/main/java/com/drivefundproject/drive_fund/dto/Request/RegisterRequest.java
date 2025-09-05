@@ -29,7 +29,7 @@ public class RegisterRequest {
     private MultipartFile profileImage;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid") // This is the key annotation
+    @Email(message = "Email should be valid") // This is our auth principal
     private String email;
 
     @NotBlank(message = "Password is required")  
