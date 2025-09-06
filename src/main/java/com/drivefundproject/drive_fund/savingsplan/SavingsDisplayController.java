@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/savings")
-public class SavingsDetailsController {
+public class SavingsDisplayController {
 
     private final SavingsPlanRepository savingsPlanRepository;
     private final SavingsDisplayService savingsDisplayService;
