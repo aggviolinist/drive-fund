@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SavingsDetailsRequest {
     private Integer id;
-    private String fname;
+    private String firstname;
     private String imageUrl;
     private String productname;
     private Double amount;

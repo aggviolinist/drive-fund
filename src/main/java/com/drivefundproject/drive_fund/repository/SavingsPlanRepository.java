@@ -7,5 +7,5 @@ import com.drivefundproject.drive_fund.model.SavingsPlan;
 
 @Repository
 public interface SavingsPlanRepository extends JpaRepository<SavingsPlan, Integer> {
-    
+        List<SavingsPlan> findByUserId(Integer userId);
 }
