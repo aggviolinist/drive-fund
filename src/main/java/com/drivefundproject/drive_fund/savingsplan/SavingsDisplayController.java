@@ -3,6 +3,7 @@ package com.drivefundproject.drive_fund.savingsplan;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsDetailsResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.dto.Response.SavingsDetailsResponse;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
@@ -44,17 +45,9 @@ public class SavingsDisplayController {
             return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "Please add a savings plan",null);            
         }
 
-        List<SavingsDetailsResponse> savingsDetailsResponse = savingsPlan.stream()
-        .map(plan -> new SavingsDetailsResponse(
-            plan.getUser().getFirstname(),
-            plan.getUser().getImageUrl(),
-            plan.getCatalogue().getProductname(),
-            plan.getAmount(),
-            plan.getTimeline()
-        ))
-        .collect(Collectors.toList());
+        ConciseSavingsDetailsResponse conciseSavingsDetailsResponse  = new ConciseSavingsDetailsResponse(user, savingsPlan);
 
-        return ResponseHandler.generateResponse(HttpStatus.OK,"Saving Plan fetched successfully",savingsDetailsResponse);
+        return ResponseHandler.generateResponse(HttpStatus.OK,"Saving Plan fetched successfully",conciseSavingsDetailsResponse);
     }
     
     
