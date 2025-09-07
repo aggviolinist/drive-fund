@@ -23,8 +23,9 @@ public class ConciseSavingsDetailsResponse {
         this.imageUrl = user.getImageUrl();
         this.savingsDetailsResponse = savingsPlan.stream()
           .map(plan -> new SavingsDetailsResponse(
-            null, //firstname is not needed in this inner DTO
-            null,
+            //null, //firstname is not needed in this inner DTO
+            //null,
+            plan.getId(),
             plan.getCatalogue().getProductname(),
             plan.getAmount(),
             plan.getTimeline()
