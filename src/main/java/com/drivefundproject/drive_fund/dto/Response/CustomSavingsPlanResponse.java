@@ -11,6 +11,6 @@ public class CustomSavingsPlanResponse {
     private Integer id;
     private Double amount;
     private String timeline;
-    private CustomCatalogueResponse catalogueResponse;
+    private CustomCataloguePlanResponse catalogueResponse;
     private CustomUserSavingsPlanResponse userSavingsPlanResponse;
 }

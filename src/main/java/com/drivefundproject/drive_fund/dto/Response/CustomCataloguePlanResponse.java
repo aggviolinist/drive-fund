@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomCatalogueResponse {
+public class CustomCataloguePlanResponse {
     private Integer id;
     private String productname;
     private String productdesc;    

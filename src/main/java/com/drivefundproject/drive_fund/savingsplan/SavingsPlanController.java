@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
-import com.drivefundproject.drive_fund.dto.Response.CustomCatalogueResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.CustomCataloguePlanResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomSavingsPlanResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomUserSavingsPlanResponse;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
@@ -43,7 +43,7 @@ public class SavingsPlanController {
           user.getImageUrl()
           );
 
-        CustomCatalogueResponse catalogueResponse = new CustomCatalogueResponse(
+        CustomCataloguePlanResponse catalogueResponse = new CustomCataloguePlanResponse(
           newSavingsPlan.getCatalogue().getId(),
           newSavingsPlan.getCatalogue().getProductname(),
           newSavingsPlan.getCatalogue().getProductdesc()
