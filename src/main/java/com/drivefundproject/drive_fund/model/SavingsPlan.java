@@ -26,7 +26,7 @@ public class SavingsPlan {
     private Integer id;
 
     private Double amount;
-    private String timeline; 
+    private Integer timeline; 
     
     //Establishing a many to one relationship between savingsplan and catalogue,user 
     @ManyToOne(fetch = FetchType.LAZY)

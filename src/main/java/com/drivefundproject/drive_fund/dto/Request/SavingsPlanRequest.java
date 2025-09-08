@@ -18,6 +18,6 @@ public class SavingsPlanRequest {
     private Double amount;
 
     @NotBlank(message = "Timeline is required")  
-    private String timeline;
+    private Integer timeline;
        
 }

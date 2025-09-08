@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class CustomSavingsPlanResponse {
     private Integer id;
     private Double amount;
-    private String timeline;
+    private Integer timeline;
     private CustomCataloguePlanResponse catalogueResponse;
     private CustomUserSavingsPlanResponse userSavingsPlanResponse;
 }

@@ -13,7 +13,7 @@ public class SavingsDetailsResponse {
     //private String imageUrl;
     private String productname;
     private Double amount;
-    private String timeline;
+    private Integer timeline;
 
     // public SavingsDetailsResponse(String productname, Double amount, String timeline) {
     //     this.productname = productname;

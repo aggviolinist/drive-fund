@@ -34,7 +34,7 @@ public class SavingsDisplayController {
     //     this.savingsPlanRepository = savingsPlanRepository;
     // }
 
-    @GetMapping("/details/user")
+    @GetMapping("/details")
     public ResponseEntity<Object> getSavingsPlanForUser(@AuthenticationPrincipal User user) {
         if(user == null){
             return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED, "User Not authenticated", null);
