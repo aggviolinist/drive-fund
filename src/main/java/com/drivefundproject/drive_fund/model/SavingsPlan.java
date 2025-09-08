@@ -1,6 +1,12 @@
 package com.drivefundproject.drive_fund.model;
 
+import java.time.LocalDate;
+
+import org.springframework.cglib.core.Local;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +33,12 @@ public class SavingsPlan {
 
     private Double amount;
     private Integer timeline; 
+
+    private LocalDate creationDate;
+    private LocalDate targetCompletionDate;
+
+    @Enumerated(EnumType.STRING)
+    private SavingsStatus status;
     
     //Establishing a many to one relationship between savingsplan and catalogue,user 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,10 +1,13 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
 import com.drivefundproject.drive_fund.model.Catalogue;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
+import com.drivefundproject.drive_fund.model.SavingsStatus;
 import com.drivefundproject.drive_fund.model.User;
 import com.drivefundproject.drive_fund.repository.CatalogueRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
@@ -29,11 +32,18 @@ public class SavingsPlanService  {
         User user = userRepository.findById(userId) 
             .orElseThrow(() -> new RuntimeException("User not found"));
 
+        LocalDate creationDate = LocalDate.now();
+
+        LocalDate targetCompletionDate = creationDate.plusMonths(savingsPlanRequest.getTimeline());
+
         SavingsPlan savingsPlan = SavingsPlan.builder()
              .timeline(savingsPlanRequest.getTimeline())
              .amount(savingsPlanRequest.getAmount())
              .catalogue(catalogueItem)
              .user(user)
+             .creationDate(creationDate)
+             .targetCompletionDate(targetCompletionDate)
+             .status(SavingsStatus.PENDING)
              .build();
         //save user in SavingsPlan table
         return savingsPlanRepository.save(savingsPlan);

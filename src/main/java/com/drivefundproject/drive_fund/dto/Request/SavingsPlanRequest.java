@@ -17,7 +17,7 @@ public class SavingsPlanRequest {
     @NotNull(message = "Amount is required")  
     private Double amount;
 
-    @NotBlank(message = "Timeline is required")  
+    @NotNull(message = "Timeline is required")  
     private Integer timeline;
        
 }
