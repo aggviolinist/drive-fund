@@ -28,7 +28,10 @@ public class ConciseSavingsDetailsResponse {
             plan.getId(),
             plan.getCatalogue().getProductname(),
             plan.getAmount(),
-            plan.getTimeline()
+            plan.getTimeline(),
+            plan.getCreationDate(),
+            plan.getTargetCompletionDate(),
+            plan.getFrequency()
           ))
           .collect(Collectors.toList());
 
