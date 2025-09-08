@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
 import com.drivefundproject.drive_fund.model.Catalogue;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
-import com.drivefundproject.drive_fund.model.SavingsStatus;
+import com.drivefundproject.drive_fund.model.Status;
 import com.drivefundproject.drive_fund.model.User;
 import com.drivefundproject.drive_fund.repository.CatalogueRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
@@ -43,7 +43,8 @@ public class SavingsPlanService  {
              .user(user)
              .creationDate(creationDate)
              .targetCompletionDate(targetCompletionDate)
-             .status(SavingsStatus.PENDING)
+             .frequency(savingsPlanRequest.getFrequency())
+             .status(Status.PENDING)
              .build();
         //save user in SavingsPlan table
         return savingsPlanRepository.save(savingsPlan);

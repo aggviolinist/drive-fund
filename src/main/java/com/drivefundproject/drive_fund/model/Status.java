@@ -1,6 +1,6 @@
 package com.drivefundproject.drive_fund.model;
 
-public enum SavingsStatus {
+public enum Status {
     PENDING,
     IN_PROGRESS,
     COMPLETED,

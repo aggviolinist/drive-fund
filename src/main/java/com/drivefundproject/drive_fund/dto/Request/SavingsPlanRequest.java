@@ -1,5 +1,7 @@
 package com.drivefundproject.drive_fund.dto.Request;
 
+import com.drivefundproject.drive_fund.model.Frequency;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,5 +21,8 @@ public class SavingsPlanRequest {
 
     @NotNull(message = "Timeline is required")  
     private Integer timeline;
+
+    @NotNull(message = "Frequency is required")
+    private Frequency frequency;
        
 }

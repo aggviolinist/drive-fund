@@ -38,7 +38,10 @@ public class SavingsPlan {
     private LocalDate targetCompletionDate;
 
     @Enumerated(EnumType.STRING)
-    private SavingsStatus status;
+    private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private Frequency frequency;
     
     //Establishing a many to one relationship between savingsplan and catalogue,user 
     @ManyToOne(fetch = FetchType.LAZY)
