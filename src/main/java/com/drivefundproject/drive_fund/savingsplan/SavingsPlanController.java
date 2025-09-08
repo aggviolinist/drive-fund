@@ -33,6 +33,7 @@ public class SavingsPlanController {
     public ResponseEntity<Object> addSavingsPlan(@Valid @RequestBody SavingsPlanRequest savingsPlanRequest, @AuthenticationPrincipal User user){
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       //  User currentUser = (User) authentication.getPrincipal();
+      try{
         Integer userId = user.getId();
         
         SavingsPlan newSavingsPlan = savingsPlanService.addSavingsPlan(savingsPlanRequest, userId);
@@ -52,12 +53,16 @@ public class SavingsPlanController {
           newSavingsPlan.getId(),
           newSavingsPlan.getAmount(),
           newSavingsPlan.getTimeline(),
+          newSavingsPlan.getCreationDate(),
+          newSavingsPlan.getTargetCompletionDate(),
+          newSavingsPlan.getFrequency(),
           catalogueResponse,
           userSavingsPlanResponse
         );
-        
-
         return ResponseHandler.generateResponse(HttpStatus.CREATED, "Savings plan created successfully", savingsPlanResponseDTO);
+      } catch (RuntimeException e){
+        return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "This savings plan already exists, Create a new plan", null);
+      }
 
     }
     

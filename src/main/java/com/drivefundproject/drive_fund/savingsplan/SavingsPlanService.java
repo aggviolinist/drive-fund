@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,11 @@ public class SavingsPlanService  {
 
         User user = userRepository.findById(userId) 
             .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<SavingsPlan> existingPlan = savingsPlanRepository.findByUserIdAndCatalogueId(userId, savingsPlanRequest.getProductId());
+        if(existingPlan.isPresent()){
+            throw new RuntimeException("A savings plan for this prodcut already exists for you");
+        }
 
         LocalDate creationDate = LocalDate.now();
 

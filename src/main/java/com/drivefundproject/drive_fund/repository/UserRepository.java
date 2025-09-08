@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
 
 @Repository
