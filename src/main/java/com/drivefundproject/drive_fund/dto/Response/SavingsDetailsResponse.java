@@ -21,6 +21,7 @@ public class SavingsDetailsResponse {
     private LocalDate creationDate;
     private LocalDate targetCompletionDate;
     private Frequency frequency;
+    //private Double expectedPayment;
 
     // public SavingsDetailsResponse(String productname, Double amount, String timeline) {
     //     this.productname = productname;

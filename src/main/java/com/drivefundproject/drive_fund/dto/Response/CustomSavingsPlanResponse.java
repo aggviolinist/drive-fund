@@ -18,6 +18,7 @@ public class CustomSavingsPlanResponse {
     private LocalDate creationDate;
     private LocalDate targetCompletionDate;
     private Frequency frequency;
+    //private Double expectedPayment;
     private CustomCataloguePlanResponse catalogueResponse;
     private CustomUserSavingsPlanResponse userSavingsPlanResponse;
 }
