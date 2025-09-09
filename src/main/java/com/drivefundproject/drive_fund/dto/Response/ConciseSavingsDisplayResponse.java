@@ -13,16 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConciseSavingsDetailsResponse {
+public class ConciseSavingsDisplayResponse {
     private String firstname;
     private String imageUrl;
-    private List<SavingsDetailsResponse> savingsDetailsResponse;
+    private List<CustomSavingsDisplayResponse> customSavingsDisplayResponse;
 
-    public ConciseSavingsDetailsResponse(User user, List<SavingsPlan> savingsPlan ){
+    public ConciseSavingsDisplayResponse(User user, List<SavingsPlan> savingsPlan ){
         this.firstname = user.getFirstname();
         this.imageUrl = user.getImageUrl();
-        this.savingsDetailsResponse = savingsPlan.stream()
-          .map(plan -> new SavingsDetailsResponse(
+        this.customSavingsDisplayResponse = savingsPlan.stream()
+          .map(plan -> new CustomSavingsDisplayResponse(
             //null, //firstname is not needed in this inner DTO
             //null,
             plan.getId(),

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsPlanResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomCataloguePlanResponse;
-import com.drivefundproject.drive_fund.dto.Response.CustomSavingsPlanResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomUserSavingsPlanResponse;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
@@ -49,7 +49,7 @@ public class SavingsPlanController {
           newSavingsPlan.getCatalogue().getProductname(),
           newSavingsPlan.getCatalogue().getProductdesc()
         );
-        CustomSavingsPlanResponse savingsPlanResponseDTO = new CustomSavingsPlanResponse(
+        ConciseSavingsPlanResponse savingsPlanResponseDTO = new ConciseSavingsPlanResponse(
           newSavingsPlan.getId(),
           newSavingsPlan.getAmount(),
           newSavingsPlan.getTimeline(),

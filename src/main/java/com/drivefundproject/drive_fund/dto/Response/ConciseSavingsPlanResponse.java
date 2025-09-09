@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomSavingsPlanResponse {
+public class ConciseSavingsPlanResponse {
     private Integer id;
     private Double amount;
     private Integer timeline;

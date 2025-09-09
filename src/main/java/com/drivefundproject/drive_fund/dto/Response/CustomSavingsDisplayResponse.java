@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SavingsDetailsResponse {
+public class CustomSavingsDisplayResponse {
     private Integer id;
-   // private String firstname;
+    //private String firstname;
     //private String imageUrl;
     private String productname;
     private Double amount;
