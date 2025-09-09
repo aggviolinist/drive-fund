@@ -68,6 +68,21 @@ public class SavingsDisplayController {
         if(!savingsPlan.getUser().getId().equals(user.getId())){
             return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Access Denied", null);
         }
+        //Display the expected amount from the service method
+        double expectedPayment = savingsDisplayService.calculateExpectedPayment(savingsPlan);
+
+        //Map data from SavingsPlan and expected amount from the new DTO
+        getSavingsPlanCheckoutResponse checkoutResponse = new getSavingsPlanCheckoutResponse(
+            savingsPlan.getId,
+            savingsPlan.getCatalogue().getProductname(),
+            savingsPlan.getAmount(),
+            savingsPlan.getTimeline(),
+            savingsPlan.getCreationDate(),
+            savingsPlan.getTargetCompletionDate(),
+            savingsPlan.getFrequency(),
+            expectedPayment
+        );
+        return ResponseHandler.generateResponse(HttpStatus.OK, "Checkout details fetched successfully", checkoutResponse);
     }
     
     

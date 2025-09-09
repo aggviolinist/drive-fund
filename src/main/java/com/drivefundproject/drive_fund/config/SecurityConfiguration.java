@@ -32,7 +32,8 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;    
     private final Filter jwtAuthFilter;
-
+    
+//This is a constructor that Spring uses for dependency injection.
      public SecurityConfiguration(AuthenticationProvider authenticationProvider, 
              @Qualifier("jwtAuthenticationFilter") Filter jwtAuthFilter) {
         this.authenticationProvider = authenticationProvider;
