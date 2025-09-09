@@ -60,7 +60,13 @@ public class SavingsDisplayController {
         Optional<SavingsPlan> optionalSavingsPlan = savingsPlanRepository.findById(planId);
 
         if(!optionalSavingsPlan.isPresent()){
-            
+            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND,"Savings plan not found", null);    
+        }
+        SavingsPlan savingsPlan = optionalSavingsPlan.get();
+
+        //Ensuring the user is the one who own the plan
+        if(!savingsPlan.getUser().getId().equals(user.getId())){
+            return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Access Denied", null);
         }
     }
     
