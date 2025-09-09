@@ -6,6 +6,14 @@ import org.springframework.cglib.core.Local;
 
 import com.drivefundproject.drive_fund.model.Frequency;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SavingsPlanCheckoutResponse {
     private Integer product_id;
     private String product_name;

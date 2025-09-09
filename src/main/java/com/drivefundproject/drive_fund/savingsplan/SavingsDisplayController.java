@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsDisplayResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.SavingsPlanCheckoutResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomSavingsDisplayResponse;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
@@ -72,8 +73,8 @@ public class SavingsDisplayController {
         double expectedPayment = savingsDisplayService.calculateExpectedPayment(savingsPlan);
 
         //Map data from SavingsPlan and expected amount from the new DTO
-        getSavingsPlanCheckoutResponse checkoutResponse = new getSavingsPlanCheckoutResponse(
-            savingsPlan.getId,
+        SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
+            savingsPlan.getId(),
             savingsPlan.getCatalogue().getProductname(),
             savingsPlan.getAmount(),
             savingsPlan.getTimeline(),
