@@ -2,6 +2,7 @@ package com.drivefundproject.drive_fund.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,5 +13,7 @@ import com.drivefundproject.drive_fund.model.SavingsPlan;
 public interface SavingsPlanRepository extends JpaRepository<SavingsPlan, Integer> {
         List<SavingsPlan> findByUserId(Integer userId);
         Optional<SavingsPlan> findByUserIdAndCatalogueId(Integer userId, Integer catalogueId);
+        Optional<SavingsPlan> findByUuid(UUID uuid);
+
 
 }

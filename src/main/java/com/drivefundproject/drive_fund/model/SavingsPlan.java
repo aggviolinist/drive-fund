@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.cglib.core.Local;
 
@@ -13,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +32,8 @@ public class SavingsPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private UUID uuid;
 
     private Double amount;
     private Integer timeline; 
@@ -52,5 +56,13 @@ public class SavingsPlan {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    //Automatically generates before plan is created
+    @PrePersist
+    public void generateUuid(){
+        if(this.uuid == null){
+            this.uuid = UUID.randomUUID();
+        }
+    }
 
 }

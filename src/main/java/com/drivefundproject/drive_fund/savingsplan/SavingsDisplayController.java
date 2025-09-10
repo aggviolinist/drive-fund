@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -53,12 +54,12 @@ public class SavingsDisplayController {
         return ResponseHandler.generateResponse(HttpStatus.OK,"Saving Plan fetched successfully",conciseSavingsDisplayResponse);
     }
 
-    @GetMapping("/checkout/{planId}")
-    public ResponseEntity<Object> getSavingsPlanCheckout(@AuthenticationPrincipal User user, @PathVariable Integer planId){
+    @GetMapping("/checkout/{planuuid}")
+    public ResponseEntity<Object> getSavingsPlanCheckout(@AuthenticationPrincipal User user, @PathVariable UUID planuuid){
         if(user == null){
             return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,"User not authenticated", null);
         }
-        Optional<SavingsPlan> optionalSavingsPlan = savingsPlanRepository.findById(planId);
+        Optional<SavingsPlan> optionalSavingsPlan = savingsPlanRepository.findByUuid(planuuid);
 
         if(!optionalSavingsPlan.isPresent()){
             return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND,"Savings plan not found", null);    

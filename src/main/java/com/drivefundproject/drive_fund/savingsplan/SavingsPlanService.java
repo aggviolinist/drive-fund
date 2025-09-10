@@ -35,7 +35,7 @@ public class SavingsPlanService  {
 
         Optional<SavingsPlan> existingPlan = savingsPlanRepository.findByUserIdAndCatalogueId(userId, savingsPlanRequest.getProductId());
         if(existingPlan.isPresent()){
-            throw new RuntimeException("A savings plan for this prodcut already exists for you");
+            throw new RuntimeException("A savings plan for this product already exists for you");
         }
 
         LocalDate creationDate = LocalDate.now();
