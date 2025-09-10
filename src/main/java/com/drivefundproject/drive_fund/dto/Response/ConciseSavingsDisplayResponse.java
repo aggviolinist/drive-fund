@@ -25,7 +25,8 @@ public class ConciseSavingsDisplayResponse {
           .map(plan -> new CustomSavingsDisplayResponse(
             //null, //firstname is not needed in this inner DTO
             //null,
-            plan.getId(),
+            //plan.getId(),
+            plan.getUuid(),
             plan.getCatalogue().getProductname(),
             plan.getAmount(),
             plan.getTimeline(),

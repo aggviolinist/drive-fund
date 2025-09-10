@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.drivefundproject.drive_fund.model.Frequency;
 
@@ -12,7 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomSavingsDisplayResponse {
-    private Integer id;
+    //private Integer id;
+    private UUID uuid;
     //private String firstname;
     //private String imageUrl;
     private String productname;

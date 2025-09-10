@@ -75,7 +75,9 @@ public class SavingsDisplayController {
 
         //Map data from SavingsPlan and expected amount from the new DTO
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
-            savingsPlan.getId(),
+            //savingsPlan.getId(),
+            //savingsPlan.getUuid(),
+            savingsPlan.getUuid(),
             savingsPlan.getCatalogue().getProductname(),
             savingsPlan.getAmount(),
             savingsPlan.getTimeline(),

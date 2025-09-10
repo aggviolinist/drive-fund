@@ -50,7 +50,7 @@ public class SavingsPlanController {
           newSavingsPlan.getCatalogue().getProductdesc()
         );
         ConciseSavingsPlanResponse savingsPlanResponseDTO = new ConciseSavingsPlanResponse(
-          newSavingsPlan.getId(),
+          //newSavingsPlan.getId(),
           newSavingsPlan.getUuid(),
           newSavingsPlan.getAmount(),
           newSavingsPlan.getTimeline(),

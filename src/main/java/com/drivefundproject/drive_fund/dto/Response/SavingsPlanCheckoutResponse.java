@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.cglib.core.Local;
 
@@ -15,7 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SavingsPlanCheckoutResponse {
-    private Integer product_id;
+   // private Integer product_id;
+    private UUID uuid;
     private String product_name;
     private Double amount;
     private Integer timeline;

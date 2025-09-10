@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConciseSavingsPlanResponse {
-    private Integer id;
+    //private Integer id;
     private UUID uuid;
     private Double amount;
     private Integer timeline;
