@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.drivefundproject.drive_fund.model.Frequency;
 
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConciseSavingsPlanResponse {
     private Integer id;
+    private UUID uuid;
     private Double amount;
     private Integer timeline;
     private LocalDate creationDate;
