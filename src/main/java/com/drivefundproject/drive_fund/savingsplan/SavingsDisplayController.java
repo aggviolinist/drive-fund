@@ -77,7 +77,7 @@ public class SavingsDisplayController {
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
             //savingsPlan.getId(),
             //savingsPlan.getUuid(),
-            savingsPlan.getUuid(),
+            savingsPlan.getPlan_uuid(),
             savingsPlan.getCatalogue().getProductname(),
             savingsPlan.getAmount(),
             savingsPlan.getTimeline(),

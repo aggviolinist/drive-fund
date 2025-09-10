@@ -33,7 +33,7 @@ public class SavingsPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private UUID uuid;
+    private UUID plan_uuid;
 
     private Double amount;
     private Integer timeline; 
@@ -57,11 +57,11 @@ public class SavingsPlan {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //Automatically generates before plan is created
+    //Automatically generates uuid before plan is created
     @PrePersist
     public void generateUuid(){
-        if(this.uuid == null){
-            this.uuid = UUID.randomUUID();
+        if(this.plan_uuid == null){
+            this.plan_uuid = UUID.randomUUID();
         }
     }
 

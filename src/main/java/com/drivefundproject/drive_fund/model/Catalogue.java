@@ -1,9 +1,13 @@
 package com.drivefundproject.drive_fund.model;
 
+import java.util.UUID;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +25,19 @@ public class Catalogue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private UUID cat_uuid;
+
+    @Column(unique = true)
     private String productname;
+
     private String productdesc;
+
+     //Automatically generates uuid before product is created
+    @PrePersist
+    public void generateUuid(){
+        if(this.cat_uuid == null){
+            this.cat_uuid = UUID.randomUUID();
+        }
+    }
     
 }

@@ -51,7 +51,7 @@ public class SavingsPlanController {
         );
         ConciseSavingsPlanResponse savingsPlanResponseDTO = new ConciseSavingsPlanResponse(
           //newSavingsPlan.getId(),
-          newSavingsPlan.getUuid(),
+          newSavingsPlan.getPlan_uuid(),
           newSavingsPlan.getAmount(),
           newSavingsPlan.getTimeline(),
           newSavingsPlan.getCreationDate(),

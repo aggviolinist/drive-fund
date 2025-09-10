@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConciseSavingsPlanResponse {
     //private Integer id;
-    private UUID uuid;
+    private UUID plan_uuid;
     private Double amount;
     private Integer timeline;
     private LocalDate creationDate;
