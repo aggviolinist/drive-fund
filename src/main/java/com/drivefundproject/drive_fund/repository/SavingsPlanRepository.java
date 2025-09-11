@@ -12,8 +12,7 @@ import com.drivefundproject.drive_fund.model.SavingsPlan;
 @Repository
 public interface SavingsPlanRepository extends JpaRepository<SavingsPlan, Integer> {
         List<SavingsPlan> findByUserId(Integer userId);
-        Optional<SavingsPlan> findByUserIdAndCatalogueId(Integer userId, Integer catalogueId);
-        Optional<SavingsPlan> findByUuid(UUID uuid);
-
+        Optional<SavingsPlan> findByUserIdAndCatalogueCatUuid(Integer userId, UUID catUuid); 
+        Optional<SavingsPlan> findByPlanUuid(UUID planUuid);
 
 }

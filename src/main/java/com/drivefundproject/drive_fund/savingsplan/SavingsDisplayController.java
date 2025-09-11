@@ -54,12 +54,12 @@ public class SavingsDisplayController {
         return ResponseHandler.generateResponse(HttpStatus.OK,"Saving Plan fetched successfully",conciseSavingsDisplayResponse);
     }
 
-    @GetMapping("/checkout/{planuuid}")
-    public ResponseEntity<Object> getSavingsPlanCheckout(@AuthenticationPrincipal User user, @PathVariable UUID planuuid){
+    @GetMapping("/checkout/{planUuid}")
+    public ResponseEntity<Object> getSavingsPlanCheckout(@AuthenticationPrincipal User user, @PathVariable UUID planUuid){
         if(user == null){
             return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,"User not authenticated", null);
         }
-        Optional<SavingsPlan> optionalSavingsPlan = savingsPlanRepository.findByUuid(planuuid);
+        Optional<SavingsPlan> optionalSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(!optionalSavingsPlan.isPresent()){
             return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND,"Savings plan not found", null);    
@@ -77,7 +77,7 @@ public class SavingsDisplayController {
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
             //savingsPlan.getId(),
             //savingsPlan.getUuid(),
-            savingsPlan.getPlan_uuid(),
+            savingsPlan.getPlanUuid(),
             savingsPlan.getCatalogue().getProductname(),
             savingsPlan.getAmount(),
             savingsPlan.getTimeline(),

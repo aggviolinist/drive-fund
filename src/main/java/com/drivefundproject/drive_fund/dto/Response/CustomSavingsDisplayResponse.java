@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomSavingsDisplayResponse {
     //private Integer id;
-    private UUID plan_uuid;
+    private UUID planUuid;
     //private String firstname;
     //private String imageUrl;
     private String productname;

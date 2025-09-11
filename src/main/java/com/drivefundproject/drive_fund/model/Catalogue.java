@@ -25,7 +25,9 @@ public class Catalogue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private UUID cat_uuid;
+
+    @Column(name = "cat_uuid")
+    private UUID catUuid; 
 
     @Column(unique = true)
     private String productname;
@@ -35,8 +37,8 @@ public class Catalogue {
      //Automatically generates uuid before product is created
     @PrePersist
     public void generateUuid(){
-        if(this.cat_uuid == null){
-            this.cat_uuid = UUID.randomUUID();
+        if(this.catUuid == null){
+            this.catUuid = UUID.randomUUID();
         }
     }
     

@@ -26,7 +26,7 @@ public class ConciseSavingsDisplayResponse {
             //null, //firstname is not needed in this inner DTO
             //null,
             //plan.getId(),
-            plan.getPlan_uuid(),
+            plan.getPlanUuid(),
             plan.getCatalogue().getProductname(),
             plan.getAmount(),
             plan.getTimeline(),

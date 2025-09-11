@@ -26,14 +26,14 @@ public class SavingsPlanService  {
     private final UserRepository userRepository;
 
     public SavingsPlan addSavingsPlan(SavingsPlanRequest savingsPlanRequest, Integer userId){
-        Catalogue catalogueItem = catalogueRepository.findById(savingsPlanRequest.getProductId())
+        Catalogue catalogueItem = catalogueRepository.findByCatUuid(savingsPlanRequest.getCatUuid())
             .orElseThrow(() -> new RuntimeException("Product not found"));
 
 
         User user = userRepository.findById(userId) 
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional<SavingsPlan> existingPlan = savingsPlanRepository.findByUserIdAndCatalogueId(userId, savingsPlanRequest.getProductId());
+        Optional<SavingsPlan> existingPlan = savingsPlanRepository.findByUserIdAndCatalogueCatUuid(userId, savingsPlanRequest.getCatUuid());
         if(existingPlan.isPresent()){
             throw new RuntimeException("A savings plan for this product already exists for you");
         }

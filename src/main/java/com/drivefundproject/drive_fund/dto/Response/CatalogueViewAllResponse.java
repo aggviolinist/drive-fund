@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CatalogueViewAllResponse {
-    private UUID cat_uuid;
+    private UUID catUuid;
     private String productname; 
     private String productdesc;
 }

@@ -33,7 +33,7 @@ public class SavingsPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private UUID plan_uuid;
+    private UUID planUuid;
 
     private Double amount;
     private Integer timeline; 
@@ -60,9 +60,14 @@ public class SavingsPlan {
     //Automatically generates uuid before plan is created
     @PrePersist
     public void generateUuid(){
-        if(this.plan_uuid == null){
-            this.plan_uuid = UUID.randomUUID();
+        if(this.planUuid == null){
+            this.planUuid = UUID.randomUUID();
         }
+    }
+
+    public UUID getPlan_uuid() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPlan_uuid'");
     }
 
 }

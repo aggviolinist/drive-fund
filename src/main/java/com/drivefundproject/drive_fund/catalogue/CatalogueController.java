@@ -30,7 +30,7 @@ public class CatalogueController {
         Catalogue newProduct = catalogueService.addProduct(catalogueAddition);
         //mapping out exactly the data w want displayed
         CatalogueResponse catalogueResponse = CatalogueResponse.builder()
-         .cat_uuid(newProduct.getCat_uuid())
+         .catUuid(newProduct.getCatUuid())
          .productname(newProduct.getProductname())
          .productdesc(newProduct.getProductdesc())
          .build();
@@ -49,7 +49,7 @@ public class CatalogueController {
 
        List<CatalogueViewAllResponse> catalogueViewAllResponse = allProducts.stream()
          .map(product -> CatalogueViewAllResponse.builder()
-          .cat_uuid(product.getCat_uuid())
+          .catUuid(product.getCatUuid())
           .productname(product.getProductname())
           .productdesc(product.getProductdesc())
           .build())

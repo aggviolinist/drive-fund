@@ -45,13 +45,14 @@ public class SavingsPlanController {
           );
 
         CustomCataloguePlanResponse catalogueResponse = new CustomCataloguePlanResponse(
-          newSavingsPlan.getCatalogue().getId(),
+          //newSavingsPlan.getCatalogue().getId(),
+          newSavingsPlan.getCatalogue().getCatUuid(),
           newSavingsPlan.getCatalogue().getProductname(),
           newSavingsPlan.getCatalogue().getProductdesc()
         );
         ConciseSavingsPlanResponse savingsPlanResponseDTO = new ConciseSavingsPlanResponse(
           //newSavingsPlan.getId(),
-          newSavingsPlan.getPlan_uuid(),
+          newSavingsPlan.getPlanUuid(),
           newSavingsPlan.getAmount(),
           newSavingsPlan.getTimeline(),
           newSavingsPlan.getCreationDate(),

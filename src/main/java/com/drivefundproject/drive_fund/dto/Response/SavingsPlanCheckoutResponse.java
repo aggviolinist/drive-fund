@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SavingsPlanCheckoutResponse {
    // private Integer product_id;
-    private UUID uuid;
+    private UUID planUuid; 
     private String product_name;
     private Double amount;
     private Integer timeline;
