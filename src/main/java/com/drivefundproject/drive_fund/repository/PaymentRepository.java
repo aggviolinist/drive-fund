@@ -10,5 +10,8 @@ import com.drivefundproject.drive_fund.model.Payment;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    List<Payment> findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(UUID planUuid);
+    static List<Payment> findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(UUID planUuid) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findBySavingsPlan_PlanUuidOrderByPaymentDateAsc'");
+    }
 }

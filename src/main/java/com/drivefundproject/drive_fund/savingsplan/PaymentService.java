@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class PaymentService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
 
-    public void recordPayment( UUID planUuid, Double paymentAmount){
+    public void recordPaymentDeposit( UUID planUuid, Double paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
@@ -36,6 +37,16 @@ public class PaymentService {
         else{
             throw new IllegalArgumentException("Savings Plan not found");
         }
+    }
+    public Double calculateTotalDeposit(UUID planUuid){
+            List<Payment> payments = PaymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
+            return payments.stream()
+                 .mapToDouble(Payment::getAmount)
+                 .sum();
+
+        }
+    public Double calculateRemainingAmount(UUID planUuid){
+        
     }
     
 }
