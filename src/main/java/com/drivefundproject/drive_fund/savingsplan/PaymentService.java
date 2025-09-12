@@ -67,7 +67,7 @@ public class PaymentService {
                 return 0.0;
             }
             double percentage = (totalDeposits/targetAmount) * 100;
-            //Ensuring the percentage doesn't exceed 100%
+            //Ensuring the percentage doesn't exceed 100% incasea user overpays
             return Math.min(percentage, 100.0);
         }
         return 0.0;
