@@ -3,6 +3,7 @@ package com.drivefundproject.drive_fund.savingsplan;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.drivefundproject.drive_fund.dto.Request.PaymentRequest;
 import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsDisplayResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.dto.Response.SavingsPlanCheckoutResponse;
@@ -23,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -88,6 +91,23 @@ public class SavingsDisplayController {
         );
         return ResponseHandler.generateResponse(HttpStatus.OK, "Checkout details fetched successfully", checkoutResponse);
     }
-    
-    
-}
+    @PostMapping("/payment/{planUuid}")
+        public ResponseEntity<Object> recordPayment(@AuthenticationPrincipal User user, @PathVariable UUID planUuid, @RequestBody PaymentRequest paymentRequest){
+            if(user == null){
+                return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,"User not authenticated" , null);
+            }
+            Optional<SavingsPlan> retrievedSavedPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+            if(!retrievedSavedPlan.isPresent() || !retrievedSavedPlan.get().getUser().getId().equals(user.getId())){
+                return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Acess Denied or The Savings plan was not found" , null);
+            }
+            try{
+                PaymentService.recordPayment(planUuid, paymentRequest.getAmount());
+                return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", null);
+            }
+            catch(IllegalArgumentException e){
+                return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,e.getMessage(), null);
+
+            }
+            
+        }
+    }
