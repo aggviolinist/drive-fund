@@ -46,7 +46,31 @@ public class PaymentService {
 
         }
     public Double calculateRemainingAmount(UUID planUuid){
-        
+        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+
+        if(retrievedSavingsPlan.isPresent()){
+            SavingsPlan savingsPlan = retrievedSavingsPlan.get();
+            Double totalDeposits = calculateTotalDeposit(planUuid);
+            return savingsPlan.getAmount() - totalDeposits;
+        }
+        throw new IllegalArgumentException("Savings Plan not found");        
+    }
+    public double calculatePercentageCompleted(UUID planUuid){
+        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+
+        if(retrievedSavingsPlan.isPresent()){
+            SavingsPlan savingsPlan = retrievedSavingsPlan.get();
+            Double totalDeposits = calculateTotalDeposit(planUuid);
+            Double targetAmount = savingsPlan.getAmount();
+
+            if(targetAmount <=0){
+                return 0.0;
+            }
+            double percentage = (totalDeposits/targetAmount) * 100;
+            //Ensuring the percentage doesn't exceed 100%
+            return Math.min(percentage, 100.0);
+        }
+        return 0.0;
     }
     
 }
