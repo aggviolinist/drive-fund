@@ -7,6 +7,7 @@ import com.drivefundproject.drive_fund.dto.Request.PaymentRequest;
 import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsDisplayResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.dto.Response.SavingsPlanCheckoutResponse;
+import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomSavingsDisplayResponse;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
@@ -101,7 +102,7 @@ public class SavingsDisplayController {
                 return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Acess Denied or The Savings plan was not found" , null);
             }
             try{
-                PaymentService.recordPayment(planUuid, paymentRequest.getAmount());
+                paymentService.recordPaymentDeposit(planUuid, paymentRequest.getAmount());
                 return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", null);
             }
             catch(IllegalArgumentException e){
@@ -110,4 +111,31 @@ public class SavingsDisplayController {
             }
             
         }
+    @GetMapping("/progress/{planUUid}")
+    public ResponseEntity<Object> getSavingsProgress(@AuthenticationPrincipal User user, @PathVariable UUID planUuid){
+        if(user == null){
+            return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED, "User not authenticated", null);
+        }
+
+        Optional<SavingsPlan> retrievedSavedPlanzz = savingsPlanRepository.findByPlanUuid(planUuid);
+        if(!retrievedSavedPlanzz.isPresent() || !retrievedSavedPlanzz.get().getUser().getId().equals(user.getId())){
+            return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN, "Access Denied or Savings Plan not found", null);
+        }
+        SavingsPlan savingsPlan = retrievedSavedPlanzz.get();
+        //We now want to calculate the expected payment based on remaining amount and remaining periods
+        double newExpectedPaymenet = savingsDisplayService.calculateExpectedPaymentBasedOnRemainingBalance(savingsPlan, remainingAmount);
+
+        SavingsProgressResponse progressResponse = new SavingsProgressResponse(
+            savingsPlan.getPlanUuid(),
+            savingsPlan.getCatalogue.getProductname(),
+            savingsPlan.getAmount(),
+            totalDeposited,
+            remainingAmount,
+            newExpectedPayment,
+            percentageCompleted
+
+        );
+        return ResponseHandler.generateResponse(HttpStatus.OK, "Savings progress fetched successfully", progressResponse);
+
+    }
     }
