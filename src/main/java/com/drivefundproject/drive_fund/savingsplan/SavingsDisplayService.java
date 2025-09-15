@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.model.Frequency;
 import com.drivefundproject.drive_fund.model.Payment;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
@@ -22,11 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class SavingsDisplayService {
 
     private final SavingsPlanRepository savingsPlanRepository;
+    private final PaymentRepository paymentRepository;
+    private final PaymentService paymentService;
 
     public List<SavingsPlan>getSavingsPlanByUserId(Integer userId){
         return savingsPlanRepository.findByUserId(userId);
     }
-    public double calculateExpectedPayment(SavingsPlan savingsPlan){
+    public double calculateInitialExpectedPayment(SavingsPlan savingsPlan){
         double totalAmount = savingsPlan.getAmount();
         int timelineInMonths = savingsPlan.getTimeline();
         Frequency frequency = savingsPlan.getFrequency();
@@ -54,51 +57,71 @@ public class SavingsDisplayService {
         return totalAmount/numberOfPeriods;
 
     }
-    public double calculateExpectedPaymentBasedOnRemainingBalance(UUID planUuid, double remainingAmount){
+    public double calculateDynamicExpectedPayment(UUID planUuid, double remainingAmount){
+        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+
+        if(retrievedSavingsPlan.isPresent()){
+            SavingsPlan savingsPlan = retrievedSavingsPlan.get();
+            //Wrong approach, I used time instead of periods
+            // if(latestPayment.isPresent()){
+            //     startDateForCalculation = latestPayment.get().getPaymentDate();
+            // }
+            // else{
+            //     //if no payments have been made, use the plan's creation date
+            //     startDateForCalculation = savingsPlan.getCreationDate();
+            // }            
+            //Calculate total number of periods in plan's lifetime
+            long totalPeriods;
+            if(savingsPlan.getFrequency() == Frequency.DAILY){
+                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
+            }
+            else if(savingsPlan.getFrequency() == Frequency.WEEKLY){
+                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.WEEKS);
+            }
+            else if(savingsPlan.getFrequency() == Frequency.MONTHLY){
+                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.MONTHS);
+            }
+            else{
+                return 0.0;
+            }
+            //this is how many payments have been made
+            long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
+
+            // Remaining periods are the total periods minus payments made
+            long periodsRemaining = totalPeriods - paymentsMade;
+            
+            // Ensure periodsRemaining is not zero or negative
+            if(periodsRemaining <= 0){
+                return remainingAmount > 0 ? remainingAmount : 0.0; //If they overpaid or are at the end, remaining amount is the last payment
+            }
+            return remainingAmount/periodsRemaining;
+        }
+        return 0.0;                
+    }
+    public SavingsProgressResponse getSavingsProgress(UUID planUuid){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
-            //1. Find the most recent payment date
-            //This method will be implemented in PaymentRepository
-            
+            Double totalDeposited = paymentService.calculateTotalDeposit(planUuid);
+            Double balanceAmount = savingsPlan.getAmount() - totalDeposited;
+            double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
+            double newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
 
-            //2. Set start date for calculation based on payment history
-            LocalDate startDateForCalculation;
-            if(latestPayment.isPresent()){
-                startDateForCalculation = latestPayment.get().getPaymentDate();
-            }
-            else{
-                //if no payments have been made, use the plan's creation date
-                startDateForCalculation = savingsPlan.getCreationDate();
-            }
-            
-            //3. Calculate remaining periods using determined start date
-            long periodsRemaining;
-            if(savingsPlan.getFrequency() == Frequency.DAILY){
-                periodsRemaining = startDateForCalculation.until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
-            }
-            else if(savingsPlan.getFrequency() == Frequency.WEEKLY){
-                periodsRemaining = startDateForCalculation.until(savingsPlan.getTargetCompletionDate(), ChronoUnit.WEEKS);
-            }
-            else if(savingsPlan.getFrequency() == Frequency.MONTHLY){
-                periodsRemaining = startDateForCalculation.until(savingsPlan.getTargetCompletionDate(), ChronoUnit.MONTHS);
-            }
-            else{
-                return 0.0;
-            }
-            return remainingAmount/periodsRemaining;
+            //this is the dynamic expected payment using remaining amount
+            return new SavingsProgressResponse(
+                savingsPlan.getPlanUuid(),
+                savingsPlan.getCatalogue().getProductname(),
+                savingsPlan.getAmount(),
+                totalDeposited,
+                balanceAmount,
+                newExpectedPayment,
+                Math.min(percentageCompleted,100.0)
+                );
+
         }
-        //if savings plan is not found, return 0.0
-        return 0.0;
-        
-        // //Last payment date needs to calculate remaining periods
-        // LocalDate startDateForCalculation = lastPaymentDate != null ? setPaymentDate()
-        // long periodsRemaining;
-        // if(savingsPlan.getFrequency() == Frequency.DAILY){
-        //     periodsRemaining = LocalDate.now().until(savingsPlan.getTargetCompletionDate(), null)
-        // }
+        throw new IllegalArgumentException("Savings Plan not found");
 
     }
     

@@ -37,6 +37,7 @@ public class SavingsDisplayController {
 
     private final SavingsPlanRepository savingsPlanRepository;
     private final SavingsDisplayService savingsDisplayService;
+    private final PaymentService paymentService;
 
     // SavingsDetailsController(SavingsPlanRepository savingsPlanRepository) {
     //     this.savingsPlanRepository = savingsPlanRepository;
@@ -75,7 +76,7 @@ public class SavingsDisplayController {
             return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Access Denied", null);
         }
         //Display the expected amount from the service method
-        double expectedPayment = savingsDisplayService.calculateExpectedPayment(savingsPlan);
+        double expectedPayment = savingsDisplayService.calculateInitialExpectedPayment(savingsPlan);
 
         //Map data from SavingsPlan and expected amount from the new DTO
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
@@ -121,21 +122,12 @@ public class SavingsDisplayController {
         if(!retrievedSavedPlanzz.isPresent() || !retrievedSavedPlanzz.get().getUser().getId().equals(user.getId())){
             return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN, "Access Denied or Savings Plan not found", null);
         }
-        SavingsPlan savingsPlan = retrievedSavedPlanzz.get();
-        //We now want to calculate the expected payment based on remaining amount and remaining periods
-        double newExpectedPaymenet = savingsDisplayService.calculateExpectedPaymentBasedOnRemainingBalance(savingsPlan, remainingAmount);
-
-        SavingsProgressResponse progressResponse = new SavingsProgressResponse(
-            savingsPlan.getPlanUuid(),
-            savingsPlan.getCatalogue.getProductname(),
-            savingsPlan.getAmount(),
-            totalDeposited,
-            remainingAmount,
-            newExpectedPayment,
-            percentageCompleted
-
-        );
-        return ResponseHandler.generateResponse(HttpStatus.OK, "Savings progress fetched successfully", progressResponse);
-
+        try{
+        SavingsProgressResponse progressResponse = savingsDisplayService.getSavingsProgress(planUuid);
+        return ResponseHandler.generateResponse(HttpStatus.OK,"Savings progress feteched Sucessfully", progressResponse);
+        }
+        catch(IllegalArgumentException e){
+            return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, e.getMessage(), null);
+        }
     }
     }
