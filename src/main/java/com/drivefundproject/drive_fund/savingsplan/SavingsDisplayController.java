@@ -112,7 +112,7 @@ public class SavingsDisplayController {
             }
             
         }
-    @GetMapping("/progress/{planUUid}")
+    @GetMapping("/progress/{planUuid}")
     public ResponseEntity<Object> getSavingsProgress(@AuthenticationPrincipal User user, @PathVariable UUID planUuid){
         if(user == null){
             return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED, "User not authenticated", null);
