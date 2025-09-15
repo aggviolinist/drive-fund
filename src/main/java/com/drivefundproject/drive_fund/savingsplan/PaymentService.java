@@ -39,7 +39,7 @@ public class PaymentService {
         }
     }
     public Double calculateTotalDeposit(UUID planUuid){
-            List<Payment> payments = PaymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
+            List<Payment> payments = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
             return payments.stream()
                  .mapToDouble(Payment::getAmount)
                  .sum();

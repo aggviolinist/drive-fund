@@ -65,9 +65,4 @@ public class SavingsPlan {
         }
     }
 
-    public UUID getPlan_uuid() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPlan_uuid'");
-    }
-
 }

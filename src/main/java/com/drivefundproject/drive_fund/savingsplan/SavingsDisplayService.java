@@ -54,7 +54,7 @@ public class SavingsDisplayService {
         return totalAmount/numberOfPeriods;
 
     }
-    public double calculateExpectedPaymentBasedOnRemainingBalance(UUID planUuid, Double remainingAmount){
+    public double calculateExpectedPaymentBasedOnRemainingBalance(UUID planUuid, double remainingAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
@@ -62,10 +62,10 @@ public class SavingsDisplayService {
 
             //1. Find the most recent payment date
             //This method will be implemented in PaymentRepository
-            Optional<Payment> latestPayment = PaymentRepository.findTopBySavingsPlan_PlanUuidOrderByPaymentDateDesc(planUuid);
+            
 
             //2. Set start date for calculation based on payment history
-            LocalDate startDateForCalculation = latestPayment.get().getPaymentDate();
+            LocalDate startDateForCalculation;
             if(latestPayment.isPresent()){
                 startDateForCalculation = latestPayment.get().getPaymentDate();
             }
