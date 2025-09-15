@@ -12,7 +12,7 @@ import com.drivefundproject.drive_fund.model.Payment;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-     Optional<Payment> findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(UUID planUuid);
+     List<Payment> findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(UUID planUuid);
      Optional<Payment> findTopBySavingsPlan_PlanUuidOrderByPaymentDateDesc(UUID planUUid);  
      long countBySavingsPlan_PlanUuid(UUID planUuid);   
 }
