@@ -51,7 +51,15 @@ public class PaymentService {
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
             Double totalDeposits = calculateTotalDeposit(planUuid);
-            return savingsPlan.getAmount() - totalDeposits;
+            Double remainingAmount = savingsPlan.getAmount() - totalDeposits;
+            //return savingsPlan.getAmount() - totalDeposits;
+        
+            if(remainingAmount<0){
+                return 0.0;
+            }
+            else{
+                return remainingAmount;
+            }
         }
         throw new IllegalArgumentException("Savings Plan not found");        
     }
