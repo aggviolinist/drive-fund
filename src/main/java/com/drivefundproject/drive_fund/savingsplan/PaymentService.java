@@ -25,10 +25,18 @@ public class PaymentService {
 
     public void recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
-
+        //We want to avoid overpayment 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
+            BigDecimal currentTotalDeposited = calculateTotalDeposit(planUuid);
+            BigDecimal newTotalDeposited = currentTotalDeposited.add(paymentAmount);
+            BigDecimal targetAmount = savingsPlan.getAmount();
+
+            if(newTotalDeposited.compareTo(targetAmount) > 0){
+                throw new IllegalArgumentException("Payment amount exceeds the remaining savings goal. The remaining amount is:" + targetAmount.subtract(currentTotalDeposited));
+
+            }
             Payment payment = new Payment();
             payment.setSavingsPlan(savingsPlan);
             payment.setAmount(paymentAmount);

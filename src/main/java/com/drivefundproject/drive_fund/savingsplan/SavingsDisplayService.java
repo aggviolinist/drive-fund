@@ -86,7 +86,7 @@ public class SavingsDisplayService {
 
             //We need to avoid negative expected values
             if(remainingAmount.compareTo(BigDecimal.ZERO) <= 0){
-                return BigDecimal.Zero;
+                return BigDecimal.ZERO;
             }
             // Remaining periods are the total periods minus the elapsedperiods
             long periodsRemaining = totalPeriods - elapsedPeriods;
