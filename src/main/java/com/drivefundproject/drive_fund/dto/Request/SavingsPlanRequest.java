@@ -20,7 +20,7 @@ public class SavingsPlanRequest {
     private UUID catUuid;
 
     @NotNull(message = "Amount is required")  
-    private Double amount;
+    private BigDecimal amount;
 
     @NotNull(message = "Timeline is required")  
     private Integer timeline;

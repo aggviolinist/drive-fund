@@ -1,5 +1,6 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class PaymentService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
 
-    public void recordPaymentDeposit( UUID planUuid, Double paymentAmount){
+    public void recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
@@ -38,20 +39,20 @@ public class PaymentService {
             throw new IllegalArgumentException("Savings Plan not found");
         }
     }
-    public Double calculateTotalDeposit(UUID planUuid){
+    public BigDecimal calculateTotalDeposit(UUID planUuid){
             List<Payment> payments = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
             return payments.stream()
-                 .mapToDouble(Payment::getAmount)
-                 .sum();
+                 .map(Payment::getAmount)
+                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         }
-    public Double calculateRemainingAmount(UUID planUuid){
+    public BigDecimal calculateRemainingAmount(UUID planUuid){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
-            Double totalDeposits = calculateTotalDeposit(planUuid);
-            Double remainingAmount = savingsPlan.getAmount() - totalDeposits;
+            BigDecimal totalDeposits = calculateTotalDeposit(planUuid);
+            BigDecimal remainingAmount = savingsPlan.getAmount() - totalDeposits;
             //return savingsPlan.getAmount() - totalDeposits;
         
             if(remainingAmount<0){
@@ -68,8 +69,8 @@ public class PaymentService {
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
-            Double totalDeposits = calculateTotalDeposit(planUuid);
-            Double targetAmount = savingsPlan.getAmount();
+            BigDecimal totalDeposits = calculateTotalDeposit(planUuid);
+            BigDecimal targetAmount = savingsPlan.getAmount();
 
             if(targetAmount <=0){
                 return 0.0;

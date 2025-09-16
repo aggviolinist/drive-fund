@@ -1,6 +1,8 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
 import java.lang.StackWalker.Option;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -29,8 +31,8 @@ public class SavingsDisplayService {
     public List<SavingsPlan>getSavingsPlanByUserId(Integer userId){
         return savingsPlanRepository.findByUserId(userId);
     }
-    public double calculateInitialExpectedPayment(SavingsPlan savingsPlan){
-        double totalAmount = savingsPlan.getAmount();
+    public BigDecimal calculateInitialExpectedPayment(SavingsPlan savingsPlan){
+        BigDecimal totalAmount = savingsPlan.getAmount();
         int timelineInMonths = savingsPlan.getTimeline();
         Frequency frequency = savingsPlan.getFrequency();
         long numberOfPeriods;
@@ -47,17 +49,17 @@ public class SavingsDisplayService {
         else {
             //If we have an expired period or if there is an error with the dates
             //It won't calculate anything
-            return 0.0;
+            return BigDecimal.ZERO;
         }
         //this helps us handle misconfigured dates/start period that is same as end date
         if(numberOfPeriods <= 0){
             return totalAmount;
         }
 
-        return totalAmount/numberOfPeriods;
+        return totalAmount.divide(new BigDecimal (numberOfPeriods),0, RoundingMode.HALF_UP);
 
     }
-    public double calculateDynamicExpectedPayment(UUID planUuid, double remainingAmount){
+    public BigDecimal calculateDynamicExpectedPayment(UUID planUuid, BigDecimal remainingAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
@@ -82,7 +84,7 @@ public class SavingsDisplayService {
                 totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.MONTHS);
             }
             else{
-                return 0.0;
+                return BigDecimal.ZERO;
             }
             //this is how many payments have been made
             long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
@@ -92,11 +94,11 @@ public class SavingsDisplayService {
             
             // Ensure periodsRemaining is not zero or negative
             if(periodsRemaining <= 0){
-                return remainingAmount > 0 ? remainingAmount : 0.0; //If they overpaid or are at the end, remaining amount is the last payment
+                return remainingAmount.compareTo(BigDecimal.ZERO) > 0 ? remainingAmount : BigDecimal.ZERO; //(Always returning 0)If they overpaid or are at the end, remaining amount is the last payment 
             }
             return remainingAmount/periodsRemaining;
         }
-        return 0.0;                
+        return BigDecimal.ZERO;               
     }
     public SavingsProgressResponse getSavingsProgress(UUID planUuid){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
@@ -104,10 +106,10 @@ public class SavingsDisplayService {
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
-            Double totalDeposited = paymentService.calculateTotalDeposit(planUuid);
-            Double balanceAmount = savingsPlan.getAmount() - totalDeposited;
+            BigDecimal totalDeposited = paymentService.calculateTotalDeposit(planUuid);
+            BigDecimal balanceAmount = savingsPlan.getAmount() - totalDeposited;
             double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
-            double newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
+            BigDecimal newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
 
             //this is the dynamic expected payment using remaining amount
             return new SavingsProgressResponse(

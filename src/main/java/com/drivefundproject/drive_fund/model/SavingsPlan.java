@@ -35,7 +35,7 @@ public class SavingsPlan {
 
     private UUID planUuid;
 
-    private Double amount;
+    private BigDecimal amount;
     private Integer timeline; 
 
     private LocalDate creationDate;

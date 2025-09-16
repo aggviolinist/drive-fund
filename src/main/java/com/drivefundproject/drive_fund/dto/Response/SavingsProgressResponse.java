@@ -1,5 +1,6 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -12,10 +13,10 @@ import lombok.Setter;
 public class SavingsProgressResponse {
     private UUID planUUid;
     private String productName;
-    private Double targetAmount;
-    private Double totalDeposited;
-    private Double remainingAmount;
-    private Double newExpectedPayment;
+    private BigDecimal targetAmount;
+    private BigDecimal totalDeposited;
+    private BigDecimal remainingAmount;
+    private BigDecimal newExpectedPayment;
     private double percentageCompleted;
     
 }

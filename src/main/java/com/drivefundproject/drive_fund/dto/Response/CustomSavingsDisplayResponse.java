@@ -18,7 +18,7 @@ public class CustomSavingsDisplayResponse {
     //private String firstname;
     //private String imageUrl;
     private String productname;
-    private Double amount;
+    private BigDecimal amount;
     private Integer timeline;
     private LocalDate creationDate;
     private LocalDate targetCompletionDate;

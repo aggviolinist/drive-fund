@@ -1,5 +1,6 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -19,10 +20,10 @@ public class SavingsPlanCheckoutResponse {
    // private Integer product_id;
     private UUID planUuid; 
     private String product_name;
-    private Double amount;
+    private BigDecimal amount;
     private Integer timeline;
     private LocalDate creationDate;
     private LocalDate targetCompletionDate;
     private Frequency frequency;
-    private Double expectedPayment;
+    private BigDecimal expectedPayment;
 }
