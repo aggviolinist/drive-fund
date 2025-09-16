@@ -84,12 +84,16 @@ public class SavingsDisplayService {
             //this is how many payments have been made
             //long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
 
-            // Remaining periods are the total periods minus payments made
+            //We need to avoid negative expected values
+            if(remainingAmount.compareTo(BigDecimal.ZERO) <= 0){
+                return BigDecimal.Zero;
+            }
+            // Remaining periods are the total periods minus the elapsedperiods
             long periodsRemaining = totalPeriods - elapsedPeriods;
             
             // Ensure periodsRemaining is not zero or negative
             if(periodsRemaining <= 0){
-                return remainingAmount.compareTo(BigDecimal.ZERO) > 0 ? remainingAmount : BigDecimal.ZERO; //(Always returning 0)If they overpaid or are at the end, remaining amount is the last payment 
+                return remainingAmount;//.compareTo(BigDecimal.ZERO) > 0 ? remainingAmount : BigDecimal.ZERO; //(Always returning 0)If they overpaid or are at the end, remaining amount is the last payment 
             }
             return remainingAmount.divide(new BigDecimal(periodsRemaining),0,RoundingMode.HALF_UP);
         }
