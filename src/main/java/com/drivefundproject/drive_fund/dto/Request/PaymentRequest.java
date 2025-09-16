@@ -1,5 +1,7 @@
 package com.drivefundproject.drive_fund.dto.Request;
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 

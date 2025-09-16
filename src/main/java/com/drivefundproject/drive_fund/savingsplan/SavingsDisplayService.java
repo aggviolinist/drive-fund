@@ -33,7 +33,6 @@ public class SavingsDisplayService {
     }
     public BigDecimal calculateInitialExpectedPayment(SavingsPlan savingsPlan){
         BigDecimal totalAmount = savingsPlan.getAmount();
-        int timelineInMonths = savingsPlan.getTimeline();
         Frequency frequency = savingsPlan.getFrequency();
         long numberOfPeriods;
 
@@ -59,44 +58,40 @@ public class SavingsDisplayService {
         return totalAmount.divide(new BigDecimal (numberOfPeriods),0, RoundingMode.HALF_UP);
 
     }
+    //Calculates new expected payment on time basis and not on period basis. Self adjust every month
     public BigDecimal calculateDynamicExpectedPayment(UUID planUuid, BigDecimal remainingAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
-            //Wrong approach, I used time instead of periods
-            // if(latestPayment.isPresent()){
-            //     startDateForCalculation = latestPayment.get().getPaymentDate();
-            // }
-            // else{
-            //     //if no payments have been made, use the plan's creation date
-            //     startDateForCalculation = savingsPlan.getCreationDate();
-            // }            
-            //Calculate total number of periods in plan's lifetime
             long totalPeriods;
+            long elapsedPeriods;
             if(savingsPlan.getFrequency() == Frequency.DAILY){
                 totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
+                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.DAYS);
             }
             else if(savingsPlan.getFrequency() == Frequency.WEEKLY){
                 totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.WEEKS);
+                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.WEEKS);
             }
             else if(savingsPlan.getFrequency() == Frequency.MONTHLY){
                 totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.MONTHS);
+                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.MONTHS);
             }
             else{
                 return BigDecimal.ZERO;
             }
             //this is how many payments have been made
-            long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
+            //long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
 
             // Remaining periods are the total periods minus payments made
-            long periodsRemaining = totalPeriods - paymentsMade;
+            long periodsRemaining = totalPeriods - elapsedPeriods;
             
             // Ensure periodsRemaining is not zero or negative
             if(periodsRemaining <= 0){
                 return remainingAmount.compareTo(BigDecimal.ZERO) > 0 ? remainingAmount : BigDecimal.ZERO; //(Always returning 0)If they overpaid or are at the end, remaining amount is the last payment 
             }
-            return remainingAmount/periodsRemaining;
+            return remainingAmount.divide(new BigDecimal(periodsRemaining),0,RoundingMode.HALF_UP);
         }
         return BigDecimal.ZERO;               
     }
@@ -107,7 +102,7 @@ public class SavingsDisplayService {
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
             BigDecimal totalDeposited = paymentService.calculateTotalDeposit(planUuid);
-            BigDecimal balanceAmount = savingsPlan.getAmount() - totalDeposited;
+            BigDecimal balanceAmount = savingsPlan.getAmount().subtract(totalDeposited);
             double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
             BigDecimal newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
 

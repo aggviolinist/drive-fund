@@ -1,5 +1,6 @@
 package com.drivefundproject.drive_fund.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 

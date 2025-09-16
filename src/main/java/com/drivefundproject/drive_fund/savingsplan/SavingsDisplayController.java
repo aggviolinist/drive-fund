@@ -14,6 +14,7 @@ import com.drivefundproject.drive_fund.model.User;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -76,7 +77,7 @@ public class SavingsDisplayController {
             return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Access Denied", null);
         }
         //Display the expected amount from the service method
-        double expectedPayment = savingsDisplayService.calculateInitialExpectedPayment(savingsPlan);
+        BigDecimal expectedPayment = savingsDisplayService.calculateInitialExpectedPayment(savingsPlan);
 
         //Map data from SavingsPlan and expected amount from the new DTO
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(

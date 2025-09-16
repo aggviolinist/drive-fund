@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -52,11 +53,11 @@ public class PaymentService {
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
             BigDecimal totalDeposits = calculateTotalDeposit(planUuid);
-            BigDecimal remainingAmount = savingsPlan.getAmount() - totalDeposits;
+            BigDecimal remainingAmount = savingsPlan.getAmount().subtract(totalDeposits);
             //return savingsPlan.getAmount() - totalDeposits;
         
-            if(remainingAmount<0){
-                return 0.0;
+            if(remainingAmount.compareTo(BigDecimal.ZERO) < 0){
+                return BigDecimal.ZERO;
             }
             else{
                 return remainingAmount;
@@ -72,10 +73,10 @@ public class PaymentService {
             BigDecimal totalDeposits = calculateTotalDeposit(planUuid);
             BigDecimal targetAmount = savingsPlan.getAmount();
 
-            if(targetAmount <=0){
+            if(targetAmount.compareTo(BigDecimal.ZERO) <= 0){
                 return 0.0;
             }
-            double percentage = (totalDeposits/targetAmount) * 100;
+            double percentage = totalDeposits.divide(targetAmount, 4, RoundingMode.HALF_UP).doubleValue() * 100;
             //Ensuring the percentage doesn't exceed 100% incasea user overpays
             return Math.min(percentage, 100.0);
         }

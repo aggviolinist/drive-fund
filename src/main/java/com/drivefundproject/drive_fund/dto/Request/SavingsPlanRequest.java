@@ -1,5 +1,6 @@
 package com.drivefundproject.drive_fund.dto.Request;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.drivefundproject.drive_fund.model.Frequency;
