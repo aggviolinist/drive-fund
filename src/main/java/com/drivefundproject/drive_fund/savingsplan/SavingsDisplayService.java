@@ -136,12 +136,12 @@ public class SavingsDisplayService {
             }
 
             //Inital expected contribution per period
-            BigDecimal initialPerPeriod = targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
+            BigDecimal initialPerPeriod = calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
 
             //Expected till now
-            BigDecimal expectedTillnow = initialPerPeriod.multiply(new BigDecimal(elapsedPeriods));
+            BigDecimal expectedAsPerYourSavingsFrequency = initialPerPeriod.multiply(new BigDecimal(elapsedPeriods));
             BigDecimal paidTillNow = totalDeposited;
-            BigDecimal arrears = expectedTillnow.subtract(paidTillNow);
+            BigDecimal arrears = expectedAsPerYourSavingsFrequency.subtract(paidTillNow);
 
             //Smooth adjustment for new expected
             long remainingPeriods = totalPeriods - elapsedPeriods;
@@ -165,10 +165,10 @@ public class SavingsDisplayService {
                 savingsPlan.getPlanUuid(),
                 savingsPlan.getCatalogue().getProductname(),
                 targetAmount,
-                totalDeposited,
-                balanceAmount,
-                expectedTillnow,
                 paidTillNow,
+                //totalDeposited,
+                balanceAmount,
+                expectedAsPerYourSavingsFrequency,
                 arrears,
                 newExpectedPayment,
                 Math.min(percentageCompleted,100.0),
