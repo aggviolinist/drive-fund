@@ -109,6 +109,8 @@ public class SavingsDisplayService {
             BigDecimal totalDeposited = paymentService.calculateTotalDeposit(planUuid);
             BigDecimal balanceAmount = savingsPlan.getAmount().subtract(totalDeposited);
             double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
+            long roundedPecentage = (long) Math.min(percentageCompleted,100.0);
+
             BigDecimal newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
             String note;
 
@@ -136,12 +138,12 @@ public class SavingsDisplayService {
             }
 
             //Inital expected contribution per period
-            BigDecimal initialPerPeriod = calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
+            BigDecimal initialAmountPerPeriod = calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
 
             //Expected till now
-            BigDecimal expectedAsPerYourSavingsFrequency = initialPerPeriod.multiply(new BigDecimal(elapsedPeriods));
+            BigDecimal expectedAmountAsPerYourSavingsFrequency = initialAmountPerPeriod.multiply(new BigDecimal(elapsedPeriods));
             BigDecimal paidTillNow = totalDeposited;
-            BigDecimal arrears = expectedAsPerYourSavingsFrequency.subtract(paidTillNow);
+            BigDecimal arrears = expectedAmountAsPerYourSavingsFrequency.subtract(paidTillNow);
 
             //Smooth adjustment for new expected
             long remainingPeriods = totalPeriods - elapsedPeriods;
@@ -168,10 +170,10 @@ public class SavingsDisplayService {
                 paidTillNow,
                 //totalDeposited,
                 balanceAmount,
-                expectedAsPerYourSavingsFrequency,
+                expectedAmountAsPerYourSavingsFrequency,
                 arrears,
                 newExpectedPayment,
-                Math.min(percentageCompleted,100.0),
+                roundedPecentage,
                 note
                 );
 

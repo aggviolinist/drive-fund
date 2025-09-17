@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.model.Payment;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
+import com.drivefundproject.drive_fund.model.Status;
 import com.drivefundproject.drive_fund.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 
@@ -37,12 +38,26 @@ public class PaymentService {
                 throw new IllegalArgumentException("Payment amount exceeds the remaining savings goal. The remaining amount is:" + targetAmount.subtract(currentTotalDeposited));
 
             }
+            //IN-PROGRESS Status Logic
+            if(savingsPlan.getStatus() == Status.PENDING){
+                savingsPlan.setStatus(Status.IN_PROGRESS);
+                savingsPlanRepository.save(savingsPlan);
+            }
+
             Payment payment = new Payment();
             payment.setSavingsPlan(savingsPlan);
             payment.setAmount(paymentAmount);
             payment.setPaymentDate(LocalDate.now());
 
             paymentRepository.save(payment);
+
+            //COMPLETE status logic
+            BigDecimal updatedTotalDeposits = calculateTotalDeposit(planUuid);
+            if(updatedTotalDeposits.compareTo(targetAmount) >=0 ){
+                savingsPlan.setStatus(Status.COMPLETED);
+                savingsPlanRepository.save(savingsPlan);
+            }
+
         }
         else{
             throw new IllegalArgumentException("Savings Plan not found");
