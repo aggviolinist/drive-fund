@@ -105,20 +105,74 @@ public class SavingsDisplayService {
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
+            BigDecimal targetAmount = savingsPlan.getAmount();
             BigDecimal totalDeposited = paymentService.calculateTotalDeposit(planUuid);
             BigDecimal balanceAmount = savingsPlan.getAmount().subtract(totalDeposited);
             double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
             BigDecimal newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
+            String note;
+
+            ChronoUnit unit;
+
+            if(savingsPlan.getFrequency() == Frequency.DAILY){
+                unit = ChronoUnit.DAYS;
+            }
+            else if(savingsPlan.getFrequency() == Frequency.WEEKLY){
+                unit = ChronoUnit.WEEKS;
+            }
+            else if(savingsPlan.getFrequency() == Frequency.MONTHLY){
+                unit = ChronoUnit.MONTHS;
+            }
+            else{
+                throw new IllegalArgumentException("Unsupported frequency");
+            }
+
+            //Total and Elapsed periods
+            long totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), unit);
+            long elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), unit);
+
+            if(totalPeriods <= 0){
+                totalPeriods = 1;
+            }
+
+            //Inital expected contribution per period
+            BigDecimal initialPerPeriod = targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
+
+            //Expected till now
+            BigDecimal expectedTillnow = initialPerPeriod.multiply(new BigDecimal(elapsedPeriods));
+            BigDecimal paidTillNow = totalDeposited;
+            BigDecimal arrears = expectedTillnow.subtract(paidTillNow);
+
+            //Smooth adjustment for new expected
+            long remainingPeriods = totalPeriods - elapsedPeriods;
+            if(remainingPeriods <= 0){
+                remainingPeriods = 1;
+            }
+            //Friendly note
+            if(arrears.compareTo(BigDecimal.ZERO) > 0){
+                note = "You are behind by" + arrears + ". The remaining amount has been redistributed as " +newExpectedPayment + "per" + savingsPlan.getFrequency().name().toLowerCase() + " to still meet your goal.";
+            }
+            else if(arrears.compareTo(BigDecimal.ZERO) < 0){
+                note = "You are ahead by " + arrears.abs() + ". Your future payments are reduced to " + newExpectedPayment + "per" +savingsPlan.getFrequency().name().toLowerCase() + ".";
+            }
+            else{
+                note = "You are on track. Your future expected payment is"+ newExpectedPayment + "per" + savingsPlan.getFrequency().name().toLowerCase() + ".";
+            }
+
 
             //this is the dynamic expected payment using remaining amount
             return new SavingsProgressResponse(
                 savingsPlan.getPlanUuid(),
                 savingsPlan.getCatalogue().getProductname(),
-                savingsPlan.getAmount(),
+                targetAmount,
                 totalDeposited,
                 balanceAmount,
+                expectedTillnow,
+                paidTillNow,
+                arrears,
                 newExpectedPayment,
-                Math.min(percentageCompleted,100.0)
+                Math.min(percentageCompleted,100.0),
+                note
                 );
 
         }

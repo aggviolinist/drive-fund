@@ -12,6 +12,8 @@ import com.drivefundproject.drive_fund.dto.Response.CustomSavingsDisplayResponse
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
@@ -95,7 +97,7 @@ public class SavingsDisplayController {
         return ResponseHandler.generateResponse(HttpStatus.OK, "Checkout details fetched successfully", checkoutResponse);
     }
     @PostMapping("/payment/{planUuid}")
-        public ResponseEntity<Object> recordPayment(@AuthenticationPrincipal User user, @PathVariable UUID planUuid, @RequestBody PaymentRequest paymentRequest){
+        public ResponseEntity<Object> recordPayment(@AuthenticationPrincipal User user, @PathVariable UUID planUuid, @Valid @RequestBody PaymentRequest paymentRequest){
             if(user == null){
                 return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,"User not authenticated" , null);
             }

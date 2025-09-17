@@ -16,6 +16,8 @@ import com.drivefundproject.drive_fund.dto.Response.CatalogueViewAllResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.model.Catalogue;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/product")
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class CatalogueController {
     private final CatalogueService catalogueService;
 
     @PostMapping("/add-products")
-    public ResponseEntity<Object> addProduct(@RequestBody CatalogueRequest catalogueAddition) {
+    public ResponseEntity<Object> addProduct(@Valid @RequestBody CatalogueRequest catalogueAddition) {
         try{
         // Delegate all logic to the service layer
         Catalogue newProduct = catalogueService.addProduct(catalogueAddition);
