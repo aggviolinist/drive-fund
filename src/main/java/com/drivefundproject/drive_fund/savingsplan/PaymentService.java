@@ -44,6 +44,7 @@ public class PaymentService {
                 savingsPlanRepository.save(savingsPlan);
             }
 
+            //Adding new paymen
             Payment payment = new Payment();
             payment.setSavingsPlan(savingsPlan);
             payment.setAmount(paymentAmount);
