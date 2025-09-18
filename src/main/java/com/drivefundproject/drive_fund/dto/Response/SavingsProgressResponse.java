@@ -3,6 +3,8 @@ package com.drivefundproject.drive_fund.dto.Response;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.drivefundproject.drive_fund.model.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +23,7 @@ public class SavingsProgressResponse {
     private BigDecimal arrears;
     private BigDecimal newExpectedPayment;
     private double percentageCompleted;
+    private Status status;
     private String note;
     
 }

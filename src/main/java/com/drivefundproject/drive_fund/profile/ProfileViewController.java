@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Request.UserProfileRequest;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+import com.drivefundproject.drive_fund.dto.Response.UserProfileResponse;
 import com.drivefundproject.drive_fund.model.User;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class ProfileViewController {
         User currentUser = (User) authentication.getPrincipal();
         Integer userId = currentUser.getId();   
          
-        UserProfileRequest response = profileViewService.getProfileViewDetails(userId);
+        UserProfileResponse response = profileViewService.getProfileViewDetails(userId);
         return ResponseHandler.generateResponse(HttpStatus.OK, "User profile fetched successfully",response);
     }
 }

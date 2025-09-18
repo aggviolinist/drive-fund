@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.dto.Request.CatalogueRequest;
-import com.drivefundproject.drive_fund.dto.Request.UserProfileRequest;
 import com.drivefundproject.drive_fund.model.Catalogue;
 import com.drivefundproject.drive_fund.repository.CatalogueRepository;
 

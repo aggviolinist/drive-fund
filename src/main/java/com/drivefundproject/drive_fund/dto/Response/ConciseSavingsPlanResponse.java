@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import com.drivefundproject.drive_fund.model.Frequency;
+import com.drivefundproject.drive_fund.model.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class ConciseSavingsPlanResponse {
     private LocalDate creationDate;
     private LocalDate targetCompletionDate;
     private Frequency frequency;
+    private Status status;
     //private Double expectedPayment;
     private CustomCataloguePlanResponse catalogueResponse;
     private CustomUserSavingsPlanResponse userSavingsPlanResponse;

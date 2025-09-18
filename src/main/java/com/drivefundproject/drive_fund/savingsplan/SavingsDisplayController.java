@@ -9,6 +9,8 @@ import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.dto.Response.SavingsPlanCheckoutResponse;
 import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.dto.Response.CustomSavingsDisplayResponse;
+import com.drivefundproject.drive_fund.dto.Response.PaymentResponse;
+import com.drivefundproject.drive_fund.model.Payment;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.User;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
@@ -83,8 +85,6 @@ public class SavingsDisplayController {
 
         //Map data from SavingsPlan and expected amount from the new DTO
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
-            //savingsPlan.getId(),
-            //savingsPlan.getUuid(),
             savingsPlan.getPlanUuid(),
             savingsPlan.getCatalogue().getProductname(),
             savingsPlan.getAmount(),
@@ -92,6 +92,7 @@ public class SavingsDisplayController {
             savingsPlan.getCreationDate(),
             savingsPlan.getTargetCompletionDate(),
             savingsPlan.getFrequency(),
+            savingsPlan.getStatus(),
             expectedPayment
         );
         return ResponseHandler.generateResponse(HttpStatus.OK, "Checkout details fetched successfully", checkoutResponse);
@@ -106,8 +107,16 @@ public class SavingsDisplayController {
                 return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Acess Denied or The Savings plan was not found" , null);
             }
             try{
-                paymentService.recordPaymentDeposit(planUuid, paymentRequest.getAmount());
-                return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", null);
+              Payment newpaymentResponse = paymentService.recordPaymentDeposit(planUuid, paymentRequest.getAmount());
+              PaymentResponse paymentResponse = new PaymentResponse(
+                newpaymentResponse.getSavingsPlan().getPlanUuid(),
+                newpaymentResponse.getPaymentUuid(),
+                newpaymentResponse.getAmount(),
+                newpaymentResponse.getPaymentDate(),
+                newpaymentResponse.getPaymentMethod(),
+                newpaymentResponse.getTransactionId());
+
+                return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", paymentResponse);
             }
             catch(IllegalArgumentException e){
                 return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,e.getMessage(), null);

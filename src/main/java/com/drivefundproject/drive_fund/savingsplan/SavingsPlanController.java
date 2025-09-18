@@ -58,6 +58,7 @@ public class SavingsPlanController {
           newSavingsPlan.getCreationDate(),
           newSavingsPlan.getTargetCompletionDate(),
           newSavingsPlan.getFrequency(),
+          newSavingsPlan.getStatus(),
           catalogueResponse,
           userSavingsPlanResponse
         );

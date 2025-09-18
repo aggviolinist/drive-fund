@@ -32,7 +32,8 @@ public class ConciseSavingsDisplayResponse {
             plan.getTimeline(),
             plan.getCreationDate(),
             plan.getTargetCompletionDate(),
-            plan.getFrequency()
+            plan.getFrequency(),
+            plan.getStatus()
           ))
           .collect(Collectors.toList());
 

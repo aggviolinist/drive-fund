@@ -24,7 +24,7 @@ public class PaymentService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
 
-    public void recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
+    public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
         //We want to avoid overpayment 
         if(retrievedSavingsPlan.isPresent()){
@@ -50,7 +50,7 @@ public class PaymentService {
             payment.setAmount(paymentAmount);
             payment.setPaymentDate(LocalDate.now());
 
-            paymentRepository.save(payment);
+            Payment savedPayment = paymentRepository.save(payment);
 
             //COMPLETE status logic
             BigDecimal updatedTotalDeposits = calculateTotalDeposit(planUuid);
@@ -58,7 +58,7 @@ public class PaymentService {
                 savingsPlan.setStatus(Status.COMPLETED);
                 savingsPlanRepository.save(savingsPlan);
             }
-
+            return savedPayment;
         }
         else{
             throw new IllegalArgumentException("Savings Plan not found");

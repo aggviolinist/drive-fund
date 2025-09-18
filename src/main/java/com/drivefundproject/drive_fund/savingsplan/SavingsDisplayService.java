@@ -168,12 +168,12 @@ public class SavingsDisplayService {
                 savingsPlan.getCatalogue().getProductname(),
                 targetAmount,
                 paidTillNow,
-                //totalDeposited,
                 balanceAmount,
                 expectedAmountAsPerYourSavingsFrequency,
                 arrears,
                 newExpectedPayment,
                 roundedPecentage,
+                savingsPlan.getStatus(),
                 note
                 );
 

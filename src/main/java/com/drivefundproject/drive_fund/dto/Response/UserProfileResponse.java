@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.dto.Request;
+package com.drivefundproject.drive_fund.dto.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfileRequest {
+public class UserProfileResponse {
     private String firstname;
     private String imageUrl;
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.cglib.core.Local;
 
 import com.drivefundproject.drive_fund.model.Frequency;
+import com.drivefundproject.drive_fund.model.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +26,6 @@ public class SavingsPlanCheckoutResponse {
     private LocalDate creationDate;
     private LocalDate targetCompletionDate;
     private Frequency frequency;
+    private Status status;
     private BigDecimal expectedPayment;
 }
