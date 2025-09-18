@@ -24,6 +24,7 @@ public class SavingsProgressResponse {
     private BigDecimal newExpectedPayment;
     private double percentageCompleted;
     private Status status;
+    private String timeRemaining;
     private String note;
     
 }

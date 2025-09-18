@@ -161,6 +161,25 @@ public class SavingsDisplayService {
                 note = "You are on track. Your future expected payment is"+ newExpectedPayment + "per" + savingsPlan.getFrequency().name().toLowerCase() + ".";
             }
 
+            //Countdown Calculation
+            LocalDate currentDate = LocalDate.now();
+            LocalDate targetDate = savingsPlan.getTargetCompletionDate();
+            String countDown;
+
+            if(targetDate.isAfter(currentDate)){
+                long daysRemaining = ChronoUnit.DAYS.between(currentDate, targetDate);
+
+                if(daysRemaining < 7){
+                    countDown = daysRemaining + "day(s) remaining";
+                }
+                else{
+                    long weeksRemaining = ChronoUnit.WEEKS.between(currentDate, targetDate);
+                    countDown = weeksRemaining + " week(s) remaining";
+                }
+            }else{
+                countDown = "You reached your goal!";
+            }
+
 
             //this is the dynamic expected payment using remaining amount
             return new SavingsProgressResponse(
@@ -174,6 +193,7 @@ public class SavingsDisplayService {
                 newExpectedPayment,
                 roundedPecentage,
                 savingsPlan.getStatus(),
+                countDown,
                 note
                 );
 
