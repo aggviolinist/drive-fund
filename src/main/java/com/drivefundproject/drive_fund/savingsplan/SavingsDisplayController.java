@@ -114,7 +114,8 @@ public class SavingsDisplayController {
                 newpaymentResponse.getAmount(),
                 newpaymentResponse.getPaymentDate(),
                 newpaymentResponse.getPaymentMethod(),
-                newpaymentResponse.getTransactionId());
+                newpaymentResponse.getTransactionId(),
+                newpaymentResponse.getSavingsPlan().getStatus());
 
                 return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", paymentResponse);
             }

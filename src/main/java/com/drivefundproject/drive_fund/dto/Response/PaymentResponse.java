@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.drivefundproject.drive_fund.model.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +15,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentResponse {
     private UUID planUuid;
-    private UUID payment_uuid;
+    private UUID paymentUuid;
     private BigDecimal amount;
     private LocalDate payment_date;
     private String payment_method;
     private String transaction_id;
+    private Status status;
 
 
 
