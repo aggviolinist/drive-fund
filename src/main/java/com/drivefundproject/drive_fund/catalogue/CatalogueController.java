@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.drivefundproject.drive_fund.dto.Request.CatalogueRequest;
@@ -20,6 +21,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/product")
+@PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
 public class CatalogueController {
 

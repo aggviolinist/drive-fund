@@ -2,6 +2,7 @@ package com.drivefundproject.drive_fund.savingsplan;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/savings")
+@PreAuthorize("hasRole('USER')") 
 public class SavingsPlanController {
 
     private final SavingsPlanService savingsPlanService;
@@ -66,7 +68,5 @@ public class SavingsPlanController {
       } catch (RuntimeException e){
         return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "This savings plan already exists, Create a new plan", null);
       }
-
-    }
-    
+    }   
 }
