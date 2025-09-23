@@ -67,7 +67,7 @@ public class SecurityConfiguration {
 
 
             //.requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()  
-            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")          
+            //.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")          
             .anyRequest().authenticated()
         )
         // 3. New, functional way to manage sessions

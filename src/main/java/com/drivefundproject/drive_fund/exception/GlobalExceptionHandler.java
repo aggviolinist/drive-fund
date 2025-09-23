@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("status", 403);
+        body.put("status", HttpStatus.FORBIDDEN.value());
         body.put("message", "Access Denied"); //+ request.getRequestURI());
         body.put("data", null);
 
