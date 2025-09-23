@@ -141,9 +141,9 @@ public class SavingsDisplayService {
             BigDecimal initialAmountPerPeriod = calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
 
             //Expected till now
-            BigDecimal expectedAmountAsPerYourSavingsFrequency = initialAmountPerPeriod.multiply(new BigDecimal(elapsedPeriods));
-            BigDecimal paidTillNow = totalDeposited;
-            BigDecimal arrears = expectedAmountAsPerYourSavingsFrequency.subtract(paidTillNow);
+            BigDecimal TotalExpectedSavingsTillTodayAsPerYourSavingsFrequency = initialAmountPerPeriod.multiply(new BigDecimal(elapsedPeriods));
+            BigDecimal paidTillToday = totalDeposited;
+            BigDecimal ArrearsTillToday = TotalExpectedSavingsTillTodayAsPerYourSavingsFrequency.subtract(paidTillToday);
 
             //Smooth adjustment for new expected
             long remainingPeriods = totalPeriods - elapsedPeriods;
@@ -151,11 +151,11 @@ public class SavingsDisplayService {
                 remainingPeriods = 1;
             }
             //Friendly note
-            if(arrears.compareTo(BigDecimal.ZERO) > 0){
-                note = "You are behind by" + arrears + ". The remaining amount has been redistributed as " +newExpectedPayment + "per" + savingsPlan.getFrequency().name().toLowerCase() + " to still meet your goal.";
+            if(ArrearsTillToday.compareTo(BigDecimal.ZERO) > 0){
+                note = "You are behind by" + ArrearsTillToday + ". The remaining amount has been redistributed as " +newExpectedPayment + "per" + savingsPlan.getFrequency().name().toLowerCase() + " to still meet your goal.";
             }
-            else if(arrears.compareTo(BigDecimal.ZERO) < 0){
-                note = "You are ahead by " + arrears.abs() + ". Your future payments are reduced to " + newExpectedPayment + "per" +savingsPlan.getFrequency().name().toLowerCase() + ".";
+            else if(ArrearsTillToday.compareTo(BigDecimal.ZERO) < 0){
+                note = "You are ahead by " + ArrearsTillToday.abs() + ". Your future payments are reduced to " + newExpectedPayment + "per" +savingsPlan.getFrequency().name().toLowerCase() + ".";
             }
             else{
                 note = "You are on track. Your future expected payment is"+ newExpectedPayment + "per" + savingsPlan.getFrequency().name().toLowerCase() + ".";
@@ -186,10 +186,10 @@ public class SavingsDisplayService {
                 savingsPlan.getPlanUuid(),
                 savingsPlan.getCatalogue().getProductname(),
                 targetAmount,
-                paidTillNow,
+                paidTillToday,
                 balanceAmount,
-                expectedAmountAsPerYourSavingsFrequency,
-                arrears,
+                TotalExpectedSavingsTillTodayAsPerYourSavingsFrequency,
+                ArrearsTillToday,
                 newExpectedPayment,
                 roundedPecentage,
                 savingsPlan.getStatus(),

@@ -1,17 +1,21 @@
 package com.drivefundproject.drive_fund.exception;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -61,4 +65,16 @@ public class GlobalExceptionHandler {
             null
         );
     }
+    //Access denied global exception
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("status", 403);
+        body.put("message", "Access Denied"); //+ request.getRequestURI());
+        body.put("data", null);
+
+
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+}
+
 }

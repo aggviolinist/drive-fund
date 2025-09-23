@@ -16,11 +16,11 @@ public class SavingsProgressResponse {
     private UUID planUUid;
     private String productName;
     private BigDecimal targetAmount;
-    private BigDecimal paidTillnow;
+    private BigDecimal paidTillToday;
     private BigDecimal remainingAmount;
-    private BigDecimal expectedAsPerYourSavingsFrequency;
+    private BigDecimal TotalExpectedSavingsTillTodayAsPerYourSavingsFrequency;
     //private BigDecimal paidTillnow;
-    private BigDecimal arrears;
+    private BigDecimal ArrearsTillToday;
     private BigDecimal newExpectedPayment;
     private double percentageCompleted;
     private Status status;
