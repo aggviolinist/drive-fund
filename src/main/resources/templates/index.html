@@ -2,75 +2,130 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Real-Time Notifications</title>
+    <title>Real-Time Savings Deposit Tester</title>
+    <meta id="plan-uuid" content="00000000-0000-0000-0000-000000000001">
+
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <style>
+        body { font-family: sans-serif; }
+        .success { color: green; border: 1px solid green; padding: 10px; margin: 10px 0;}
+        .error { color: red; border: 1px solid red; padding: 10px; margin: 10px 0; }
+        .response-box { border: 1px solid #ccc; padding: 15px; margin-top: 15px; }
+        #send-form { margin-bottom: 20px; padding: 10px; border: 1px dashed #007bff; }
+    </style>
 </head>
 <body>
-    <h1>Real-Time Notifications</h1>
+    <h1>Real-Time Savings Deposit Tester</h1>
+    <div id="connection-status">Not Connected</div>
 
     <div id="send-form">
-        <textarea id="message-input" placeholder="Type your message here..." rows="4" cols="50"></textarea>
-        <br>
-        <button onclick="sendMessage()">Send Notification</button>
+        <h2>Make a Deposit (Test)</h2>
+        <label for="deposit-amount">Deposit Amount:</label>
+        <input type="number" id="deposit-amount" placeholder="e.g., 100.00" value="500" step="0.01">
+        <br><br>
+        <button onclick="sendDeposit()">Send Deposit</button>
     </div>
 
-    <h2>Notifications Received:</h2>
-    <div id="notifications"></div>
-
+    <h2>Latest Savings Progress:</h2>
+    <div id="progress-display">Waiting for deposit...</div>
 
     <script>
         let stompClient = null;
         const SOCKET_URL = 'http://localhost:8080/ws'; 
+        const PROGRESS_TOPIC = '/topic/progress'; // Matches @SendTo in the new controller
+        const DEPOSIT_DESTINATION = '/app/deposit'; // Matches /app prefix + @MessageMapping in the new controller
 
-        // ----------------------------------------------------
-        // Connection Logic
-        // ----------------------------------------------------
+        // --- Utility Functions ---
+
+        function updateStatus(message, isError = false) {
+            const statusElement = document.getElementById('connection-status');
+            statusElement.textContent = message;
+            statusElement.style.color = isError ? 'red' : 'green';
+        }
+
+        function displayProgress(progressJson) {
+            const display = document.getElementById('progress-display');
+            
+            try {
+                const progress = JSON.parse(progressJson);
+                
+                // Handle the custom error message from the server
+                if (progress.error) {
+                    display.innerHTML = `<div class="error">Server Error: ${progress.error}</div>`;
+                    return;
+                }
+
+                // Format the output to be readable
+                display.innerHTML = `
+                    <div class="response-box success">
+                        <h3>Deposit Successful!</h3>
+                        <p><strong>Goal:</strong> ${progress.productname}</p>
+                        <p><strong>Target Amount:</strong> $${progress.targetAmount}</p>
+                        <p><strong>Total Deposited:</strong> <strong style="color: blue;">$${progress.paidTillToday}</strong></p>
+                        <p><strong>Balance Remaining:</strong> $${progress.balanceAmount}</p>
+                        <p><strong>Progress:</strong> ${progress.roundedPecentage}% Completed</p>
+                        <p><strong>Next Expected Payment:</strong> $${progress.newExpectedPayment} per ${progress.frequency ? progress.frequency.toLowerCase() : 'period'}</p>
+                        <p><strong>Note:</strong> ${progress.note}</p>
+                        <p><strong>Countdown:</strong> ${progress.countDown}</p>
+                        <hr>
+                        <details>
+                            <summary>View Full JSON Response</summary>
+                            <pre>${JSON.stringify(progress, null, 2)}</pre>
+                        </details>
+                    </div>
+                `;
+            } catch (e) {
+                console.error("Error parsing/displaying response:", e);
+                display.innerHTML = `<div class="error">Received invalid data: <pre>${progressJson}</pre></div>`;
+            }
+        }
+
+        // --- Connection Logic ---
+
         function connect() {
-            const socket = new SockJS(SOCKET_URL);
+            const socket = new SockJS(SOCKET_URL); // SockJS handles fallbacks
             stompClient = Stomp.over(socket);
 
             stompClient.connect({}, function (frame) {
-                console.log('Connected: ' + frame); 
+                updateStatus('Connected to Spring Boot Server', false);
+                console.log('Connected: ' + frame);
                 
-                // Subscribe to the public topic defined in your controller's @SendTo
-                stompClient.subscribe('/topic/notifications', function (notificationMessage) {
-                    showNotification(notificationMessage.body); 
+                // Subscribe to the topic where the server sends the progress update
+                stompClient.subscribe(PROGRESS_TOPIC, function (progressMessage) {
+                    // progressMessage.body is the JSON string from the server
+                    displayProgress(progressMessage.body); 
                 });
 
             }, function (error) {
+                updateStatus('Connection Error: ' + error, true);
                 console.error('WebSocket connection error: ' + error); 
             });
         }
 
-        // ----------------------------------------------------
-        // Sending Message Logic (NEW FUNCTION)
-        // ----------------------------------------------------
-        function sendMessage() {
-            const inputElement = document.getElementById('message-input');
-            const message = inputElement.value.trim();
+        // --- Sending Deposit Logic ---
 
-            if (message && stompClient) {
-                // The destination matches your Application Prefix + MessageMapping: /app/sendMessage
-                stompClient.send("/app/sendMessaging", {}, message); 
-                console.log("Sent message: " + message);
-                
-                // Clear the input area after sending
-                inputElement.value = ''; 
-            } else if (!stompClient) {
-                console.error("STOMP client not connected.");
+        function sendDeposit() {
+            const amountInput = document.getElementById('deposit-amount');
+            const amount = parseFloat(amountInput.value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid deposit amount.");
+                return;
             }
-        }
 
-        // ----------------------------------------------------
-        // Display Logic
-        // ----------------------------------------------------
-        function showNotification(message) {
-            const notifications = document.getElementById('notifications');
-            const notification = document.createElement('p');
-            // Display the time along with the message
-            notification.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            notifications.prepend(notification); // Use prepend to show new messages at the top
+            if (stompClient && stompClient.connected) {
+                // Construct the JSON message payload expected by the Spring controller
+                const depositMessage = JSON.stringify({ 'amount': amount });
+
+                // Send the JSON string to the Spring @MessageMapping destination
+                stompClient.send(DEPOSIT_DESTINATION, {}, depositMessage); 
+                console.log("Sent deposit message to " + DEPOSIT_DESTINATION + ": " + depositMessage);
+                
+            } else {
+                updateStatus("STOMP client not connected. Reconnecting...", true);
+                connect(); // Try to reconnect if not connected
+            }
         }
 
         // Initialize connection when the page loads
