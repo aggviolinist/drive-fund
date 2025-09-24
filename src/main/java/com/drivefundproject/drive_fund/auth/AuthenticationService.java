@@ -58,6 +58,7 @@ public class AuthenticationService {
 // Moving this to controller seperation of concerns principle -------->TokenResponse tokenResponse = TokenResponse.builder()
     return TokenResponse.builder()
     .token(jwtToken)
+    .role(user.getRole())
     .build();
     // return TokenResponse.builder()
     //     .token(jwtToken)
@@ -78,6 +79,7 @@ public TokenResponse login(loginRequest request) {
 //Moving this to Controller seperation of concerns principle ----------->> TokenResponse tokenResponse = TokenResponse.builder()
     return TokenResponse.builder()
     .token(jwtToken)
+    .role(user.getRole())
     .build();
 
     // return TokenResponse.builder()
