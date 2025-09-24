@@ -52,7 +52,7 @@
 
             if (message && stompClient) {
                 // The destination matches your Application Prefix + MessageMapping: /app/sendMessage
-                stompClient.send("/app/sendMessage", {}, message); 
+                stompClient.send("/app/sendMessaging", {}, message); 
                 console.log("Sent message: " + message);
                 
                 // Clear the input area after sending
