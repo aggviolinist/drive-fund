@@ -19,7 +19,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import static org.springframework.security.config.Customizer.withDefaults; // Add this line
+import static org.springframework.security.config.Customizer.withDefaults; 
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,7 +61,7 @@ public class SecurityConfiguration {
         "/v3/api-docs","/api/v1/auth/**", "/api/v1/auth/register", "/api/v1/auth/login","/v2/api-docs",
 			"/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 			"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html",
-			"/api/test/**", "/authenticate"
+			"/api/test/**", "/authenticate", "/web/sockets/**", "/ws/**"
         ).permitAll()
         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 

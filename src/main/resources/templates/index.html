@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Notifications</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+    <h1>Real-Time Notifications</h1>
+
+    <div id="send-form">
+        <textarea id="message-input" placeholder="Type your message here..." rows="4" cols="50"></textarea>
+        <br>
+        <button onclick="sendMessage()">Send Notification</button>
+    </div>
+
+    <h2>Notifications Received:</h2>
+    <div id="notifications"></div>
+
+
+    <script>
+        let stompClient = null;
+        const SOCKET_URL = 'http://localhost:8080/ws'; 
+
+        // ----------------------------------------------------
+        // Connection Logic
+        // ----------------------------------------------------
+        function connect() {
+            const socket = new SockJS(SOCKET_URL);
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame); 
+                
+                // Subscribe to the public topic defined in your controller's @SendTo
+                stompClient.subscribe('/topic/notifications', function (notificationMessage) {
+                    showNotification(notificationMessage.body); 
+                });
+
+            }, function (error) {
+                console.error('WebSocket connection error: ' + error); 
+            });
+        }
+
+        // ----------------------------------------------------
+        // Sending Message Logic (NEW FUNCTION)
+        // ----------------------------------------------------
+        function sendMessage() {
+            const inputElement = document.getElementById('message-input');
+            const message = inputElement.value.trim();
+
+            if (message && stompClient) {
+                // The destination matches your Application Prefix + MessageMapping: /app/sendMessage
+                stompClient.send("/app/sendMessage", {}, message); 
+                console.log("Sent message: " + message);
+                
+                // Clear the input area after sending
+                inputElement.value = ''; 
+            } else if (!stompClient) {
+                console.error("STOMP client not connected.");
+            }
+        }
+
+        // ----------------------------------------------------
+        // Display Logic
+        // ----------------------------------------------------
+        function showNotification(message) {
+            const notifications = document.getElementById('notifications');
+            const notification = document.createElement('p');
+            // Display the time along with the message
+            notification.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            notifications.prepend(notification); // Use prepend to show new messages at the top
+        }
+
+        // Initialize connection when the page loads
+        connect();
+    </script>
+</body>
+</html>
