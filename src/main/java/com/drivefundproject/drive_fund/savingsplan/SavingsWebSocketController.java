@@ -6,6 +6,10 @@ import java.util.UUID;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,12 +19,19 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+//@CrossOrigin("*")
+@RequestMapping("/web/sockets")
 public class SavingsWebSocketController {
     private final PaymentService paymentService;
     private final SavingsDisplayService savingsDisplayService;
     private final ObjectMapper objectMapper; //Jackson json-object, object-json
 
-    private final UUID MOCK_SAVINGS_PLAN_UUID = UUID.fromString(""); //TO DO
+    private final UUID MOCK_SAVINGS_PLAN_UUID = UUID.fromString("db6dab4e-6524-4a84-8824-2ab2c472303e"); //TO DO
+
+     @GetMapping("/messages")
+    public String getTemplate(Model model){
+        return "index";
+    }
     
     @MessageMapping("/deposit")
     @SendTo("/topic/progress")

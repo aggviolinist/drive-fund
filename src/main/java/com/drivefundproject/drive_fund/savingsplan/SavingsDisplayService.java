@@ -100,7 +100,8 @@ public class SavingsDisplayService {
         return BigDecimal.ZERO;               
     }
     public SavingsProgressResponse getSavingsProgress(UUID planUuid){
-        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+      //Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuidWithCatalogueFetch(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();

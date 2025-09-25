@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @CrossOrigin("*")
-@RequestMapping("/web/sockets")
+@RequestMapping("/web/sockets/old")
 public class NotificationController {
 
     @GetMapping("/messages")
