@@ -3,7 +3,7 @@ package com.drivefundproject.drive_fund.savingsplan;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Request.PaymentRequest;
+import com.drivefundproject.drive_fund.dto.Request.RestPaymentRequest;
 import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsDisplayResponse;
 import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
 import com.drivefundproject.drive_fund.dto.Response.SavingsPlanCheckoutResponse;
@@ -83,7 +83,7 @@ public class SavingsDisplayController {
             return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Access Denied", null);
         }
         //Display the expected amount from the service method
-        BigDecimal expectedPayment = savingsDisplayService.calculateInitialExpectedPayment(savingsPlan);
+        BigDecimal expectedPayment = paymentService.calculateInitialExpectedPayment(savingsPlan);
 
         //Map data from SavingsPlan and expected amount from the new DTO
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
@@ -100,7 +100,7 @@ public class SavingsDisplayController {
         return ResponseHandler.generateResponse(HttpStatus.OK, "Checkout details fetched successfully", checkoutResponse);
     }
     @PostMapping("/payment/{planUuid}")
-        public ResponseEntity<Object> recordPayment(@AuthenticationPrincipal User user, @PathVariable UUID planUuid, @Valid @RequestBody PaymentRequest paymentRequest){
+        public ResponseEntity<Object> recordPayment(@AuthenticationPrincipal User user, @PathVariable UUID planUuid, @Valid @RequestBody RestPaymentRequest paymentRequest){
             if(user == null){
                 return ResponseHandler.generateResponse(HttpStatus.UNAUTHORIZED,"User not authenticated" , null);
             }

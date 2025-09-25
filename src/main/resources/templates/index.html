@@ -44,34 +44,49 @@
             statusElement.style.color = isError ? 'red' : 'green';
         }
 
+        // --- UPDATED displayProgress FUNCTION ---
         function displayProgress(progressJson) {
             const display = document.getElementById('progress-display');
             
             try {
-                const progress = JSON.parse(progressJson);
+                // Now parsing the COMBINED DTO: DepositConfirmationDTO
+                const combinedResponse = JSON.parse(progressJson);
                 
                 // Handle the custom error message from the server
-                if (progress.error) {
-                    display.innerHTML = `<div class="error">Server Error: ${progress.error}</div>`;
+                if (combinedResponse.error) {
+                    display.innerHTML = `<div class="error">Server Error: ${combinedResponse.error}</div>`;
                     return;
                 }
 
+                // Destructure the nested DTOs for easier access
+                const payment = combinedResponse.paymentDetails;
+                const progress = combinedResponse.progressDetails;
+                
                 // Format the output to be readable
                 display.innerHTML = `
                     <div class="response-box success">
-                        <h3>Deposit Successful!</h3>
+                        <h3>Deposit Confirmation: ${combinedResponse.message}</h3>
+                        
+                        <h4>Payment Details</h4>
+                        <p><strong>Payment ID:</strong> ${payment.paymentUuid}</p>
+                        <p><strong>Amount Deposited:</strong> <strong style="color: blue;">$${payment.amount}</strong></p>
+                        <p><strong>Date:</strong> ${payment.payment_date}</p>
+                        <p><strong>Status:</strong> ${payment.status}</p>
+                        <hr>
+
+                        <h4>Updated Savings Progress</h4>
                         <p><strong>Goal:</strong> ${progress.productname}</p>
-                        <p><strong>Target Amount:</strong> $${progress.targetAmount}</p>
-                        <p><strong>Total Deposited:</strong> <strong style="color: blue;">$${progress.paidTillToday}</strong></p>
+                        <p><strong>Total Deposited:</strong> <strong style="color: green;">$${progress.paidTillToday}</strong></p>
                         <p><strong>Balance Remaining:</strong> $${progress.balanceAmount}</p>
                         <p><strong>Progress:</strong> ${progress.roundedPecentage}% Completed</p>
                         <p><strong>Next Expected Payment:</strong> $${progress.newExpectedPayment} per ${progress.frequency ? progress.frequency.toLowerCase() : 'period'}</p>
                         <p><strong>Note:</strong> ${progress.note}</p>
                         <p><strong>Countdown:</strong> ${progress.countDown}</p>
                         <hr>
+                        
                         <details>
                             <summary>View Full JSON Response</summary>
-                            <pre>${JSON.stringify(progress, null, 2)}</pre>
+                            <pre>${JSON.stringify(combinedResponse, null, 2)}</pre>
                         </details>
                     </div>
                 `;
@@ -80,6 +95,8 @@
                 display.innerHTML = `<div class="error">Received invalid data: <pre>${progressJson}</pre></div>`;
             }
         }
+        // --- END UPDATED displayProgress FUNCTION ---
+
 
         // --- Connection Logic ---
 
@@ -116,6 +133,7 @@
 
             if (stompClient && stompClient.connected) {
                 // Construct the JSON message payload expected by the Spring controller
+                // The key must match the 'amount' field in your SocketPaymentRequest DTO
                 const depositMessage = JSON.stringify({ 'amount': amount });
 
                 // Send the JSON string to the Spring @MessageMapping destination

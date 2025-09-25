@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaymentRequest {
+public class RestPaymentRequest {
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.01", inclusive = true, message = "Amount must be greater than 0")
     private BigDecimal amount; 

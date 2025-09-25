@@ -3,12 +3,14 @@ package com.drivefundproject.drive_fund.savingsplan;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.drivefundproject.drive_fund.model.Frequency;
 import com.drivefundproject.drive_fund.model.Payment;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.Status;
@@ -105,5 +107,75 @@ public class PaymentService {
             return Math.min(percentage, 100.0);
         }
         return 0.0;
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////
+    public BigDecimal calculateInitialExpectedPayment(SavingsPlan savingsPlan){
+        BigDecimal totalAmount = savingsPlan.getAmount();
+        Frequency frequency = savingsPlan.getFrequency();
+        long numberOfPeriods;
+
+        if(frequency == Frequency.DAILY){
+            numberOfPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
+        }
+        else if(frequency == Frequency.WEEKLY){
+            numberOfPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.WEEKS);
+        }
+        else if(frequency == Frequency.MONTHLY){
+            numberOfPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.MONTHS);
+        }
+        else {
+            //If we have an expired period or if there is an error with the dates
+            //It won't calculate anything
+            return BigDecimal.ZERO;
+        }
+        //this helps us handle misconfigured dates/start period that is same as end date
+        if(numberOfPeriods <= 0){
+            return totalAmount;
+        }
+
+        return totalAmount.divide(new BigDecimal (numberOfPeriods),0, RoundingMode.HALF_UP);
+
+    }
+
+     //Calculates new expected payment on time basis and not on period basis. Self adjust every month
+    public BigDecimal calculateDynamicExpectedPayment(UUID planUuid, BigDecimal remainingAmount){
+        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+
+        if(retrievedSavingsPlan.isPresent()){
+            SavingsPlan savingsPlan = retrievedSavingsPlan.get();
+            long totalPeriods;
+            long elapsedPeriods;
+            if(savingsPlan.getFrequency() == Frequency.DAILY){
+                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
+                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.DAYS);
+            }
+            else if(savingsPlan.getFrequency() == Frequency.WEEKLY){
+                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.WEEKS);
+                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.WEEKS);
+            }
+            else if(savingsPlan.getFrequency() == Frequency.MONTHLY){
+                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.MONTHS);
+                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.MONTHS);
+            }
+            else{
+                return BigDecimal.ZERO;
+            }
+            //this is how many payments have been made
+            //long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
+
+            //We need to avoid negative expected values
+            if(remainingAmount.compareTo(BigDecimal.ZERO) <= 0){
+                return BigDecimal.ZERO;
+            }
+            // Remaining periods are the total periods minus the elapsedperiods
+            long periodsRemaining = totalPeriods - elapsedPeriods;
+            
+            // Ensure periodsRemaining is not zero or negative
+            if(periodsRemaining <= 0){
+                return remainingAmount;//.compareTo(BigDecimal.ZERO) > 0 ? remainingAmount : BigDecimal.ZERO; //(Always returning 0)If they overpaid or are at the end, remaining amount is the last payment 
+            }
+            return remainingAmount.divide(new BigDecimal(periodsRemaining),0,RoundingMode.HALF_UP);
+        }
+        return BigDecimal.ZERO;               
     }
 }

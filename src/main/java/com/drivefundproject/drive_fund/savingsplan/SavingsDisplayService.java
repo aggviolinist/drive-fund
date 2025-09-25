@@ -31,74 +31,6 @@ public class SavingsDisplayService {
     public List<SavingsPlan>getSavingsPlanByUserId(Integer userId){
         return savingsPlanRepository.findByUserId(userId);
     }
-    public BigDecimal calculateInitialExpectedPayment(SavingsPlan savingsPlan){
-        BigDecimal totalAmount = savingsPlan.getAmount();
-        Frequency frequency = savingsPlan.getFrequency();
-        long numberOfPeriods;
-
-        if(frequency == Frequency.DAILY){
-            numberOfPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
-        }
-        else if(frequency == Frequency.WEEKLY){
-            numberOfPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.WEEKS);
-        }
-        else if(frequency == Frequency.MONTHLY){
-            numberOfPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.MONTHS);
-        }
-        else {
-            //If we have an expired period or if there is an error with the dates
-            //It won't calculate anything
-            return BigDecimal.ZERO;
-        }
-        //this helps us handle misconfigured dates/start period that is same as end date
-        if(numberOfPeriods <= 0){
-            return totalAmount;
-        }
-
-        return totalAmount.divide(new BigDecimal (numberOfPeriods),0, RoundingMode.HALF_UP);
-
-    }
-    //Calculates new expected payment on time basis and not on period basis. Self adjust every month
-    public BigDecimal calculateDynamicExpectedPayment(UUID planUuid, BigDecimal remainingAmount){
-        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
-
-        if(retrievedSavingsPlan.isPresent()){
-            SavingsPlan savingsPlan = retrievedSavingsPlan.get();
-            long totalPeriods;
-            long elapsedPeriods;
-            if(savingsPlan.getFrequency() == Frequency.DAILY){
-                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(),ChronoUnit.DAYS);
-                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.DAYS);
-            }
-            else if(savingsPlan.getFrequency() == Frequency.WEEKLY){
-                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.WEEKS);
-                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.WEEKS);
-            }
-            else if(savingsPlan.getFrequency() == Frequency.MONTHLY){
-                totalPeriods = savingsPlan.getCreationDate().until(savingsPlan.getTargetCompletionDate(), ChronoUnit.MONTHS);
-                elapsedPeriods = savingsPlan.getCreationDate().until(LocalDate.now(), ChronoUnit.MONTHS);
-            }
-            else{
-                return BigDecimal.ZERO;
-            }
-            //this is how many payments have been made
-            //long paymentsMade = paymentRepository.countBySavingsPlan_PlanUuid(planUuid);
-
-            //We need to avoid negative expected values
-            if(remainingAmount.compareTo(BigDecimal.ZERO) <= 0){
-                return BigDecimal.ZERO;
-            }
-            // Remaining periods are the total periods minus the elapsedperiods
-            long periodsRemaining = totalPeriods - elapsedPeriods;
-            
-            // Ensure periodsRemaining is not zero or negative
-            if(periodsRemaining <= 0){
-                return remainingAmount;//.compareTo(BigDecimal.ZERO) > 0 ? remainingAmount : BigDecimal.ZERO; //(Always returning 0)If they overpaid or are at the end, remaining amount is the last payment 
-            }
-            return remainingAmount.divide(new BigDecimal(periodsRemaining),0,RoundingMode.HALF_UP);
-        }
-        return BigDecimal.ZERO;               
-    }
     public SavingsProgressResponse getSavingsProgress(UUID planUuid){
       //Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuidWithCatalogueFetch(planUuid);
@@ -112,7 +44,7 @@ public class SavingsDisplayService {
             double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
             long roundedPecentage = (long) Math.min(percentageCompleted,100.0);
 
-            BigDecimal newExpectedPayment = calculateDynamicExpectedPayment(planUuid,balanceAmount);
+            BigDecimal newExpectedPayment = paymentService.calculateDynamicExpectedPayment(planUuid,balanceAmount);
             String note;
 
             ChronoUnit unit;
@@ -139,7 +71,7 @@ public class SavingsDisplayService {
             }
 
             //Inital expected contribution per period
-            BigDecimal initialAmountPerPeriod = calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
+            BigDecimal initialAmountPerPeriod = paymentService.calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
 
             //Expected till now
             BigDecimal TotalExpectedSavingsTillTodayAsPerYourSavingsFrequency = initialAmountPerPeriod.multiply(new BigDecimal(elapsedPeriods));
