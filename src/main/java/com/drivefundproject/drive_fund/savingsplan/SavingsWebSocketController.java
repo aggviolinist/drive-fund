@@ -1,11 +1,13 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,7 +38,29 @@ public class SavingsWebSocketController {
         System.out.println("Received deposit of:" + depositAmount + "for Plan: " + MOCK_SAVINGS_PLAN_UUID);
 
         try{
+            paymentService.recordPaymentDeposit(MOCK_SAVINGS_PLAN_UUID, depositAmount);
             
+            SavingsProgressResponse progressResponse = savingsDisplayService.getSavingsProgress(MOCK_SAVINGS_PLAN_UUID);
+
+            return objectMapper.writeValueAsString(progressResponse);
+
+
+        }
+        catch(Exception e){
+            System.err.println("Error processing savings logic: " + e.getMessage());
+
+            return "{\"error\": \"Error in the savings calculation: " + e.getMessage() + "\"}";
+        }
+    }
+
+    public static class DepositMessage{
+        private BigDecimal amount;
+
+        public BigDecimal getAmount(){
+            return amount;
+        }
+        public void setAmount(BigDecimal amount){
+            this.amount = amount;
         }
     }
 }
