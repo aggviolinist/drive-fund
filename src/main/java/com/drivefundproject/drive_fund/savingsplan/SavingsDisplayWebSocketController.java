@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class SavingsDisplayWebSocketController {
     private final PaymentService paymentService;
     private final SavingsDisplayService savingsDisplayService;
-    private final ObjectMapper objectMapper; //Jackson json-object, object-json
+    private final ObjectMapper objectMapper; //Jackson json-java object, java object-json
 
     private final UUID MOCK_SAVINGS_PLAN_UUID = UUID.fromString("db6dab4e-6524-4a84-8824-2ab2c472303e"); //TO DO
 
