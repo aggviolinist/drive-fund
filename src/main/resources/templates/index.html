@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Real-Time Savings Deposit Tester</title>
-    <meta id="plan-uuid" content="db6dab4e-6524-4a84-8824-2ab2c472303e">
+    <meta id="plan-uuid" content="34d2137f-50ff-4601-9343-e49d983acc3b">
 
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
@@ -59,8 +59,8 @@
                 }
 
                 // Destructure the nested DTOs for easier access
-                const payment = combinedResponse.paymentDetails;
-                const progress = combinedResponse.progressDetails;
+                const payment = combinedResponse.paymentResponse;
+                const progress = combinedResponse.savingsProgressResponse;
                 
                 // Format the output to be readable
                 display.innerHTML = `
@@ -75,13 +75,13 @@
                         <hr>
 
                         <h4>Updated Savings Progress</h4>
-                        <p><strong>Goal:</strong> ${progress.productname}</p>
+                        <p><strong>Goal:</strong> ${progress.productName}</p>
                         <p><strong>Total Deposited:</strong> <strong style="color: green;">$${progress.paidTillToday}</strong></p>
-                        <p><strong>Balance Remaining:</strong> $${progress.balanceAmount}</p>
-                        <p><strong>Progress:</strong> ${progress.roundedPecentage}% Completed</p>
+                        <p><strong>Balance Remaining:</strong> $${progress.remainingAmount}</p>
+                        <p><strong>Progress:</strong> ${progress.percentageCompleted}% Completed</p>
                         <p><strong>Next Expected Payment:</strong> $${progress.newExpectedPayment} per ${progress.frequency ? progress.frequency.toLowerCase() : 'period'}</p>
                         <p><strong>Note:</strong> ${progress.note}</p>
-                        <p><strong>Countdown:</strong> ${progress.countDown}</p>
+                        <p><strong>Countdown:</strong> ${progress.timeRemaining}</p>
                         <hr>
                         
                         <details>
