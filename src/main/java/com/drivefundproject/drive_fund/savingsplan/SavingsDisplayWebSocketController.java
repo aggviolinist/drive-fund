@@ -28,7 +28,7 @@ public class SavingsDisplayWebSocketController {
     private final SavingsDisplayService savingsDisplayService;
     private final ObjectMapper objectMapper; //Jackson json-java object, java object-json
 
-    private final UUID MOCK_SAVINGS_PLAN_UUID = UUID.fromString("34d2137f-50ff-4601-9343-e49d983acc3b"); //TO DO
+    private final UUID MOCK_SAVINGS_PLAN_UUID = UUID.fromString("db6dab4e-6524-4a84-8824-2ab2c472303e"); //TO DO
 
      @GetMapping("/messages")
     public String getTemplate(Model model){
@@ -55,14 +55,7 @@ public class SavingsDisplayWebSocketController {
             
             SavingsProgressResponse savingsProgressResponse = savingsDisplayService.getSavingsProgress(MOCK_SAVINGS_PLAN_UUID);
 
-            PaymentResponse paymentResponse = new PaymentResponse(
-               newPayment.getSavingsPlan().getPlanUuid(),
-               newPayment.getPaymentUuid(),
-               newPayment.getAmount(),
-               newPayment.getPaymentDate(),
-               newPayment.getPaymentMethod(),
-               newPayment.getTransactionId(),
-               newPayment.getSavingsPlan().getStatus());
+            PaymentResponse paymentResponse = savingsDisplayService.createPaymentResponse(newPayment);
 
             SocketDepositDetailsResponse combinedDTO = new SocketDepositDetailsResponse(
                 paymentResponse,

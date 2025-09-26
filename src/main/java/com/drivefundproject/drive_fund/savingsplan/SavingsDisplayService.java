@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.drivefundproject.drive_fund.dto.Response.PaymentResponse;
 import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.model.Frequency;
 import com.drivefundproject.drive_fund.model.Payment;
@@ -133,6 +134,21 @@ public class SavingsDisplayService {
         }
         throw new IllegalArgumentException("Savings Plan not found");
 
+    }
+    public PaymentResponse createPaymentResponse( Payment newPayment){
+        if(newPayment == null){
+            throw new IllegalArgumentException("Payment entity cannot be null!");
+        }
+
+        return new PaymentResponse(
+               newPayment.getSavingsPlan().getPlanUuid(),
+               newPayment.getPaymentUuid(),
+               newPayment.getAmount(),
+               newPayment.getPaymentDate(),
+               newPayment.getPaymentMethod(),
+               newPayment.getTransactionId(),
+               newPayment.getSavingsPlan().getStatus()
+        );
     }
     
 }
