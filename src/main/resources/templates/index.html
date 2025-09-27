@@ -17,6 +17,7 @@
 </head>
 <body>
     <h1>Real-Time Savings Deposit Tester</h1>
+    <p>Testing Plan: <strong id="plan-id-display">Loading...</strong></p> 
     <div id="connection-status">Not Connected</div>
 
     <div id="send-form">
@@ -30,11 +31,18 @@
     <h2>Latest Savings Progress:</h2>
     <div id="progress-display">Waiting for deposit...</div>
 
-    <script>
+    <script th:inline = "javascript">
+        /*<![CDATA[*/
+        const planUuid = /*[[${planUuid}]]*/ 'ERROR_NO_UUID';
+        document.getElementById('plan-id-display').textContent = planUuid;
+        //const SOCKET_URL = '/web/sockets'; //for connnecting with Angular
+        const SOCKET_URL = 'http://localhost:8080/ws'; // for local testing
+        const PROGRESS_TOPIC = '/topic/progress/${planUuid}'; // Matches @SendTo in the new controller
+        const DEPOSIT_DESTINATION = '/app/deposit/${planUuid}'; // Matches /app prefix + @MessageMapping in the new controller
+        /*]]>*/
+
         let stompClient = null;
-        const SOCKET_URL = 'http://localhost:8080/ws'; 
-        const PROGRESS_TOPIC = '/topic/progress'; // Matches @SendTo in the new controller
-        const DEPOSIT_DESTINATION = '/app/deposit'; // Matches /app prefix + @MessageMapping in the new controller
+
 
         // --- Utility Functions ---
 
@@ -128,6 +136,11 @@
 
             if (isNaN(amount) || amount <= 0) {
                 alert("Please enter a valid deposit amount.");
+                return;
+            }
+              // Check if UUID was successfully loaded
+            if (planUuid === 'ERROR_NO_UUID') {
+                alert("Error: Could not determine Savings Plan ID. Reload the page with the correct UUID in the URL.");
                 return;
             }
 
