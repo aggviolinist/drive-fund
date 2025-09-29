@@ -11,5 +11,6 @@ public class SocketDepositDetailsResponse {
 
     private PaymentResponse paymentResponse;
     private SavingsProgressResponse savingsProgressResponse;
+    private InterestResponse interestResponse;
     private String Message;
 }

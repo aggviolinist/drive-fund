@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.drivefundproject.drive_fund.dto.Request.SocketPaymentRequest;
+import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
 import com.drivefundproject.drive_fund.dto.Response.PaymentResponse;
 import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.dto.Response.SocketDepositDetailsResponse;
@@ -40,19 +42,10 @@ public class SavingsDisplayWebSocketController {
     
     @MessageMapping("/deposit/{planUuid}")
     @SendTo("/topic/progress/{planUuid}")
-    public String handleDepositAndCalculateProgress(@DestinationVariable UUID planUuid, String message) throws JsonProcessingException{
-        SocketPaymentRequest depositRequest;
-
-        try{
-            depositRequest = objectMapper.readValue(message, SocketPaymentRequest.class);
-        }
-        catch(Exception e){
-            System.err.println("Error parsing deposit message:" + e.getMessage());
-            return "{\"error\": \"Invalid deposit format or missing amount.\"}";
-        }
+    public String handleDepositAndCalculateProgress(@DestinationVariable UUID planUuid, @Payload SocketPaymentRequest depositRequest) throws JsonProcessingException{
         BigDecimal depositAmount = depositRequest.getAmount();
-       System.out.println("Received deposit of:" + depositAmount + "for Plan: " + planUuid);
-
+        System.out.println("Received deposit of:" + depositAmount + " for Plan:" + planUuid);
+        
         try{
             Payment newPayment = paymentService.recordPaymentDeposit(planUuid, depositAmount);
             
@@ -60,9 +53,12 @@ public class SavingsDisplayWebSocketController {
 
             PaymentResponse paymentResponse = savingsDisplayService.createPaymentResponse(newPayment);
 
+            InterestResponse interestResponse = paymentService.calculateInterest(planUuid, percentageCompleted);
+
             SocketDepositDetailsResponse combinedDTO = new SocketDepositDetailsResponse(
                 paymentResponse,
                 savingsProgressResponse,
+                interestResponse,
                 "Deposit of $" + depositAmount + "recorded successfully. Progress updated in real-time. ");
 
             return objectMapper.writeValueAsString(combinedDTO);

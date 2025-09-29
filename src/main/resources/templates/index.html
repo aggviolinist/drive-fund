@@ -37,8 +37,8 @@
         document.getElementById('plan-id-display').textContent = planUuid;
         //const SOCKET_URL = '/web/sockets'; //for connnecting with Angular
         const SOCKET_URL = 'http://localhost:8080/ws'; // for local testing
-        const PROGRESS_TOPIC = '/topic/progress/${planUuid}'; // Matches @SendTo in the new controller
-        const DEPOSIT_DESTINATION = '/app/deposit/${planUuid}'; // Matches /app prefix + @MessageMapping in the new controller
+        const PROGRESS_TOPIC = `/topic/progress/${planUuid}`; // Matches @SendTo to enable Subscription
+        const DEPOSIT_DESTINATION = `/app/deposit/${planUuid}`; // Matches /app prefix + @MessageMapping destination where data is sent to
         /*]]>*/
 
         let stompClient = null;
@@ -116,6 +116,7 @@
                 console.log('Connected: ' + frame);
                 
                 // Subscribe to the topic where the server sends the progress update
+                //progressMessage is the container for data sent from the socket
                 stompClient.subscribe(PROGRESS_TOPIC, function (progressMessage) {
                     // progressMessage.body is the JSON string from the server
                     displayProgress(progressMessage.body); 
