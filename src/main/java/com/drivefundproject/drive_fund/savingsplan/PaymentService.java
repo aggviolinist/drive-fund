@@ -10,8 +10,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
 import com.drivefundproject.drive_fund.model.Frequency;
 import com.drivefundproject.drive_fund.model.Payment;
+import com.drivefundproject.drive_fund.model.PaymentType;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.Status;
 import com.drivefundproject.drive_fund.repository.PaymentRepository;
@@ -25,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 public class PaymentService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
+
+    private final BigDecimal FIVE_PERCENT_INTEREST_RATE =  new BigDecimal("0.05"); //5% interest on 50% deposit
+    private final BigDecimal SEVENPOINTFIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
 
     public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
@@ -50,6 +55,7 @@ public class PaymentService {
             Payment payment = new Payment();
             payment.setSavingsPlan(savingsPlan);
             payment.setAmount(paymentAmount);
+            payment.setPaymentType(PaymentType.DEPOSIT); //Deposit to show interest earned
             payment.setPaymentDate(LocalDate.now());
 
             Payment savedPayment = paymentRepository.save(payment);
@@ -66,6 +72,81 @@ public class PaymentService {
             throw new IllegalArgumentException("Savings Plan not found");
         }
     }
+
+    //We want to check if Interest has already been assigned
+    public boolean hasInterestBeenAwarded(UUID planUuid, PaymentType paymentType){
+        //This count is in my repo, helps me find if user has been awarded the interest already
+        //If in this planuuid, there is any interest awarded
+        long count =  paymentRepository.countBySavingsPlan_PlanUuidAndPaymentType(planUuid,paymentType);
+        return count > 0;
+    }
+
+    //We now award both 50% and 75% interest
+    public InterestResponse calculateInterest(UUID planUuid, double percentageCompleted){
+        Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+         
+        if(!retrievedSavingsPlan.isPresent()){
+            //Empty response when plan isn't found
+            return new InterestResponse(planUuid, BigDecimal.ZERO, BigDecimal.ZERO, 0.0, BigDecimal.ZERO, "Savings Plan not found!");
+        }
+        SavingsPlan savingsPlan = retrievedSavingsPlan.get();
+        BigDecimal targetAmount = savingsPlan.getAmount();
+        BigDecimal paidTillToday = calculateTotalDeposit(planUuid);
+        BigDecimal interestAmount = BigDecimal.ZERO;
+        String message = "No interest awarded.";
+        PaymentType interestType = null;
+
+        //1. CHECK 50% THRESHOLD
+        if(percentageCompleted >= 50.00 && !hasInterestBeenAwarded(planUuid, PaymentType.INTEREST_50_PERCENT)){
+            interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_RATE);
+            interestType = PaymentType.INTEREST_50_PERCENT;
+            message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded."; 
+        }
+        else if(percentageCompleted >= 75.00 && !hasInterestBeenAwarded(planUuid, PaymentType.INTEREST_75_PERCENT)){
+            interestAmount = targetAmount.multiply(SEVENPOINTFIVE_PERCENT_INTEREST_RATE);
+            interestType = PaymentType.INTEREST_75_PERCENT;
+            message = "Congratulations! 75% target reached. " + SEVENPOINTFIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
+        }
+        //If Interest was awarded add it as payment
+        if(interestAmount.compareTo(BigDecimal.ZERO) > 0){
+            applyInterestAsPayment(planUuid, interestAmount, interestType);
+
+            //Add interest to total deposited just earned
+            paidTillToday = calculateTotalDeposit(planUuid);
+        }
+        return new InterestResponse(
+            planUuid,
+            targetAmount,
+            paidTillToday,
+            percentageCompleted,
+            interestAmount.setScale(2,RoundingMode.HALF_UP),
+            message
+        );
+    }
+
+    //Recording the awarded interest as a new payment/deposit
+    private Payment applyInterestAsPayment(UUID planUuid, BigDecimal interestAmount,  PaymentType interestType){
+    Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+
+    if(retrievedSavingsPlan.isPresent() && interestAmount.compareTo(BigDecimal.ZERO) > 0){
+        SavingsPlan savingsPlan = retrievedSavingsPlan.get();
+
+        Payment interestPayment = new Payment();
+
+        interestPayment.setSavingsPlan(savingsPlan);
+        interestPayment.setAmount(interestAmount);
+        interestPayment.setPaymentDate(LocalDate.now());
+        interestPayment.setPaymentType(interestType);
+        interestPayment.setPaymentMethod("SYSTEM_AWARDED_INTEREST");
+        interestPayment.setTransactionId("INTEREST-"+ interestType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
+
+        return paymentRepository.save(interestPayment);
+    }
+    else{
+        throw new IllegalArgumentException("Cannot apply interest. Savings Plan not found/ Interest amount is zero");
+    }
+    }
+    //Total deposited amount
     public BigDecimal calculateTotalDeposit(UUID planUuid){
             List<Payment> payments = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
             return payments.stream()
