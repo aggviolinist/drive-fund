@@ -28,8 +28,8 @@ public class PaymentService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
 
-    private final BigDecimal FIVE_PERCENT_INTEREST_RATE =  new BigDecimal("0.05"); //5% interest on 50% deposit
-    private final BigDecimal SEVENPOINTFIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
+    private final BigDecimal FIVE_PERCENT_INTEREST_FEE =  new BigDecimal("0.05"); //5% interest on 50% deposit
+    private final BigDecimal SEVENPOINTFIVE_PERCENT_INTEREST_FEE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
 
     public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
@@ -99,15 +99,15 @@ public class PaymentService {
 
         //a. CHECK 50% THRESHOLD
         if(percentageCompleted >= 50.00 && !hasInterestBeenAwarded(planUuid, PaymentType.INTEREST_50_PERCENT)){
-            interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_RATE);
+            interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_FEE);
             interestType = PaymentType.INTEREST_50_PERCENT;
-            message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded."; 
+            message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_FEE.multiply(new BigDecimal("100")) + "% interest awarded."; 
         }
         //b. CHECK 75% THRESHOLD
         else if(percentageCompleted >= 75.00 && !hasInterestBeenAwarded(planUuid, PaymentType.INTEREST_75_PERCENT)){
-            interestAmount = targetAmount.multiply(SEVENPOINTFIVE_PERCENT_INTEREST_RATE);
+            interestAmount = targetAmount.multiply(SEVENPOINTFIVE_PERCENT_INTEREST_FEE);
             interestType = PaymentType.INTEREST_75_PERCENT;
-            message = "Congratulations! 75% target reached. " + SEVENPOINTFIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
+            message = "Congratulations! 75% target reached. " + SEVENPOINTFIVE_PERCENT_INTEREST_FEE.multiply(new BigDecimal("100")) + "% interest awarded.";
         }
         //3. IF INTEREST WAS AWARDED ADD IT AS PAYMENT
         if(interestAmount.compareTo(BigDecimal.ZERO) > 0){
@@ -187,7 +187,7 @@ public class PaymentService {
                 return 0.0;
             }
             double percentage = totalDeposits.divide(targetAmount, 4, RoundingMode.HALF_UP).doubleValue() * 100;
-            //Ensuring the percentage doesn't exceed 100% incasea user overpays
+            //Ensuring the percentage doesn't exceed 100% incase user overpays
             return Math.min(percentage, 100.0);
         }
         return 0.0;

@@ -50,6 +50,10 @@ public class Payment {
     @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType = PaymentType.DEPOSIT;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="withdrawal_type", nullable = false)
+    private WithdrawalType withdrawalType = WithdrawalType.NO_WITHDRAWAL;
+
     @PrePersist
     public void prePersist(){
         if(this.paymentUuid == null){
