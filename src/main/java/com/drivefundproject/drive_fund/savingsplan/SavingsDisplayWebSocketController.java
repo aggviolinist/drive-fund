@@ -47,19 +47,29 @@ public class SavingsDisplayWebSocketController {
         System.out.println("Received deposit of:" + depositAmount + " for Plan:" + planUuid);
         
         try{
+            // 1. Record User deposit
             Payment newPayment = paymentService.recordPaymentDeposit(planUuid, depositAmount);
             
+            // 2. Get progress response BEFORE interest logic
             SavingsProgressResponse savingsProgressResponse = savingsDisplayService.getSavingsProgress(planUuid);
 
             PaymentResponse paymentResponse = savingsDisplayService.createPaymentResponse(newPayment);
-
+ 
+            // 3. Check for Interest using current percentage
+            double percentageCompleted = savingsProgressResponse.getPercentageCompleted();
             InterestResponse interestResponse = paymentService.calculateInterest(planUuid, percentageCompleted);
 
+            // 4. Get progress AFTER interest has been applied
+            if(interestResponse.getInterestAmount().compareTo(BigDecimal.ZERO) > 0){
+                //We want to refresh the progress response after interest was applied
+                savingsProgressResponse = savingsDisplayService.getSavingsProgress(planUuid);
+            }
+            //5. Build and return combined DTO
             SocketDepositDetailsResponse combinedDTO = new SocketDepositDetailsResponse(
                 paymentResponse,
                 savingsProgressResponse,
                 interestResponse,
-                "Deposit of $" + depositAmount + "recorded successfully. Progress updated in real-time. ");
+                "Deposit of $" + depositAmount + "recorded successfully. Progress updated in real-time." + interestResponse.getMessage());
 
             return objectMapper.writeValueAsString(combinedDTO);
         }

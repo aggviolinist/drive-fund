@@ -33,7 +33,7 @@ public class PaymentService {
 
     public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
-        //We want to avoid overpayment 
+        //We want to avoid overpayment of the target amount
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
@@ -55,7 +55,7 @@ public class PaymentService {
             Payment payment = new Payment();
             payment.setSavingsPlan(savingsPlan);
             payment.setAmount(paymentAmount);
-            payment.setPaymentType(PaymentType.DEPOSIT); //Deposit to show interest earned
+            payment.setPaymentType(PaymentType.DEPOSIT); //Deposit interest as payment
             payment.setPaymentDate(LocalDate.now());
 
             Payment savedPayment = paymentRepository.save(payment);
@@ -73,15 +73,15 @@ public class PaymentService {
         }
     }
 
-    //We want to check if Interest has already been assigned
+    //1. CHECK IF INTEREST HAS BEEN AWARDED
     public boolean hasInterestBeenAwarded(UUID planUuid, PaymentType paymentType){
-        //This count is in my repo, helps me find if user has been awarded the interest already
-        //If in this planuuid, there is any interest awarded
+        //This count is in my repo, and helps me find if user has been awarded the interest already
+        //If in this planuuid, there is any interest awarded count;
         long count =  paymentRepository.countBySavingsPlan_PlanUuidAndPaymentType(planUuid,paymentType);
         return count > 0;
     }
 
-    //We now award both 50% and 75% interest
+    //2. CALCULATING INTEREST 50% AND 75% INTEREST
     public InterestResponse calculateInterest(UUID planUuid, double percentageCompleted){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
          
@@ -89,6 +89,7 @@ public class PaymentService {
             //Empty response when plan isn't found
             return new InterestResponse(planUuid, BigDecimal.ZERO, BigDecimal.ZERO, 0.0, BigDecimal.ZERO, "Savings Plan not found!");
         }
+        //Initialize before doing the interest math
         SavingsPlan savingsPlan = retrievedSavingsPlan.get();
         BigDecimal targetAmount = savingsPlan.getAmount();
         BigDecimal paidTillToday = calculateTotalDeposit(planUuid);
@@ -96,22 +97,23 @@ public class PaymentService {
         String message = "No interest awarded.";
         PaymentType interestType = null;
 
-        //1. CHECK 50% THRESHOLD
+        //a. CHECK 50% THRESHOLD
         if(percentageCompleted >= 50.00 && !hasInterestBeenAwarded(planUuid, PaymentType.INTEREST_50_PERCENT)){
             interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_RATE);
             interestType = PaymentType.INTEREST_50_PERCENT;
             message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded."; 
         }
+        //b. CHECK 75% THRESHOLD
         else if(percentageCompleted >= 75.00 && !hasInterestBeenAwarded(planUuid, PaymentType.INTEREST_75_PERCENT)){
             interestAmount = targetAmount.multiply(SEVENPOINTFIVE_PERCENT_INTEREST_RATE);
             interestType = PaymentType.INTEREST_75_PERCENT;
             message = "Congratulations! 75% target reached. " + SEVENPOINTFIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
         }
-        //If Interest was awarded add it as payment
+        //3. IF INTEREST WAS AWARDED ADD IT AS PAYMENT
         if(interestAmount.compareTo(BigDecimal.ZERO) > 0){
             applyInterestAsPayment(planUuid, interestAmount, interestType);
 
-            //Add interest to total deposited just earned
+        //4. ADD INTEREST TO THE TOTAL DEPOSIT JUST EARNED
             paidTillToday = calculateTotalDeposit(planUuid);
         }
         return new InterestResponse(
@@ -124,11 +126,12 @@ public class PaymentService {
         );
     }
 
-    //Recording the awarded interest as a new payment/deposit
+    //1. RECORDING THE NEWLY AWARDED INTEREST AS A NEW PAYMENT/DEPOSIT
     private Payment applyInterestAsPayment(UUID planUuid, BigDecimal interestAmount,  PaymentType interestType){
     Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
     if(retrievedSavingsPlan.isPresent() && interestAmount.compareTo(BigDecimal.ZERO) > 0){
+        //We can't apply a non-positive (zero/negative) amount of interest
         SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
         Payment interestPayment = new Payment();
