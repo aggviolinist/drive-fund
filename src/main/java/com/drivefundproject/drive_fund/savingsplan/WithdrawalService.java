@@ -2,6 +2,7 @@ package com.drivefundproject.drive_fund.savingsplan;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import com.drivefundproject.drive_fund.model.PaymentType;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.Status;
 import com.drivefundproject.drive_fund.model.WithdrawalType;
+import com.drivefundproject.drive_fund.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 public class WithdrawalService {
 
     private final SavingsPlanRepository savingsPlanRepository;
+    private final PaymentRepository paymentRepository;
 
     private final BigDecimal WITHDRAWALPENALTY_FEE_RATE = new BigDecimal("0.10"); //10% penalty on early withdrawal
     private final BigDecimal WITHDRAWAL_FEE_RATE = new BigDecimal("0.02"); //2% Transcation fee on end of tenure
@@ -67,9 +70,25 @@ public class WithdrawalService {
 
         //3. Record the Withdrawal (Negative Payment)
         Payment withdrawal = new Payment();
-        
+        withdrawal.setSavingsPlan(savingsPlan);
+        withdrawal.setAmount(withdrawnAmount.negate());
+        withdrawal.setWithdrawalType(WithdrawalType.NO_WITHDRAWAL);
+        withdrawal.setWithdrawalDate(LocalDate.now());
+        withdrawal.setPaymentMethod("WITHDRAWAL_REQUEST");
+        withdrawal.setTransactionId("WITHDRAW-" + UUID.randomUUID().toString().substring(0,8));
+        paymentRepository.save(withdrawal);
 
+        //4. Record penalty(Positive payment to the platform)
+        Payment penalty = new Payment();
+        penalty.setSavingsPlan(savingsPlan);
+        penalty.setAmount(feeAmount);
+        penalty.setWithdrawalType(feeType);
+        penalty.setWithdrawalDate(LocalDate.now());
+        penalty.setPaymentMethod(feeReason);
+        penalty.setTransactionId(feeType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
+        paymentRepository.save(penalty);
 
+        System.out.println("Successful withdrawal of:" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + ". " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " applied.");
     }
     
 }
