@@ -115,7 +115,7 @@ public class SavingsDisplayController {
                 newpaymentResponse.getPaymentUuid(),
                 newpaymentResponse.getAmount(),
                 newpaymentResponse.getPaymentDate(),
-                newpaymentResponse.getPaymentMethod(),
+                newpaymentResponse.getSystemMessage(),
                 newpaymentResponse.getTransactionId(),
                 newpaymentResponse.getSavingsPlan().getStatus());
 

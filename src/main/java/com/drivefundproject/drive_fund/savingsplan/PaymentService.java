@@ -140,7 +140,7 @@ public class PaymentService {
         interestPayment.setAmount(interestAmount);
         interestPayment.setPaymentDate(LocalDate.now());
         interestPayment.setPaymentType(interestType);
-        interestPayment.setPaymentMethod("SYSTEM_AWARDED_INTEREST");
+        interestPayment.setSystemMessage("SYSTEM_AWARDED_INTEREST");
         interestPayment.setTransactionId("INTEREST-"+ interestType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
 
         return paymentRepository.save(interestPayment);

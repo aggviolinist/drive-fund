@@ -42,7 +42,7 @@ public class Payment {
 
     private LocalDate paymentDate;
 
-    private String paymentMethod;
+    private String systemMessage;
 
     private LocalDate withdrawalDate; 
 
