@@ -44,6 +44,8 @@ public class Payment {
 
     private String paymentMethod;
 
+    private LocalDate withdrawalDate; 
+
     private String transactionId;
 
     @Enumerated(EnumType.STRING)
