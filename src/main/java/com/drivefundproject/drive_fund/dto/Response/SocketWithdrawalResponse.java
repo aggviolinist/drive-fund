@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WithdrawalResponse {
+public class SocketWithdrawalResponse {
     private SavingsProgressResponse savingsProgressResponse;
     private BigDecimal withdrawnAmount;
     private String Message;   

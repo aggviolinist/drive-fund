@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.savingsplan;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,6 +20,7 @@ import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
 import com.drivefundproject.drive_fund.dto.Response.PaymentResponse;
 import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.dto.Response.SocketDepositDetailsResponse;
+import com.drivefundproject.drive_fund.dto.Response.SocketWithdrawalResponse;
 import com.drivefundproject.drive_fund.model.Payment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,13 +102,23 @@ public class SavingsDisplayWebSocketController {
             //This reduces the totaldeposits, totalExpectedAmounts, Percentages
             SavingsProgressResponse savingsProgressService = savingsDisplayService.getSavingsProgress(plaUuid);
 
-
-
-
-
-
+            //3. Build and return the combined CTO
+            String successMessage = "Withdrawal of $" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + " processed successfully. Progress updated in real-time.";
+            SocketWithdrawalResponse socketWithdrawalResponseDTO = new SocketWithdrawalResponse(
+                savingsProgressService,
+                withdrawnAmount,
+                successMessage
+            );
+            return objectMapper.writeValueAsString(socketWithdrawalResponseDTO);
         }
-        
+        catch(IllegalArgumentException e){
+            System.out.println("Error processing withdrawal logic: " + e.getMessage());
 
+            return "{\"error\": \"" + e.getMessage() + "\"}";
+        }
+        catch(Exception e){
+            System.err.println("Internal Server Error" + e.getMessage());
+            return "{\"error\": \"Internal server error during withdrawal processing. \"}";
+        }
     }
 }

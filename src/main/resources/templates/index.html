@@ -28,6 +28,14 @@
         <button onclick="sendDeposit()">Send Deposit</button>
     </div>
 
+    <div id="withdraw-form">
+        <h2>Withdrawal (Test)</h2>
+        <label for="withdraw-amount">Withdraw Amount:</label>
+        <input type="number" id="withdraw-amount" placeholder="e.g., 100.00" value="500" step="0.01">
+        <br><br>
+        <button onclick="withdrawDeposit()">Withdraw This Amount</button>
+    </div>
+
     <h2>Latest Savings Progress:</h2>
     <div id="progress-display">Waiting for deposit...</div>
 
@@ -39,6 +47,7 @@
         const SOCKET_URL = 'http://localhost:8080/ws'; // for local testing
         const PROGRESS_TOPIC = `/topic/progress/${planUuid}`; // Matches @SendTo to enable Subscription
         const DEPOSIT_DESTINATION = `/app/deposit/${planUuid}`; // Matches /app prefix + @MessageMapping destination where data is sent to
+        const WITHDRAW_DESTINATION = `/app/withdraw/${planUuid}`; //Destination data is sent
         /*]]>*/
 
         let stompClient = null;
@@ -58,6 +67,9 @@
             try {
                 // Now parsing the COMBINED DTO: DepositConfirmationDTO
                 const combinedResponse = JSON.parse(progressJson);
+
+                //Withdraw DTO
+                cont 
                 
                 // Handle the custom error message from the server
                 if (combinedResponse.error) {
