@@ -1,20 +1,17 @@
 package com.drivefundproject.drive_fund.dto.Response;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class WithdrawalResponse {
-    private UUID plaUuid;
-    private BigDecimal targetAmount;
-    private double percentageCompleted;
-    private BigDecimal WithdrawnAmount;
+    private SavingsProgressResponse savingsProgressResponse;
+    private BigDecimal withdrawnAmount;
     private String Message;
     
 }

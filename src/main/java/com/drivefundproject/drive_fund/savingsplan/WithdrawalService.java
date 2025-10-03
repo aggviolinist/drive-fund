@@ -62,16 +62,16 @@ public class WithdrawalService {
         //2. Calculate Costs and Validate Balance
         BigDecimal feeAmount = withdrawnAmount.multiply(feeRate).setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalWithdrawalCost = withdrawnAmount.add(feeAmount);
-        BigDecimal netBalance = paymentService.calculateTotalDeposit(planUuid);
+        BigDecimal TotalDeposits = paymentService.calculateTotalDeposit(planUuid);
 
-        if(netBalance.compareTo(totalWithdrawalCost) < 0){
-            throw new IllegalArgumentException("Withdrawl request of " + withdrawnAmount.setScale(2, RoundingMode.HALF_UP) + "plus" + feeReason + "of" + feeAmount.setScale(2, RoundingMode.HALF_UP) + "exceeds the available net balance of " + netBalance.setScale(2, RoundingMode.HALF_UP));
+        if(TotalDeposits.compareTo(totalWithdrawalCost) < 0){
+            throw new IllegalArgumentException("Withdrawl request of " + withdrawnAmount.setScale(2, RoundingMode.HALF_UP) + "plus" + feeReason + "of" + feeAmount.setScale(2, RoundingMode.HALF_UP) + "exceeds the available net balance of " + TotalDeposits.setScale(2, RoundingMode.HALF_UP));
         }
 
         //3. Record the Withdrawal (Negative Payment)
         Payment withdrawal = new Payment();
         withdrawal.setSavingsPlan(savingsPlan);
-        withdrawal.setAmount(withdrawnAmount.negate());
+        withdrawal.setPaymentAmount(withdrawnAmount.negate());
         withdrawal.setWithdrawalType(feeType);
         withdrawal.setWithdrawalDate(LocalDate.now());
         withdrawal.setSystemMessage("WITHDRAWAL_REQUEST");
@@ -81,7 +81,7 @@ public class WithdrawalService {
         //4. Record penalty(Positive payment to the platform)
         Payment penalty = new Payment();
         penalty.setSavingsPlan(savingsPlan);
-        penalty.setAmount(feeAmount);
+        penalty.setPaymentAmount(feeAmount);
         penalty.setWithdrawalType(feeType);
         penalty.setWithdrawalDate(LocalDate.now());
         penalty.setSystemMessage(feeReason);

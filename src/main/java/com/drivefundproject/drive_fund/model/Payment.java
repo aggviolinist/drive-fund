@@ -38,7 +38,7 @@ public class Payment {
     @JoinColumn(name = "savings_plan_id", nullable = false)
     private SavingsPlan savingsPlan;
 
-    private BigDecimal Amount;
+    private BigDecimal paymentAmount;
 
     private LocalDate paymentDate;
 

@@ -43,7 +43,7 @@ public class SavingsDisplayWebSocketController {
     @MessageMapping("/deposit/{planUuid}")
     @SendTo("/topic/progress/{planUuid}")
     public String handleDepositAndCalculateProgress(@DestinationVariable UUID planUuid, @Payload SocketPaymentRequest depositRequest) throws JsonProcessingException{
-        BigDecimal depositAmount = depositRequest.getAmount();
+        BigDecimal depositAmount = depositRequest.getPaymentAmount();
         System.out.println("Received deposit of:" + depositAmount + " for Plan:" + planUuid);
         
         try{

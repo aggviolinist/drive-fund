@@ -143,7 +143,7 @@ public class SavingsDisplayService {
         return new PaymentResponse(
                newPayment.getSavingsPlan().getPlanUuid(),
                newPayment.getPaymentUuid(),
-               newPayment.getAmount(),
+               newPayment.getPaymentAmount(),
                newPayment.getPaymentDate(),
                newPayment.getSystemMessage(),
                newPayment.getTransactionId(),

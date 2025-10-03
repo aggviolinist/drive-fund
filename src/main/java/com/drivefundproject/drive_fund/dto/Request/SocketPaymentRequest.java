@@ -11,9 +11,10 @@ import lombok.Setter;
 @Setter
 public class SocketPaymentRequest{
 
-        @NotNull(message = "Amount is required")
+        //Needs to be implemented in front end
+        @NotNull(message = "Payment Amount is required")
         @DecimalMin(value = "0.01", inclusive = true, message = "Amount must be greater than 0")
-        private BigDecimal amount;
+        private BigDecimal paymentAmount;
 
         // public BigDecimal getAmount(){
         //     return amount;

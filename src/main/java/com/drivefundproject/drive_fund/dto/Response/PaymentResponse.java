@@ -16,7 +16,7 @@ import lombok.Setter;
 public class PaymentResponse {
     private UUID planUuid;
     private UUID paymentUuid;
-    private BigDecimal amount;
+    private BigDecimal paymentAmount;
     private LocalDate payment_date;
     private String payment_method;
     private String transaction_id;

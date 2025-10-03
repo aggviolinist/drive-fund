@@ -54,7 +54,7 @@ public class PaymentService {
             //Adding new payment
             Payment payment = new Payment();
             payment.setSavingsPlan(savingsPlan);
-            payment.setAmount(paymentAmount);
+            payment.setPaymentAmount(paymentAmount);
             payment.setPaymentType(PaymentType.DEPOSIT); //Deposit interest as payment
             payment.setPaymentDate(LocalDate.now());
 
@@ -137,7 +137,7 @@ public class PaymentService {
         Payment interestPayment = new Payment();
 
         interestPayment.setSavingsPlan(savingsPlan);
-        interestPayment.setAmount(interestAmount);
+        interestPayment.setPaymentAmount(interestAmount);
         interestPayment.setPaymentDate(LocalDate.now());
         interestPayment.setPaymentType(interestType);
         interestPayment.setSystemMessage("SYSTEM_AWARDED_INTEREST");
@@ -153,7 +153,7 @@ public class PaymentService {
     public BigDecimal calculateTotalDeposit(UUID planUuid){
             List<Payment> payments = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
             return payments.stream()
-                 .map(Payment::getAmount)
+                 .map(Payment::getPaymentAmount)
                  .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         }

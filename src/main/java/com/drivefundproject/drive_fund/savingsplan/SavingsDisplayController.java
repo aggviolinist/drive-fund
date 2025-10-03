@@ -113,7 +113,7 @@ public class SavingsDisplayController {
               PaymentResponse paymentResponse = new PaymentResponse(
                 newpaymentResponse.getSavingsPlan().getPlanUuid(),
                 newpaymentResponse.getPaymentUuid(),
-                newpaymentResponse.getAmount(),
+                newpaymentResponse.getPaymentAmount(),
                 newpaymentResponse.getPaymentDate(),
                 newpaymentResponse.getSystemMessage(),
                 newpaymentResponse.getTransactionId(),
