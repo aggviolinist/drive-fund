@@ -14,5 +14,5 @@ public class SocketWithdrawalRequest {
     //Needs to be validated in front end
     @NotNull(message = "Withdrawal Amount is needed")
     @DecimalMin(value = "0.01", inclusive = true, message = "Amount must be greater than 0")
-    private BigDecimal WithdrawnAmount;
+    private BigDecimal withdrawnAmount;
 }

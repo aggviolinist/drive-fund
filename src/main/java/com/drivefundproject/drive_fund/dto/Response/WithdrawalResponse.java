@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class WithdrawalResponse {
     private SavingsProgressResponse savingsProgressResponse;
     private BigDecimal withdrawnAmount;
-    private String Message;
-    
+    private String Message;   
 }

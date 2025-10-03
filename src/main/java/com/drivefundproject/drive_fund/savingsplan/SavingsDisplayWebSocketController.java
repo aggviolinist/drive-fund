@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.drivefundproject.drive_fund.dto.Request.SocketPaymentRequest;
+import com.drivefundproject.drive_fund.dto.Request.SocketWithdrawalRequest;
 import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
 import com.drivefundproject.drive_fund.dto.Response.PaymentResponse;
 import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
@@ -31,6 +32,8 @@ public class SavingsDisplayWebSocketController {
     private final PaymentService paymentService;
     private final SavingsDisplayService savingsDisplayService;
     private final ObjectMapper objectMapper; //Jackson json-java object, java object-json
+
+    private final WithdrawalService withdrawalService;
 
     //private final UUID MOCK_SAVINGS_PLAN_UUID = UUID.fromString("db6dab4e-6524-4a84-8824-2ab2c472303e"); //TO DO
 
@@ -82,5 +85,23 @@ public class SavingsDisplayWebSocketController {
             System.err.println("Internal Server Error" + e.getMessage());
             return "{\"error\": \"Internal server error during savings calculation.\"}";
         }
+    }
+    @MessageMapping("/withdraw/{planUuid}")
+    @SendTo("/topic/progress/{planUuid}")
+    public String handleWithdrawalAndCalculateProgress(@DestinationVariable UUID plaUuid, @Payload SocketWithdrawalRequest withdrawalRequest) throws JsonProcessingException{
+        BigDecimal withdrawnAmount = withdrawalRequest.getWithdrawnAmount();
+        System.out.println("Withdrawal Amount of:" + withdrawnAmount + "for plan:" + plaUuid);
+
+        try{
+            //1. Record the user withthdrawal together with the fees and penalties associated with it
+            withdrawalService.recordWithdrawal(plaUuid, withdrawnAmount);
+
+            //2.
+
+
+
+        }
+        
+
     }
 }

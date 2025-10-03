@@ -72,7 +72,8 @@ public class WithdrawalService {
         Payment withdrawal = new Payment();
         withdrawal.setSavingsPlan(savingsPlan);
         withdrawal.setPaymentAmount(withdrawnAmount.negate());
-        withdrawal.setWithdrawalType(feeType);
+        withdrawal.setWithdrawalType(WithdrawalType.NO_WITHDRAWAL);
+        withdrawal.setPaymentType(PaymentType.WITHDRAWAL);
         withdrawal.setWithdrawalDate(LocalDate.now());
         withdrawal.setSystemMessage("WITHDRAWAL_REQUEST");
         withdrawal.setTransactionId("WITHDRAW-" + UUID.randomUUID().toString().substring(0,8));
@@ -83,6 +84,7 @@ public class WithdrawalService {
         penalty.setSavingsPlan(savingsPlan);
         penalty.setPaymentAmount(feeAmount);
         penalty.setWithdrawalType(feeType);
+        penalty.setPaymentType(PaymentType.FEE); 
         penalty.setWithdrawalDate(LocalDate.now());
         penalty.setSystemMessage(feeReason);
         penalty.setTransactionId(feeType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
