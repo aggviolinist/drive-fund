@@ -96,7 +96,12 @@ public class SavingsDisplayWebSocketController {
             //1. Record the user withthdrawal together with the fees and penalties associated with it
             withdrawalService.recordWithdrawal(plaUuid, withdrawnAmount);
 
-            //2.
+            //2. Get the updated progress response
+            //This reduces the totaldeposits, totalExpectedAmounts, Percentages
+            SavingsProgressResponse savingsProgressService = savingsDisplayService.getSavingsProgress(plaUuid);
+
+
+
 
 
 
