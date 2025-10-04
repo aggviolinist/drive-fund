@@ -183,13 +183,17 @@
             const withdrawalInput  = document.getElementById('withdraw-amount')
             const withdrawalAmount = parseFloat(withdrawalInput.value);
 
-            if(isNaN(amount) || amount <= 0){
-                alert("Please enter a valid deposit amount");
+            if(isNaN(withdrawalAmount) || withdrawalAmount <= 0){
+                alert("Please enter a valid amount to be withdrawn!");
                 return;
             }
             //Was the UUID loaded successfully?
             if(planUuid === 'ERROR_NO_UUID'){
-                alert("Error ");
+                alert("Error: Couldn't find the savings Plan. Reload the page to get correct UUID.");
+                return;
+            }
+            if(stompClient && stompClient.connected){
+                //Construct the JSON payload 
 
             }
         }
