@@ -68,8 +68,7 @@
                 // Now parsing the COMBINED DTO: DepositConfirmationDTO
                 const combinedResponse = JSON.parse(progressJson);
 
-                //Withdraw DTO
-                cont 
+                 
                 
                 // Handle the custom error message from the server
                 if (combinedResponse.error) {
@@ -80,6 +79,7 @@
                 // Destructure the nested DTOs for easier access
                 const payment = combinedResponse.paymentResponse;
                 const progress = combinedResponse.savingsProgressResponse;
+                const withdraw = combinedResponse.socketWithdrawalResponse;
                 
                 // Format the output to be readable
                 display.innerHTML = `
@@ -88,9 +88,16 @@
                         
                         <h4>Payment Details</h4>
                         <p><strong>Payment ID:</strong> ${payment.paymentUuid}</p>
-                        <p><strong>Amount Deposited:</strong> <strong style="color: blue;">$${payment.amount}</strong></p>
+                        <p><strong>Amount Deposited:</strong> <strong style="color: blue;">$${payment.paymentAmount}</strong></p>
                         <p><strong>Date:</strong> ${payment.payment_date}</p>
                         <p><strong>Status:</strong> ${payment.status}</p>
+                        <hr>
+
+                        <h4>Withdrawal Details</h4>
+                        <p><strong>Payment ID:</strong> ${progress.planUuid}</p>
+                        <p><strong>Amount Withdrawn:</strong> <strong style="color: blue;">$${withdraw.withdrawnAmount}</strong></p>
+                        <p><strong>Date:</strong> ${withdraw.withdrawalDate}</p>
+                        <p><strong>Status:</strong> ${withdraw.Message}</p>
                         <hr>
 
                         <h4>Updated Savings Progress</h4>

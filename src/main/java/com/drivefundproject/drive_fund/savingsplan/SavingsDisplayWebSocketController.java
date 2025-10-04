@@ -107,6 +107,7 @@ public class SavingsDisplayWebSocketController {
             SocketWithdrawalResponse socketWithdrawalResponseDTO = new SocketWithdrawalResponse(
                 savingsProgressService,
                 withdrawnAmount,
+                withdrawalDate,
                 successMessage
             );
             return objectMapper.writeValueAsString(socketWithdrawalResponseDTO);
