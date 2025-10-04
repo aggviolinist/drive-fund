@@ -88,7 +88,7 @@ public class SavingsDisplayWebSocketController {
             return "{\"error\": \"Internal server error during savings calculation.\"}";
         }
     }
-    @MessageMapping("/withdraw/{planUuid}")
+    @MessageMapping("/withdrawal/{planUuid}")
     @SendTo("/topic/progress/{planUuid}")
     public String handleWithdrawalAndCalculateProgress(@DestinationVariable UUID plaUuid, @Payload SocketWithdrawalRequest withdrawalRequest) throws JsonProcessingException{
         BigDecimal withdrawnAmount = withdrawalRequest.getWithdrawnAmount();
