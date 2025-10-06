@@ -3,6 +3,8 @@ package com.drivefundproject.drive_fund.savingsplan;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.UUID;
+import java.time.LocalDate;
+
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -107,7 +109,7 @@ public class SavingsDisplayWebSocketController {
             SocketWithdrawalResponse socketWithdrawalResponseDTO = new SocketWithdrawalResponse(
                 savingsProgressService,
                 withdrawnAmount,
-                withdrawalDate,
+                withdrawnDate,
                 successMessage
             );
             return objectMapper.writeValueAsString(socketWithdrawalResponseDTO);

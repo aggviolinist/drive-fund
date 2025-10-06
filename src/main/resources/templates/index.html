@@ -76,30 +76,48 @@
                     return;
                 }
 
+                //Make payment only on deposit DTO
+                const isDepositResponse = combinedResponse.paymentResponse !== undefined;
+
                 // Destructure the nested DTOs for easier access
-                const payment = combinedResponse.paymentResponse;
+                //const payment = combinedResponse.paymentResponse;
                 const progress = combinedResponse.savingsProgressResponse;
-                const withdraw = combinedResponse.socketWithdrawalResponse;
+                //const withdraw = combinedResponse.socketWithdrawalResponse;
+
+                // const progress = isDepositResponse
+                //    ? combinedResponse.savingsProgressResponse
+                //    : combinedResponse.savingsProgressResponse;
+
+                const DepostiOrWithdrawalMessage = combinedResponse.message;
+
+                //Start building the display HTML
+                let html = `<div class="response-box" ${isDepositResponse ? 'success' : `error`}>`;
+                    html += `<h3>Transaction Update: ${DepostiOrWithdrawalMessage}</h3><hr>`;
+
+                if(isDepositResponse){
+                    const payment = combinedResponse.paymentResponse;
+                    html += `
+                         <h4>Payment Details-Deposit</h4>
+                         <p><strong>Payment ID:</strong> ${payment.paymentUuid}</p>
+                         <p><strong>Amount Deposited:</strong> <strong style="color:blue;"> ${payment.paymentAmount}</strong></p>
+                         <p><strong>Date: </strong> ${payment.payment_date} </p>
+                         <p><strong> Status: </strong> ${payment.status} </p>
+                         `;
+                }
+                else{
+                    //Withdrawal Response (SocketWithdrawalDetailsResponse)
+                    const withdrawalAmount = combinedResponse.withdrawnAmount;
+                    const withdrawalDate = combinedResponse.withdrawalDate;
+                    html += `<h4>Withdrawal Details</h4>
+                         <p><strong>Amount withdrawn:</strong> <strong style="color: red;">${withdrawalAmount}</strong></p>
+                         <p><strong>Date: </strong> ${withdrawalDate}</p>
+                         <p>Note: Transaction fees/penalties were applied and are reflected in the total deposit balance below.</p>
+                        <hr>
+                        `;
+                }
                 
                 // Format the output to be readable
-                display.innerHTML = `
-                    <div class="response-box success">
-                        <h3>Deposit Confirmation: ${combinedResponse.message}</h3>
-                        
-                        <h4>Payment Details</h4>
-                        <p><strong>Payment ID:</strong> ${payment.paymentUuid}</p>
-                        <p><strong>Amount Deposited:</strong> <strong style="color: blue;">$${payment.paymentAmount}</strong></p>
-                        <p><strong>Date:</strong> ${payment.payment_date}</p>
-                        <p><strong>Status:</strong> ${payment.status}</p>
-                        <hr>
-
-                        <h4>Withdrawal Details</h4>
-                        <p><strong>Payment ID:</strong> ${progress.planUuid}</p>
-                        <p><strong>Amount Withdrawn:</strong> <strong style="color: blue;">$${withdraw.withdrawnAmount}</strong></p>
-                        <p><strong>Date:</strong> ${withdraw.withdrawalDate}</p>
-                        <p><strong>Status:</strong> ${withdraw.Message}</p>
-                        <hr>
-
+                html += `                        
                         <h4>Updated Savings Progress</h4>
                         <p><strong>Goal:</strong> ${progress.productName}</p>
                         <p><strong>Total Deposited:</strong> <strong style="color: green;">$${progress.paidTillToday}</strong></p>
@@ -116,6 +134,7 @@
                         </details>
                     </div>
                 `;
+                display.innerHTML = html
             } catch (e) {
                 console.error("Error parsing/displaying response:", e);
                 display.innerHTML = `<div class="error">Received invalid data: <pre>${progressJson}</pre></div>`;
@@ -151,9 +170,9 @@
 
         function sendDeposit() {
             const amountInput = document.getElementById('deposit-amount');
-            const amount = parseFloat(amountInput.value);
+            const paymentAmount = parseFloat(amountInput.value);
 
-            if (isNaN(amount) || amount <= 0) {
+            if (isNaN(paymentAmount) || paymentAmount <= 0) {
                 alert("Please enter a valid deposit amount.");
                 return;
             }
@@ -166,7 +185,7 @@
             if (stompClient && stompClient.connected) {
                 // Construct the JSON message payload expected by the Spring controller
                 // The key must match the 'amount' field in your SocketPaymentRequest DTO
-                const depositMessage = JSON.stringify({ 'amount': amount });
+                const depositMessage = JSON.stringify({ 'paymentAmount': paymentAmount });
 
                 // Send the JSON string to the Spring @MessageMapping destination
                 stompClient.send(DEPOSIT_DESTINATION, {}, depositMessage); 
@@ -181,9 +200,9 @@
         //--Withdrawal Logic
         function sendWithdrawal(){
             const withdrawalInput  = document.getElementById('withdraw-amount')
-            const withdrawalAmount = parseFloat(withdrawalInput.value);
+            const withdrawnAmount = parseFloat(withdrawalInput.value);
 
-            if(isNaN(withdrawalAmount) || withdrawalAmount <= 0){
+            if(isNaN(withdrawnAmount) || withdrawnAmount <= 0){
                 alert("Please enter a valid amount to be withdrawn!");
                 return;
             }
@@ -193,9 +212,17 @@
                 return;
             }
             if(stompClient && stompClient.connected){
-                //Construct the JSON payload 
-                
+                //Construct the JSON payload to be received Spring Controller
+                const withdrawMessage = JSON.stringify({'withdrawAmount':withdrawnAmount});
 
+                //Send JSON string to the new Spring @MessagingMapping destination
+                stompClient.send(WITHDRAW_DESTINATION, {}, withdrawMessage);
+                console.log("Sent withdrawal message to " + WITHDRAW_DESTINATION + ": " + withdrawMessage);
+
+            }
+            else{
+                updateStatus("STOMP client not connected Reconnecting....", true);
+                connect();
             }
         }
 
