@@ -106,6 +106,7 @@ public class SavingsDisplayWebSocketController {
 
             //3. Build and return the combined CTO
             String successMessage = "Withdrawal of $" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + " processed successfully. Progress updated in real-time.";
+            LocalDate withdrawnDate = LocalDate.now();
             SocketWithdrawalResponse socketWithdrawalResponseDTO = new SocketWithdrawalResponse(
                 savingsProgressService,
                 withdrawnAmount,
