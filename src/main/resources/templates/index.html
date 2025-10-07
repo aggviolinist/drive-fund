@@ -88,11 +88,11 @@
                 //    ? combinedResponse.savingsProgressResponse
                 //    : combinedResponse.savingsProgressResponse;
 
-                const DepostiOrWithdrawalMessage = combinedResponse.message;
+                const DepositOrWithdrawalMessage = combinedResponse.message;
 
                 //Start building the display HTML
                 let html = `<div class="response-box" ${isDepositResponse ? 'success' : `error`}>`;
-                    html += `<h3>Transaction Update: ${DepostiOrWithdrawalMessage}</h3><hr>`;
+                    html += `<h3>Transaction Update: ${DepositOrWithdrawalMessage}</h3><hr>`;
 
                 if(isDepositResponse){
                     const payment = combinedResponse.paymentResponse;
@@ -213,7 +213,7 @@
             }
             if(stompClient && stompClient.connected){
                 //Construct the JSON payload to be received Spring Controller
-                const withdrawMessage = JSON.stringify({'withdrawAmount':withdrawnAmount});
+                const withdrawMessage = JSON.stringify({'withdrawnAmount':withdrawnAmount});
 
                 //Send JSON string to the new Spring @MessagingMapping destination
                 stompClient.send(WITHDRAW_DESTINATION, {}, withdrawMessage);

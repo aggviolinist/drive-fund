@@ -92,17 +92,17 @@ public class SavingsDisplayWebSocketController {
     }
     @MessageMapping("/withdrawal/{planUuid}")
     @SendTo("/topic/progress/{planUuid}")
-    public String handleWithdrawalAndCalculateProgress(@DestinationVariable UUID plaUuid, @Payload SocketWithdrawalRequest withdrawalRequest) throws JsonProcessingException{
+    public String handleWithdrawalAndCalculateProgress(@DestinationVariable UUID planUuid, @Payload SocketWithdrawalRequest withdrawalRequest) throws JsonProcessingException{
         BigDecimal withdrawnAmount = withdrawalRequest.getWithdrawnAmount();
-        System.out.println("Withdrawal Amount of:" + withdrawnAmount + "for plan:" + plaUuid);
+        System.out.println("Withdrawal Amount of:" + withdrawnAmount + "for plan:" + planUuid);
 
         try{
             //1. Record the user withthdrawal together with the fees and penalties associated with it
-            withdrawalService.recordWithdrawal(plaUuid, withdrawnAmount);
+            withdrawalService.recordWithdrawal(planUuid, withdrawnAmount);
 
             //2. Get the updated progress response
             //This reduces the totaldeposits, totalExpectedAmounts, Percentages
-            SavingsProgressResponse savingsProgressService = savingsDisplayService.getSavingsProgress(plaUuid);
+            SavingsProgressResponse savingsProgressService = savingsDisplayService.getSavingsProgress(planUuid);
 
             //3. Build and return the combined CTO
             String successMessage = "Withdrawal of $" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + " processed successfully. Progress updated in real-time.";

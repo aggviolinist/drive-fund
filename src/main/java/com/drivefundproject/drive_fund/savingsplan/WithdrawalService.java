@@ -37,7 +37,12 @@ public class WithdrawalService {
     public void recordWithdrawal(UUID planUuid, BigDecimal withdrawnAmount){
         //Validate Savings Plan and Status
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
+        if(withdrawnAmount == null)
+        {
+            throw new IllegalArgumentException("Withdrawal Amount must be provided.");
 
+        }
+        
         if(!retrievedSavingsPlan.isPresent()){
             throw new IllegalArgumentException("Savings Plan not found.");
         }
