@@ -18,13 +18,7 @@ public class PaymentResponse {
     private UUID paymentUuid;
     private BigDecimal paymentAmount;
     private LocalDate payment_date;
-    private String payment_method;
-    private String transaction_id;
-    private Status status;
-
-
-
-
-
-    
+    //private String payment_method;
+   // private String transaction_id;
+    private Status status;    
 }

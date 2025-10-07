@@ -56,6 +56,8 @@ public class PaymentService {
             payment.setSavingsPlan(savingsPlan);
             payment.setPaymentAmount(paymentAmount);
             payment.setPaymentType(PaymentType.DEPOSIT); //Deposit interest as payment
+            payment.setSystemMessage("USER_MADE_DEPOSIT");
+            payment.setTransactionId("DEPOSIT-TXN-"+ UUID.randomUUID().toString().substring(0,8));
             payment.setPaymentDate(LocalDate.now());
 
             Payment savedPayment = paymentRepository.save(payment);

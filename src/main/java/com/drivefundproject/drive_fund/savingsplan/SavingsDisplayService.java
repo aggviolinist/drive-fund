@@ -145,8 +145,8 @@ public class SavingsDisplayService {
                newPayment.getPaymentUuid(),
                newPayment.getPaymentAmount(),
                newPayment.getPaymentDate(),
-               newPayment.getSystemMessage(),
-               newPayment.getTransactionId(),
+               //newPayment.getSystemMessage(),
+               //newPayment.getTransactionId(),
                newPayment.getSavingsPlan().getStatus()
         );
     }
