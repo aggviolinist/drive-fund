@@ -200,9 +200,9 @@
         //--Withdrawal Logic
         function sendWithdrawal(){
             const withdrawalInput  = document.getElementById('withdraw-amount')
-            const withdrawnAmount = parseFloat(withdrawalInput.value);
+            const withdrawnAmountz = parseFloat(withdrawalInput.value);
 
-            if(isNaN(withdrawnAmount) || withdrawnAmount <= 0){
+            if(isNaN(withdrawnAmountz) || withdrawnAmountz <= 0){
                 alert("Please enter a valid amount to be withdrawn!");
                 return;
             }
@@ -213,7 +213,7 @@
             }
             if(stompClient && stompClient.connected){
                 //Construct the JSON payload to be received Spring Controller
-                const withdrawMessage = JSON.stringify({'withdrawnAmount':withdrawnAmount});
+                const withdrawMessage = JSON.stringify({'withdrawnAmount':withdrawnAmountz});
 
                 //Send JSON string to the new Spring @MessagingMapping destination
                 stompClient.send(WITHDRAW_DESTINATION, {}, withdrawMessage);

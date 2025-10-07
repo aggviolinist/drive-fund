@@ -53,16 +53,17 @@ public class WithdrawalService {
         WithdrawalType feeType;
         String feeReason;
 
-        if(savingsPlan.getStatus() != Status.COMPLETED){
-            //Apply 2% transaction fee for completed plans/normal withdrawal
-            feeRate = WITHDRAWAL_FEE_RATE;
-            feeType = WithdrawalType.WITHDRAWAL_FEE;
-            feeReason = "Normal Withdrawal Transaction Fee (2%)";
-        }
-        else{
+        if(savingsPlan.getStatus() == Status.PENDING || savingsPlan.getStatus() == Status.IN_PROGRESS){
             feeRate = WITHDRAWALPENALTY_FEE_RATE;
             feeType = WithdrawalType.WITHDRAWAL_PENALTY;
             feeReason = "Early Withdrawal Penalty (10%)";
+        }
+        else{
+            //Apply 2% transaction fee for completed plans/normal withdrawal 
+            feeRate = WITHDRAWAL_FEE_RATE;
+            feeType = WithdrawalType.WITHDRAWAL_FEE;
+            feeReason = "Normal Withdrawal Transaction Fee (2%)";
+            
         }
         //2. Calculate Costs and Validate Balance
         BigDecimal feeAmount = withdrawnAmount.multiply(feeRate).setScale(2, RoundingMode.HALF_UP);
@@ -77,7 +78,7 @@ public class WithdrawalService {
         Payment withdrawal = new Payment();
         withdrawal.setSavingsPlan(savingsPlan);
         withdrawal.setPaymentAmount(withdrawnAmount.negate());
-        withdrawal.setWithdrawalType(WithdrawalType.NO_WITHDRAWAL);
+        withdrawal.setWithdrawalType(feeType);
         withdrawal.setPaymentType(PaymentType.WITHDRAWAL);
         withdrawal.setWithdrawalDate(LocalDate.now());
         withdrawal.setSystemMessage("WITHDRAWAL_REQUEST");
