@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,45 +14,41 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.Setter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "payments")
-public class Payment {
-
+@Table(name = "interest_earned")
+public class InterestEarned {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "payment_uuid", nullable = false , updatable = false)
-    private UUID paymentUuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "savings_plan_id", nullable = false)
     private SavingsPlan savingsPlan;
 
-    private BigDecimal paymentAmount;
+    @Column(name = "interestEarned_uuid", nullable = false , updatable = false)
+    private UUID interestEarnedUuid;
 
-    private LocalDate paymentDate;
+    private BigDecimal interestAmount;
 
-    private String systemMessage;
+    private LocalDate dateInterestEarned;
+
+    private String interestType;
 
     private String transactionId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_type", nullable = false)
-    private TransactionType transactionType = TransactionType.DEPOSIT;
-
     @PrePersist
     public void prePersist(){
-        if(this.paymentUuid == null){
-            this.paymentUuid = UUID.randomUUID();
+        if(this.interestEarnedUuid == null){
+            this.interestEarnedUuid = UUID.randomUUID();
         }
 
     }
+    
 }
