@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.drivefundproject.drive_fund.model.Payment;
-import com.drivefundproject.drive_fund.model.PaymentType;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -17,5 +16,4 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
      Optional<Payment> findTopBySavingsPlan_PlanUuidOrderByPaymentDateDesc(UUID planUUid);  
      long countBySavingsPlan_PlanUuid(UUID planUuid); 
 
-     long countBySavingsPlan_PlanUuidAndPaymentType(UUID planUuid, PaymentType paymentType);
 }

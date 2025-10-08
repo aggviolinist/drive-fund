@@ -28,6 +28,7 @@ public class WithdrawalService {
 
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
+    private final WithdrawalRepository 
 
     private final BigDecimal WITHDRAWALPENALTY_FEE_RATE = new BigDecimal("0.10"); //10% penalty on early withdrawal
     private final BigDecimal WITHDRAWAL_FEE_RATE = new BigDecimal("0.02"); //2% Transcation fee on end of tenure

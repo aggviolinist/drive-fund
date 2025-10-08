@@ -3,6 +3,7 @@ package com.drivefundproject.drive_fund.savingsplan;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,8 +27,8 @@ public class InterestEarnedService {
     private final InterestEarnedRepository interestEarnedRepository;
     private final PaymentService paymentService;
 
-    private final BigDecimal FIVE_PERCENT_INTEREST_FEE = new BigDecimal("0.05"); //5% interest on 50% deposit
-    private final BigDecimal SEVEN_POINT_FIVE_PERCENT_INTEREST_FEE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
+    private final BigDecimal FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.05"); //5% interest on 50% deposit
+    private final BigDecimal SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
 
     //1. CHECK IF INTEREST HAS BEEN EARNED
     public boolean hasInterestBeenAwarded(UUID planUuid, InterestType interestType){
@@ -51,26 +52,30 @@ public class InterestEarnedService {
         String message = "No interest Awarded!";
         InterestType interestType = null;
 
-        //a. CHECK 50% THRESHOLD
-        if(percentageCompleted >= 50.00 && !hasInterestBeenAwarded(planUuid, interestType.INTEREST_50_PERCENT)){
-            interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_FEE);
-            interestType = InterestType.INTEREST_50_PERCENT;
-            message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_FEE.multiply(new BigDecimal("100")) + "% interest awarded.";
-        }
-        //b. CHECK 75% THRESHOLD
-        else if(percentageCompleted >= 75.00 && ! hasInterestBeenAwarded(planUuid, interestType.INTEREST_75_PERCENT)){
-            interestAmount = targetAmount.multiply(SEVEN_POINT_FIVE_PERCENT_INTEREST_FEE);
+        //a. CHECK 75% THRESHOLD
+        if(percentageCompleted >= 75.00 && !hasInterestBeenAwarded(planUuid, InterestType.INTEREST_75_PERCENT)){
+            interestAmount = targetAmount.multiply(SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE);
             interestType = InterestType.INTEREST_75_PERCENT;
-            message = "Congratulations! 75% target reached. " + SEVEN_POINT_FIVE_PERCENT_INTEREST_FEE.multiply(new BigDecimal("100")) + "% interest awarded.";
-        }
-        //3. IF INTEREST WAS AWARDED ADD IT AS PAYMENT
-        if(interestAmount.compareTo(BigDecimal.ZERO) > 0){
+            message = "Congratulations! 75% target reached. " + SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
+
+            //ADD 7.5% INTEREST AS PAYMENT
             applyInterestAsPayment(savingsPlan, interestAmount, interestType);
-        
-        //4. ADD INTEREST TO THE TOTAL DEPOSIT JUST EARNED
-        paidTillToday = paymentService.calculateTotalDeposit(planUuid);
-        
-    }
+            //ADD 7.5% INTEREST TO THE TOTAL DEPOSIT PAID SO FAR
+            paidTillToday = paidTillToday.add(interestAmount);
+
+        }
+        //b. CHECK 50% THRESHOLD
+        else if(percentageCompleted >= 50.00 && ! hasInterestBeenAwarded(planUuid, InterestType.INTEREST_50_PERCENT)){
+            interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_RATE);
+            interestType = InterestType.INTEREST_50_PERCENT;
+            message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
+
+            //ADD 5% INTEREST EARNED AS PAYMENT
+            applyInterestAsPayment(savingsPlan, interestAmount, interestType);
+            //ADD 5% INTEREST EARNED TO THE TOTAL DEPOSIT PAID SO FAR
+            paidTillToday = paidTillToday.add(interestAmount);
+        }
+            
     return new InterestResponse(
         planUuid,
         targetAmount,
@@ -88,14 +93,20 @@ public class InterestEarnedService {
             interestEarned.setSavingsPlan(savingsPlan);
             interestEarned.setInterestAmount(interestAmount);
             interestEarned.setDateInterestEarned(LocalDate.now());
-            interestEarned.setInterestType(interestType);
+            interestEarned.setInterestType(interestType.name());
             interestEarned.setTransactionId("INTEREST-" + interestType + "-" + UUID.randomUUID().toString().substring(0,8));
 
             return interestEarnedRepository.save(interestEarned);
         }
         else{
-            throw new IllegalArgumentException("Can't apply interest. Savings Plan not found/ Interest amount is zero");
+            throw new IllegalArgumentException("Can't apply interest/Interest amount is zero.");
         }
+    }
+    public BigDecimal calculateTotalInterest(UUID planUuid){
+         List<InterestEarned> interests = interestEarnedRepository.findBySavingsPlan_PlanUuid(planUuid);
+             return interests.stream()
+                       .map(InterestEarned::getInterestAmount)
+                       .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 
