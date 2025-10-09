@@ -43,12 +43,12 @@ public class PaymentService {
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
-            BigDecimal currentTotalDeposited = calculateTotalDeposit(planUuid);
-            BigDecimal newTotalDeposited = currentTotalDeposited.add(paymentAmount);
+            BigDecimal netAmountPaidSoFar = calculateTotalDeposit(planUuid);
+            BigDecimal newTotalDeposited = netAmountPaidSoFar.add(paymentAmount);
             BigDecimal targetAmount = savingsPlan.getAmount();
 
             if(newTotalDeposited.compareTo(targetAmount) > 0){
-                throw new IllegalArgumentException("Payment amount exceeds the remaining savings goal. The remaining amount is:" + targetAmount.subtract(currentTotalDeposited));
+                throw new IllegalArgumentException("Payment amount exceeds the remaining savings goal. The remaining amount is:" + targetAmount.subtract(netAmountPaidSoFar));
 
             }
             //IN-PROGRESS Status Logic
@@ -108,19 +108,22 @@ public class PaymentService {
 
             BigDecimal grossSavings = totalDeposits.add(totalInterest);
             BigDecimal totalDeductions = totalWithdrawn.add(totalfee);
-                                
+            BigDecimal netAmountPaidSoFar =  grossSavings.subtract(totalDeductions);
 
-        //3. Combine them for the total money so far
-        return totalDeposits.add(totalInterest);
-
+            if (netAmountPaidSoFar.compareTo(BigDecimal.ZERO) < 0) {
+                  netAmountPaidSoFar = BigDecimal.ZERO;
+            }
+                            
+        //3. TotalDeposits - Totalinterest - Totalwithdrawals(fee/penalty)
+        return netAmountPaidSoFar;
         }
     public BigDecimal calculateRemainingAmount(UUID planUuid){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
-            BigDecimal totalDeposits = calculateTotalDeposit(planUuid);
-            BigDecimal remainingAmount = savingsPlan.getAmount().subtract(totalDeposits);
+            BigDecimal netAmountPaidSoFar = calculateTotalDeposit(planUuid);
+            BigDecimal remainingAmount = savingsPlan.getAmount().subtract(netAmountPaidSoFar);
             //return savingsPlan.getAmount() - totalDeposits;
         
             if(remainingAmount.compareTo(BigDecimal.ZERO) < 0){
@@ -137,15 +140,15 @@ public class PaymentService {
 
         if(retrievedSavingsPlan.isPresent()){
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
-            BigDecimal totalDeposits = calculateTotalDeposit(planUuid);
+            BigDecimal netAmountPaidSoFar = calculateTotalDeposit(planUuid);
             BigDecimal targetAmount = savingsPlan.getAmount();
 
             if(targetAmount.compareTo(BigDecimal.ZERO) <= 0){
                 return 0.0;
             }
-            double percentage = totalDeposits.divide(targetAmount, 4, RoundingMode.HALF_UP).doubleValue() * 100;
+            double percentage = netAmountPaidSoFar.divide(targetAmount, 4, RoundingMode.HALF_UP).doubleValue() * 100;
             //Ensuring the percentage doesn't exceed 100% incase user overpays
-            return Math.min(percentage, 100.0);
+            return Math.max(0.0,Math.min(percentage, 100.0));
         }
         return 0.0;
     }

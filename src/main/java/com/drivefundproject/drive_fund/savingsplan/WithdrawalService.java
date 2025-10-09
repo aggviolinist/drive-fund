@@ -76,9 +76,11 @@ public class WithdrawalService {
         BigDecimal feeAmount = withdrawnAmount.multiply(feeRate).setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalWithdrawalCost = withdrawnAmount.add(feeAmount);
         BigDecimal TotalDeposits = paymentService.calculateTotalDeposit(planUuid);
+        BigDecimal maxAllowableWithdrawal = TotalDeposits.divide(BigDecimal.ONE.add(feeRate), 2, RoundingMode.HALF_UP);
 
         if(TotalDeposits.compareTo(totalWithdrawalCost) < 0){
-            throw new IllegalArgumentException("Withdrawal request of " + withdrawnAmount.setScale(2, RoundingMode.HALF_UP) + " plus " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " exceeds the available net balance of " + TotalDeposits.setScale(2, RoundingMode.HALF_UP));
+            throw new IllegalArgumentException( "Withdrawal request exceeds available balance. You can withdraw up to " + maxAllowableWithdrawal
+        + " considering the " + feeReason + " of " + feeRate.multiply(new BigDecimal("100")) + "%.");
         }
 
         //3. Record the Withdrawal (Negative Payment)

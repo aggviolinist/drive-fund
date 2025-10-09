@@ -15,5 +15,6 @@ public class TokenResponse {
 
     private String token;
     private Role role;
+    private String firstname;
 
 }
