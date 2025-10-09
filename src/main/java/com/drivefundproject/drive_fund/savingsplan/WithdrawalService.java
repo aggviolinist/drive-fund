@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
 import com.drivefundproject.drive_fund.model.Payment;
-import com.drivefundproject.drive_fund.model.PaymentType;
+import com.drivefundproject.drive_fund.model.WithdrawalType;
+import com.drivefundproject.drive_fund.model.Withdrawals;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.Status;
-import com.drivefundproject.drive_fund.model.WithdrawalType;
+import com.drivefundproject.drive_fund.model.WithdrawalFee;
 import com.drivefundproject.drive_fund.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
+import com.drivefundproject.drive_fund.repository.WithdrawalsRepository;
+import com.drivefundproject.drive_fund.repository.WithdrawalFeeRepository;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +32,8 @@ public class WithdrawalService {
 
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
-    private final WithdrawalRepository 
+    private final WithdrawalsRepository withdrawalRepository;
+    private final WithdrawalFeeRepository withdrawalFeeRepository;
 
     private final BigDecimal WITHDRAWALPENALTY_FEE_RATE = new BigDecimal("0.10"); //10% penalty on early withdrawal
     private final BigDecimal WITHDRAWAL_FEE_RATE = new BigDecimal("0.02"); //2% Transcation fee on end of tenure
@@ -72,30 +77,28 @@ public class WithdrawalService {
         BigDecimal TotalDeposits = paymentService.calculateTotalDeposit(planUuid);
 
         if(TotalDeposits.compareTo(totalWithdrawalCost) < 0){
-            throw new IllegalArgumentException("Withdrawl request of " + withdrawnAmount.setScale(2, RoundingMode.HALF_UP) + " plus " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " exceeds the available net balance of " + TotalDeposits.setScale(2, RoundingMode.HALF_UP));
+            throw new IllegalArgumentException("Withdrawal request of " + withdrawnAmount.setScale(2, RoundingMode.HALF_UP) + " plus " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " exceeds the available net balance of " + TotalDeposits.setScale(2, RoundingMode.HALF_UP));
         }
 
         //3. Record the Withdrawal (Negative Payment)
-        Payment withdrawal = new Payment();
-        withdrawal.setSavingsPlan(savingsPlan);
-        withdrawal.setPaymentAmount(withdrawnAmount.negate());
-        withdrawal.setWithdrawalType(feeType);
-        withdrawal.setPaymentType(PaymentType.WITHDRAWAL);
-        withdrawal.setWithdrawalDate(LocalDate.now());
-        withdrawal.setSystemMessage("WITHDRAWAL_REQUEST");
-        withdrawal.setTransactionId("WITHDRAW-" + UUID.randomUUID().toString().substring(0,8));
-        paymentRepository.save(withdrawal);
+        Withdrawals withdrawals = new Withdrawals();
+        withdrawals.setSavingsPlan(savingsPlan);
+        withdrawals.setWithdrawalAmount(withdrawnAmount.negate());
+        withdrawals.setWithdrawalType(feeType);
+        withdrawals.setDateWithdrawn(LocalDate.now());
+        withdrawals.setSystemMessage("WITHDRAWAL_REQUEST");
+        withdrawals.setTransactionId("WITHDRAW-" + UUID.randomUUID().toString().substring(0,8));
+        paymentRepository.save(withdrawals);
 
         //4. Record penalty(Positive payment to the platform)
-        Payment penalty = new Payment();
-        penalty.setSavingsPlan(savingsPlan);
-        penalty.setPaymentAmount(feeAmount);
-        penalty.setWithdrawalType(feeType);
-        penalty.setPaymentType(PaymentType.FEE); 
-        penalty.setWithdrawalDate(LocalDate.now());
-        penalty.setSystemMessage(feeReason);
-        penalty.setTransactionId(feeType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
-        paymentRepository.save(penalty);
+        WithdrawalFee withdrawalFee = new WithdrawalFee();
+        withdrawalFee.setSavingsPlan(savingsPlan);
+        withdrawalFee.setWithdrawalAmount(feeAmount);
+        withdrawalFee.setWithdrawalType(feeType);
+        withdrawalFee.setDateWithdrawn(LocalDate.now());
+        withdrawalFee.setSystemMessage(feeReason);
+        withdrawalFee.setTransactionId(feeType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
+        paymentRepository.save(withdrawalFee);
 
         System.out.println("Successful withdrawal of:" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + ". " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " applied.");
     }
