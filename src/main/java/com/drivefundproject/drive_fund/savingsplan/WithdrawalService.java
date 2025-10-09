@@ -33,7 +33,6 @@ import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 public class WithdrawalService {
 
     private final SavingsPlanRepository savingsPlanRepository;
-    private final PaymentRepository paymentRepository;
     private final WithdrawalsRepository withdrawalRepository;
     private final WithdrawalFeeRepository withdrawalFeeRepository;
 
@@ -88,7 +87,7 @@ public class WithdrawalService {
         withdrawals.setWithdrawalAmount(withdrawnAmount);
         withdrawals.setWithdrawalType(feeType);
         withdrawals.setDateWithdrawn(LocalDate.now());
-        withdrawals.setSystemMessage("WITHDRAWAL_REQUEST");
+        withdrawals.setSystemMessage(feeReason);
         withdrawals.setTransactionId("WITHDRAW-" + UUID.randomUUID().toString().substring(0,8));
         withdrawalRepository.save(withdrawals);
 

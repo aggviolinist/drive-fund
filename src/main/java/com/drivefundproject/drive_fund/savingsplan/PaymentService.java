@@ -17,8 +17,12 @@ import com.drivefundproject.drive_fund.model.Payment;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.model.Status;
 import com.drivefundproject.drive_fund.model.TransactionType;
+import com.drivefundproject.drive_fund.model.WithdrawalFee;
+import com.drivefundproject.drive_fund.model.Withdrawals;
 import com.drivefundproject.drive_fund.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
+import com.drivefundproject.drive_fund.repository.WithdrawalFeeRepository;
+import com.drivefundproject.drive_fund.repository.WithdrawalsRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +33,8 @@ public class PaymentService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
     private final InterestEarnedService interestEarnedService;
+    private final WithdrawalFeeRepository withdrawalFeeRepository;
+    private final WithdrawalsRepository withdrawalsRepository;
 
 
     public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
@@ -89,6 +95,20 @@ public class PaymentService {
                       .reduce(BigDecimal.ZERO, BigDecimal::add);
         //2. Get total from earned interest (InterestEarned table)
            BigDecimal totalInterest = interestEarnedService.calculateTotalInterest(planUuid);
+        //TOTAL WITHDRAWS FROM WITHDRAWALS TABLE
+           List<Withdrawals> withdrawals = withdrawalsRepository.findBySavingsPlan_PlanUuid(planUuid);
+           BigDecimal totalWithdrawn = withdrawals.stream()
+                      .map(Withdrawals::getWithdrawalAmount)
+                      .reduce(BigDecimal.ZERO,BigDecimal::add);
+        //TOTAL WITHDRAWAL FEE FROM THE WITHDRAWAL FEE TABLE
+            List<WithdrawalFee> withdrawalFees = withdrawalFeeRepository.findBySavingsPlan_PlanUuid(planUuid);
+            BigDecimal totalfee = withdrawalFees.stream()
+                      .map(WithdrawalFee::getFeeAmount)
+                      .reduce(BigDecimal.ZERO,BigDecimal::add);
+
+            BigDecimal grossSavings = totalDeposits.add(totalInterest);
+            BigDecimal totalDeductions = totalWithdrawn.add(totalfee);
+                                
 
         //3. Combine them for the total money so far
         return totalDeposits.add(totalInterest);
