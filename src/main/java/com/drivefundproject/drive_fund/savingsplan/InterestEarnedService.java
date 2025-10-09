@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
@@ -15,6 +16,7 @@ import com.drivefundproject.drive_fund.model.InterestType;
 import com.drivefundproject.drive_fund.model.Payment;
 import com.drivefundproject.drive_fund.model.SavingsPlan;
 import com.drivefundproject.drive_fund.repository.InterestEarnedRepository;
+import com.drivefundproject.drive_fund.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class InterestEarnedService {
 
     private final SavingsPlanRepository savingsPlanRepository;
     private final InterestEarnedRepository interestEarnedRepository;
-    private final PaymentService paymentService;
+    private final PaymentRepository paymentRepository;
 
     private final BigDecimal FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.05"); //5% interest on 50% deposit
     private final BigDecimal SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
@@ -47,7 +49,13 @@ public class InterestEarnedService {
 
         SavingsPlan savingsPlan =  retrievedSavingsPlan.get();
         BigDecimal targetAmount = savingsPlan.getAmount();
-        BigDecimal paidTillToday = paymentService.calculateTotalDeposit(planUuid);
+        BigDecimal paidTillToday = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid) //Fetch all payments for a given plan, already sorted by date.
+                    .stream() 
+                    .map(Payment::getPaymentAmount)//Extracts just the paymentAmount from each payment.
+                    .reduce(BigDecimal.ZERO,BigDecimal::add)//Sums all payment amounts
+                    .add(calculateTotalInterest(planUuid));//Adds any previously awarded interest from your InterestEarnedRepository
+
+                    
         BigDecimal interestAmount = BigDecimal.ZERO;
         String message = "No interest Awarded!";
         InterestType interestType = null;
@@ -93,8 +101,8 @@ public class InterestEarnedService {
             interestEarned.setSavingsPlan(savingsPlan);
             interestEarned.setInterestAmount(interestAmount);
             interestEarned.setDateInterestEarned(LocalDate.now());
-            interestEarned.setInterestType(interestType.name());
-            interestEarned.setTransactionId("INTEREST-" + interestType + "-" + UUID.randomUUID().toString().substring(0,8));
+            interestEarned.setInterestType(interestType);
+            interestEarned.setTransactionId("INTEREST-" + interestType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
 
             return interestEarnedRepository.save(interestEarned);
         }

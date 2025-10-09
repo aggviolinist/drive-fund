@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
@@ -19,6 +20,7 @@ import com.drivefundproject.drive_fund.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
 import com.drivefundproject.drive_fund.repository.WithdrawalsRepository;
 import com.drivefundproject.drive_fund.repository.WithdrawalFeeRepository;
+
 
 
 import lombok.RequiredArgsConstructor;
@@ -83,22 +85,22 @@ public class WithdrawalService {
         //3. Record the Withdrawal (Negative Payment)
         Withdrawals withdrawals = new Withdrawals();
         withdrawals.setSavingsPlan(savingsPlan);
-        withdrawals.setWithdrawalAmount(withdrawnAmount.negate());
+        withdrawals.setWithdrawalAmount(withdrawnAmount);
         withdrawals.setWithdrawalType(feeType);
         withdrawals.setDateWithdrawn(LocalDate.now());
         withdrawals.setSystemMessage("WITHDRAWAL_REQUEST");
         withdrawals.setTransactionId("WITHDRAW-" + UUID.randomUUID().toString().substring(0,8));
-        paymentRepository.save(withdrawals);
+        withdrawalRepository.save(withdrawals);
 
         //4. Record penalty(Positive payment to the platform)
         WithdrawalFee withdrawalFee = new WithdrawalFee();
         withdrawalFee.setSavingsPlan(savingsPlan);
-        withdrawalFee.setWithdrawalAmount(feeAmount);
+        withdrawalFee.setFeeAmount(feeAmount);
         withdrawalFee.setWithdrawalType(feeType);
-        withdrawalFee.setDateWithdrawn(LocalDate.now());
+        withdrawalFee.setDateWithdrawalFeeEarned(LocalDate.now());
         withdrawalFee.setSystemMessage(feeReason);
         withdrawalFee.setTransactionId(feeType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
-        paymentRepository.save(withdrawalFee);
+        withdrawalFeeRepository.save(withdrawalFee);
 
         System.out.println("Successful withdrawal of:" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + ". " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " applied.");
     }

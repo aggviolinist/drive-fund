@@ -16,7 +16,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "withdrawal_fees")
 public class WithdrawalFee {
@@ -36,7 +44,10 @@ public class WithdrawalFee {
     private LocalDate dateWithdrawalFeeEarned;
 
     @Enumerated(EnumType.STRING)
-    private String withdrawalType;
+    @Column(name = "withdrawal_type", nullable = false)
+    private WithdrawalType withdrawalType;
+
+    private String systemMessage;
 
     private String transactionId;
 
