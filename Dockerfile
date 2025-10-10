@@ -1,5 +1,5 @@
 # Stage 1: Build the Application
-FROM maven:3.8.3-openjdk-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 # Set the working directory
 WORKDIR /app
 # Copy the project files into the build stage
@@ -7,7 +7,7 @@ COPY . .
 # Build the project, resulting in the JAR file in /target/
 RUN mvn clean install -DskipTests
 
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre-alpine
 COPY --from=build /app/target/drive-fund-0.0.1-SNAPSHOT.jar savingsapp.jar
 EXPOSE 8080
 ENTRYPOINT [ "java","-jar","savingsapp.jar" ]
