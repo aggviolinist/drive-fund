@@ -61,7 +61,7 @@ public class SecurityConfiguration {
         "/v3/api-docs","/api/v1/auth/**", "/api/v1/auth/register", "/api/v1/auth/login","/v2/api-docs",
 			"/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 			"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html",
-			"/api/test/**", "/authenticate", "/web/sockets/**", "/ws/**"
+			"/api/test/**", "/authenticate", "/web/sockets/**", "/ws/**","/favicon.ico", "/css/**", "/js/**", "/images/**"
         ).permitAll()
         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 
