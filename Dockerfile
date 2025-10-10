@@ -8,7 +8,7 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
-COPY --from=build /app/target/drive-fund-0.0.1-SNAPSHOT.jar savingsapp.jar
+COPY --from=build /app/target/*.jar savingsapp.jar
 EXPOSE 8080
 ENTRYPOINT [ "java","-jar","savingsapp.jar" ]
 
