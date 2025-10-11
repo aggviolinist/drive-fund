@@ -7,6 +7,7 @@ COPY . .
 # Build the project, resulting in the JAR file in /target/
 RUN mvn clean install -DskipTests
 
+# Stage 2: Copy the build to target folder, expose it and run it
 FROM eclipse-temurin:17-jre-alpine
 COPY --from=build /app/target/*.jar savingsapp.jar
 EXPOSE 8080
