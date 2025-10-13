@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.savingsplan;
+package com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.service;
+
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,19 +11,19 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
-import com.drivefundproject.drive_fund.model.Frequency;
-import com.drivefundproject.drive_fund.model.InterestEarned;
-import com.drivefundproject.drive_fund.model.Payment;
-import com.drivefundproject.drive_fund.model.SavingsPlan;
-import com.drivefundproject.drive_fund.model.Status;
-import com.drivefundproject.drive_fund.model.TransactionType;
-import com.drivefundproject.drive_fund.model.WithdrawalFee;
-import com.drivefundproject.drive_fund.model.Withdrawals;
-import com.drivefundproject.drive_fund.repository.PaymentRepository;
-import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
-import com.drivefundproject.drive_fund.repository.WithdrawalFeeRepository;
-import com.drivefundproject.drive_fund.repository.WithdrawalsRepository;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.Frequency;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.Status;
+import com.drivefundproject.drive_fund.user.addsavingsplan.repository.SavingsPlanRepository;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.dto.response.InterestResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.service.InterestEarnedService;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.TransactionType;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.repository.PaymentRepository;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.model.Withdrawals;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.repository.WithdrawalsRepository;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.model.WithdrawalFee;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.repository.WithdrawalFeeRepository;
 
 import lombok.RequiredArgsConstructor;
 

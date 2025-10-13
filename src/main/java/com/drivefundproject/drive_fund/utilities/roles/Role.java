@@ -1,4 +1,6 @@
-package com.drivefundproject.drive_fund.model;
+package com.drivefundproject.drive_fund.utilities.roles;
+
+
 
 import java.util.Collections;
 import java.util.List;

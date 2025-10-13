@@ -1,4 +1,6 @@
-package com.drivefundproject.drive_fund.model;
+package com.drivefundproject.drive_fund.catalogue.model;
+
+
 
 import java.util.UUID;
 

@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.profile;
+package com.drivefundproject.drive_fund.profile.controller;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
-import com.drivefundproject.drive_fund.dto.Response.UserProfileResponse;
-import com.drivefundproject.drive_fund.model.User;
+import com.drivefundproject.drive_fund.auth.model.User;
+import com.drivefundproject.drive_fund.exception.ResponseHandler;
+import com.drivefundproject.drive_fund.profile.dto.response.UserProfileResponse;
+import com.drivefundproject.drive_fund.profile.service.ProfileViewService;
 
 import lombok.RequiredArgsConstructor;
 

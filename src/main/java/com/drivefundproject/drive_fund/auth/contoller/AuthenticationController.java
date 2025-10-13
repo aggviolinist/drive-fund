@@ -1,18 +1,19 @@
-package com.drivefundproject.drive_fund.auth;
+package com.drivefundproject.drive_fund.auth.contoller;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Request.RegisterRequest;
-import com.drivefundproject.drive_fund.dto.Request.loginRequest;
-import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
-import com.drivefundproject.drive_fund.dto.Response.TokenResponse;
+import com.drivefundproject.drive_fund.auth.dto.request.RegisterRequest;
+import com.drivefundproject.drive_fund.auth.dto.request.loginRequest;
+import com.drivefundproject.drive_fund.auth.dto.response.TokenResponse;
+import com.drivefundproject.drive_fund.auth.service.AuthenticationService;
+import com.drivefundproject.drive_fund.exception.ResponseHandler;
 
 import jakarta.validation.Valid;
 

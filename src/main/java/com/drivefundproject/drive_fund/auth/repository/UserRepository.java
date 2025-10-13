@@ -1,12 +1,13 @@
-package com.drivefundproject.drive_fund.repository;
+package com.drivefundproject.drive_fund.auth.repository;
+
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.drivefundproject.drive_fund.model.SavingsPlan;
-import com.drivefundproject.drive_fund.model.User;
+import com.drivefundproject.drive_fund.auth.model.User;
+
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {

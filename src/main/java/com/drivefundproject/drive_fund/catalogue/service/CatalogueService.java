@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.catalogue;
+package com.drivefundproject.drive_fund.catalogue.service;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,9 +9,10 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.dto.Request.CatalogueRequest;
-import com.drivefundproject.drive_fund.model.Catalogue;
-import com.drivefundproject.drive_fund.repository.CatalogueRepository;
+import com.drivefundproject.drive_fund.catalogue.dto.request.CatalogueRequest;
+import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.catalogue.repository.CatalogueRepository;
+
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.model;
+package com.drivefundproject.drive_fund.auth.model;
+
 
 import java.util.Collection;
 import java.util.List;
@@ -6,6 +7,8 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.drivefundproject.drive_fund.utilities.roles.Role;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

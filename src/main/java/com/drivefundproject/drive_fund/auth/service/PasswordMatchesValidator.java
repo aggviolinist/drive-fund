@@ -1,6 +1,8 @@
-package com.drivefundproject.drive_fund.auth;
+package com.drivefundproject.drive_fund.auth.service;
 
-import com.drivefundproject.drive_fund.dto.Request.RegisterRequest;
+
+
+import com.drivefundproject.drive_fund.auth.dto.request.RegisterRequest;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

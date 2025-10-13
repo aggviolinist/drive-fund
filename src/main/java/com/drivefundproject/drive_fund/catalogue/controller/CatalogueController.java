@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.catalogue;
+package com.drivefundproject.drive_fund.catalogue.controller;
+
 
 
 import lombok.RequiredArgsConstructor;
@@ -11,11 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.drivefundproject.drive_fund.dto.Request.CatalogueRequest;
-import com.drivefundproject.drive_fund.dto.Response.CatalogueResponse;
-import com.drivefundproject.drive_fund.dto.Response.CatalogueViewAllResponse;
-import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
-import com.drivefundproject.drive_fund.model.Catalogue;
+import com.drivefundproject.drive_fund.catalogue.dto.request.CatalogueRequest;
+import com.drivefundproject.drive_fund.catalogue.dto.response.CatalogueResponse;
+import com.drivefundproject.drive_fund.catalogue.dto.response.CatalogueViewAll;
+import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.catalogue.service.CatalogueService;
+import com.drivefundproject.drive_fund.exception.ResponseHandler;
 
 import jakarta.validation.Valid;
 
@@ -51,8 +53,8 @@ public class CatalogueController {
     public ResponseEntity<Object> viewAllProducts() { 
         List<Catalogue> allProducts = catalogueService.viewAllProducts();
 
-       List<CatalogueViewAllResponse> catalogueViewAllResponse = allProducts.stream()
-         .map(product -> CatalogueViewAllResponse.builder()
+       List<CatalogueViewAll> catalogueViewAllResponse = allProducts.stream()
+         .map(product -> CatalogueViewAll.builder()
           .catUuid(product.getCatUuid())
           .productname(product.getProductname())
           .productdesc(product.getProductdesc())

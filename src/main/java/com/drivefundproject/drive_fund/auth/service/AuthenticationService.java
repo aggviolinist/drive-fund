@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.auth;
+package com.drivefundproject.drive_fund.auth.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,16 +7,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.auth.image.S3Service;
-import com.drivefundproject.drive_fund.dto.Request.RegisterRequest;
-import com.drivefundproject.drive_fund.dto.Request.loginRequest;
-import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
-import com.drivefundproject.drive_fund.dto.Response.TokenResponse;
-import com.drivefundproject.drive_fund.jwt.JwtService;
-import com.drivefundproject.drive_fund.model.Role;
-import com.drivefundproject.drive_fund.model.User;
-import com.drivefundproject.drive_fund.repository.UserRepository;
+import com.drivefundproject.drive_fund.auth.dto.request.RegisterRequest;
+import com.drivefundproject.drive_fund.auth.dto.request.loginRequest;
+import com.drivefundproject.drive_fund.auth.dto.response.TokenResponse;
+import com.drivefundproject.drive_fund.auth.model.User;
+import com.drivefundproject.drive_fund.auth.repository.UserRepository;
+import com.drivefundproject.drive_fund.utilities.jwt.JwtService;
+import com.drivefundproject.drive_fund.utilities.profileImages.S3Service;
+import com.drivefundproject.drive_fund.utilities.roles.Role;
+
 import lombok.RequiredArgsConstructor;
+
+
 
 
 @Service

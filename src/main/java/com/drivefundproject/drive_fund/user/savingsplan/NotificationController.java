@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.savingsplan;
+package com.drivefundproject.drive_fund.user.savingsplan;
+
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

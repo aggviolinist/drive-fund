@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.savingsplan;
+package com.drivefundproject.drive_fund.user.savingsplan;
+
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,14 +17,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.drivefundproject.drive_fund.dto.Request.SocketPaymentRequest;
-import com.drivefundproject.drive_fund.dto.Request.SocketWithdrawalRequest;
-import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
-import com.drivefundproject.drive_fund.dto.Response.PaymentResponse;
-import com.drivefundproject.drive_fund.dto.Response.SavingsProgressResponse;
-import com.drivefundproject.drive_fund.dto.Response.SocketDepositDetailsResponse;
-import com.drivefundproject.drive_fund.dto.Response.SocketWithdrawalResponse;
-import com.drivefundproject.drive_fund.model.Payment;
+import com.drivefundproject.drive_fund.user.savingsplan.dto.SocketDepositDetailsResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.SavingsProgressResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.service.SavingsDisplayService;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.dto.response.InterestResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.request.SocketPaymentRequest;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.response.PaymentResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.service.PaymentService;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.dto.request.SocketWithdrawalRequest;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.dto.response.SocketWithdrawalResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.service.WithdrawalService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

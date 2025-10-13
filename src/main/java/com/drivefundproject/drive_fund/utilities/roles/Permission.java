@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.model;
+package com.drivefundproject.drive_fund.utilities.roles;
+
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

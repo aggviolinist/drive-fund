@@ -1,8 +1,11 @@
-package com.drivefundproject.drive_fund.model;
+package com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.model;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

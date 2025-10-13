@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.model;
+package com.drivefundproject.drive_fund.user.addsavingsplan.model;
+
 
 public enum Status {
     PENDING,

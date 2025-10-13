@@ -13,8 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
-
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice

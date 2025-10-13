@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.repository;
+package com.drivefundproject.drive_fund.user.addsavingsplan.repository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.drivefundproject.drive_fund.model.SavingsPlan;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
+
 
 @Repository
 public interface SavingsPlanRepository extends JpaRepository<SavingsPlan, Integer> {

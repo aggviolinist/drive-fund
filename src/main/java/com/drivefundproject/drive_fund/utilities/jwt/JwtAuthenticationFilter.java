@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.jwt;
+package com.drivefundproject.drive_fund.utilities.jwt;
+
 
 import java.io.IOException;
 

@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.savingsplan;
+package com.drivefundproject.drive_fund.user.addsavingsplan.controller;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
-import com.drivefundproject.drive_fund.dto.Response.ResponseHandler;
-import com.drivefundproject.drive_fund.dto.Response.ConciseSavingsPlanResponse;
-import com.drivefundproject.drive_fund.dto.Response.CustomCataloguePlanResponse;
-import com.drivefundproject.drive_fund.dto.Response.CustomUserSavingsPlanResponse;
-import com.drivefundproject.drive_fund.model.SavingsPlan;
-import com.drivefundproject.drive_fund.model.User;
+import com.drivefundproject.drive_fund.auth.model.User;
+import com.drivefundproject.drive_fund.exception.ResponseHandler;
+import com.drivefundproject.drive_fund.user.addsavingsplan.dto.request.SavingsPlanRequest;
+import com.drivefundproject.drive_fund.user.addsavingsplan.dto.response.ConciseSavingsPlanResponse;
+import com.drivefundproject.drive_fund.user.addsavingsplan.dto.response.CustomCataloguePlanResponse;
+import com.drivefundproject.drive_fund.user.addsavingsplan.dto.response.CustomUserSavingsPlanResponse;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
+import com.drivefundproject.drive_fund.user.addsavingsplan.service.SavingsPlanService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

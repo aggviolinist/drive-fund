@@ -1,18 +1,19 @@
-package com.drivefundproject.drive_fund.savingsplan;
+package com.drivefundproject.drive_fund.user.addsavingsplan.service;
+
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.dto.Request.SavingsPlanRequest;
-import com.drivefundproject.drive_fund.model.Catalogue;
-import com.drivefundproject.drive_fund.model.SavingsPlan;
-import com.drivefundproject.drive_fund.model.Status;
-import com.drivefundproject.drive_fund.model.User;
-import com.drivefundproject.drive_fund.repository.CatalogueRepository;
-import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
-import com.drivefundproject.drive_fund.repository.UserRepository;
+import com.drivefundproject.drive_fund.auth.model.User;
+import com.drivefundproject.drive_fund.auth.repository.UserRepository;
+import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.catalogue.repository.CatalogueRepository;
+import com.drivefundproject.drive_fund.user.addsavingsplan.dto.request.SavingsPlanRequest;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.Status;
+import com.drivefundproject.drive_fund.user.addsavingsplan.repository.SavingsPlanRepository;
 
 import lombok.RequiredArgsConstructor;
 

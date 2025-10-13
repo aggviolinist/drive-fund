@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.savingsplan;
+package com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.service;
+
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,14 +11,14 @@ import java.util.UUID;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.drivefundproject.drive_fund.dto.Response.InterestResponse;
-import com.drivefundproject.drive_fund.model.InterestEarned;
-import com.drivefundproject.drive_fund.model.InterestType;
-import com.drivefundproject.drive_fund.model.Payment;
-import com.drivefundproject.drive_fund.model.SavingsPlan;
-import com.drivefundproject.drive_fund.repository.InterestEarnedRepository;
-import com.drivefundproject.drive_fund.repository.PaymentRepository;
-import com.drivefundproject.drive_fund.repository.SavingsPlanRepository;
+import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
+import com.drivefundproject.drive_fund.user.addsavingsplan.repository.SavingsPlanRepository;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.dto.response.InterestResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.model.InterestEarned;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.model.InterestType;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.repository.InterestEarnedRepository;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.repository.PaymentRepository;
 
 import lombok.RequiredArgsConstructor;
 

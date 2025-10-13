@@ -1,12 +1,12 @@
-package com.drivefundproject.drive_fund.profile;
+package com.drivefundproject.drive_fund.profile.service;
+
 
 import org.springframework.stereotype.Service;
-import com.drivefundproject.drive_fund.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
-import com.drivefundproject.drive_fund.dto.Response.UserProfileResponse;
-import com.drivefundproject.drive_fund.model.User;
+import com.drivefundproject.drive_fund.auth.repository.UserRepository;
+import com.drivefundproject.drive_fund.profile.dto.response.UserProfileResponse;
 
 @Service
 @RequiredArgsConstructor

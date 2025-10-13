@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.drivefundproject.drive_fund.repository.UserRepository;
+import com.drivefundproject.drive_fund.auth.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

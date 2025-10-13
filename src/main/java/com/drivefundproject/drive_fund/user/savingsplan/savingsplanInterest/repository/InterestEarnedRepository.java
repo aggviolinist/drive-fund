@@ -1,12 +1,16 @@
-package com.drivefundproject.drive_fund.repository;
+package com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.repository;
+
+
 
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.drivefundproject.drive_fund.model.InterestEarned;
-import com.drivefundproject.drive_fund.model.InterestType;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.model.InterestEarned;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.model.InterestType;
+
+
 
 public interface InterestEarnedRepository extends JpaRepository<InterestEarned, Long> {
     //Get all interest earned by specific savings plan

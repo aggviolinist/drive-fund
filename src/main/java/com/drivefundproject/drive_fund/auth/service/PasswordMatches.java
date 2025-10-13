@@ -1,4 +1,5 @@
-package com.drivefundproject.drive_fund.auth;
+package com.drivefundproject.drive_fund.auth.service;
+
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
