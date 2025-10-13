@@ -12,7 +12,7 @@ import com.drivefundproject.drive_fund.auth.dto.request.loginRequest;
 import com.drivefundproject.drive_fund.auth.dto.response.TokenResponse;
 import com.drivefundproject.drive_fund.auth.model.User;
 import com.drivefundproject.drive_fund.auth.repository.UserRepository;
-import com.drivefundproject.drive_fund.utilities.jwt.JwtService;
+import com.drivefundproject.drive_fund.config.jwt.JwtService;
 import com.drivefundproject.drive_fund.utilities.profileImages.S3Service;
 import com.drivefundproject.drive_fund.utilities.roles.Role;
 

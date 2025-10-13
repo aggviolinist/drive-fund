@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.utilities.jwt;
+package com.drivefundproject.drive_fund.config.jwt;
 
 
 import java.util.Date;
