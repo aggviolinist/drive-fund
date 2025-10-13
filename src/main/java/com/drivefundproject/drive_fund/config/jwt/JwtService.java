@@ -5,11 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.drivefundproject.drive_fund.auth.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,10 +24,22 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     // Ensure this key is sufficiently long (at least 256 bits for HS256)
+    //Same key for signing ang encryption
     private static final String SECRET_KEY = "7a1ca2c8afd7e73cf0c6b4350e89a5d19d9351892d453c8381e09447331457aa";
 
+
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        var roles = userDetails.getAuthorities().stream()
+              .map(authority -> authority.getAuthority())
+              .filter(authority -> authority.startsWith("ROLE_"))
+              .collect(Collectors.toList());
+            extraClaims.put("roles", roles);
+            if (userDetails instanceof User customUser) {
+                extraClaims.put("firstName", customUser.getFirstname());               
+            }
+        return generateToken(extraClaims, userDetails);
     }
     
     public String generateToken(
