@@ -21,7 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("isAuthenticated()")
 public class ProfileViewController {
 
     private final ProfileViewService profileViewService;
