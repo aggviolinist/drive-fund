@@ -20,12 +20,24 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 @Service
 public class JwtService {
 
     // Ensure this key is sufficiently long (at least 256 bits for HS256)
     //Same key for signing ang encryption
     private static final String SECRET_KEY = "7a1ca2c8afd7e73cf0c6b4350e89a5d19d9351892d453c8381e09447331457aa";
+    private final PrivateKey privateKey;
+    private final PublicKey publicKey;
+
+
+    //When spring starts up, it first loads the public and private key to memory hence, reducing performance issues
+    public JwtService() throws Exception{
+        this.privateKey = KeyUtils.loadPrivateKey("keys/local-only/private_key.pem");
+        this.publicKey = KeyUtils.loadPublicKey("keys/local-only/public_key.pem");
+    }
 
 
     public String generateToken(UserDetails userDetails) {
