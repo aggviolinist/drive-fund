@@ -20,8 +20,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import io.jsonwebtoken.security.AeadAlgorithm; // JWE imports
+import io.jsonwebtoken.security.KeyAlgorithm; // JWE imports
+import io.jsonwebtoken.security.RsaPublicJwk;
+
 
 @Service
 public class JwtService {
@@ -31,6 +36,9 @@ public class JwtService {
     private static final String SECRET_KEY = "7a1ca2c8afd7e73cf0c6b4350e89a5d19d9351892d453c8381e09447331457aa";
     private final PrivateKey privateKey;
     private final PublicKey publicKey;
+
+    private static final KeyAlgorithm<PublicKey, PrivateKey> KEY_MGMT_ALGORITHM = Jwts.KEY.RSA_OAEP_256;
+    private static final AeadAlgorithm CONTENT_ENCRYPTION_ALGORITHM = Jwts.ENC.A256GCM;
 
 
     //When spring starts up, it first loads the public and private key to memory hence, reducing performance issues
@@ -54,7 +62,7 @@ public class JwtService {
         return generateToken(extraClaims, userDetails);
     }
     
-    public String generateToken(
+    public String generateSignedToken(
         Map<String, Object> extraClaims,
         UserDetails userDetails
     ) {
@@ -64,13 +72,27 @@ public class JwtService {
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
             //.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // Set expiration
-            .signWith(getSignInKey())
+            .signWith(getSignInKey(), Jwts.SIG.HS256)
             .compact();
     }
     
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+    public String generateToken(
+        Map<String, Object> extraClaims, UserDetails userDetails
+    ){
+        String signedJwt = generateSignedToken(extraClaims, userDetails);
+    
+        return generateEncryptedToken(signedJwt);
+    }
+
+    public String generateEncryptedToken(String signedJwt){
+        return Jwts.builder()
+             .content(signedJwt, "application/jwt")
+             .encryptWith(publicKey, KEY_MGMT_ALGORITHM,CONTENT_ENCRYPTION_ALGORITHM)
+             .compact();
     }
 
     public String extractUsername(String token) {
@@ -96,10 +118,25 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+        //1. Decrypt outer token(JWE) to get inner signed token(JWS)
+        String signedJwt = decryptToken(token); 
+
+        //2. Verify and parse inner signed token(JWS) using symmetric key
         return Jwts.parser()
             .verifyWith(getSignInKey())
             .build()
-            .parseSignedClaims(token)
+            .parseSignedClaims(signedJwt)
             .getPayload();
+    }
+    private String decryptToken(String encryptedJwt){
+        //Decrypt JWE using Private Key
+        return new String(
+            Jwts.parser()
+               .decryptWith(privateKey)
+               .build()
+               .parseEncryptedContent(encryptedJwt)
+               .getPayload(),
+            StandardCharsets.UTF_8
+        );
     }
 }

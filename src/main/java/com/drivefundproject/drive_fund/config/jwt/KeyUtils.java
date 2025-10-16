@@ -1,6 +1,17 @@
 package com.drivefundproject.drive_fund.config.jwt;
 
+import java.io.InputStream;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
+import org.springframework.core.io.ClassPathResource; 
+
 public class KeyUtils {
+
 
     private KeyUtils(){} //We create Utility class since we don't want to instantiate it
 
@@ -17,20 +28,15 @@ public class KeyUtils {
                                                        .replace("-----END PUBLIC KEY-----","")
                                                        .replaceAll("\\s+","");
         final byte[] decoded = Base64.getDecoder().decode(key);
-        final PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+        final X509EncodedKeySpec  spec = new X509EncodedKeySpec(decoded);
         return KeyFactory.getInstance("RSA").generatePublic(spec);
     }
 
     private static String readKeyFromResource(final String pemPath) throws Exception{
-        try (final InputStream inputstreamz = KeyUtils.class.getResourcesAsStream(pemPath)){
+        try (final InputStream inputstreamz = new ClassPathResource(pemPath).getInputStream()){
         
-        if(inputstreamz == null){
-            throws new IllegalArguementException("Could not find Key file" + pemPath);
-        }
         return new String(inputstreamz.readAllBytes());
 
             }
         }
     }
-    
-}
