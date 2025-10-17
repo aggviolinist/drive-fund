@@ -1,4 +1,4 @@
 # Drive Fund
-A savings app to help our users achieve their multiple financial goals.
+A savings app to help our users achieve their multiple financial goals....
 
 
