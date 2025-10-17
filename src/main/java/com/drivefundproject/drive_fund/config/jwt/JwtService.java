@@ -32,19 +32,21 @@ import io.jsonwebtoken.security.RsaPublicJwk;
 public class JwtService {
 
     // Ensure this key is sufficiently long (at least 256 bits for HS256)
-    //Same key for signing ang encryption
+    // Same key for signing and encryption
     private static final String SECRET_KEY = "7a1ca2c8afd7e73cf0c6b4350e89a5d19d9351892d453c8381e09447331457aa";
     private final PrivateKey privateKey;
     private final PublicKey publicKey;
 
+    //encrypts the key
     private static final KeyAlgorithm<PublicKey, PrivateKey> KEY_MGMT_ALGORITHM = Jwts.KEY.RSA_OAEP_256;
+    //encrypts the data
     private static final AeadAlgorithm CONTENT_ENCRYPTION_ALGORITHM = Jwts.ENC.A256GCM;
 
 
     //When spring starts up, it first loads the public and private key to memory hence, reducing performance issues
     public JwtService() throws Exception{
-        this.privateKey = KeyUtils.loadPrivateKey("keys/local-only/private_key.pem");
-        this.publicKey = KeyUtils.loadPublicKey("keys/local-only/public_key.pem");
+        this.privateKey = AwsKeyLoader.loadPrivateKey("test/savingsapp/privatekey/login");
+        this.publicKey = AwsKeyLoader.loadPublicKey("test/savingsapp/publickey/login");
     }
 
 
