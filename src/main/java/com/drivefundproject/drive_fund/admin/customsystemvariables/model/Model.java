@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.admin.customsystemvariables;
+package com.drivefundproject.drive_fund.admin.customsystemvariables.model;
 
 import java.math.BigDecimal;
 
