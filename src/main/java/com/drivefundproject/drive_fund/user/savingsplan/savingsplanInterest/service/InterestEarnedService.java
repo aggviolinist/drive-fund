@@ -30,8 +30,18 @@ public class InterestEarnedService {
     private final InterestEarnedRepository interestEarnedRepository;
     private final PaymentRepository paymentRepository;
 
-    private final BigDecimal FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.05"); //5% interest on 50% deposit
-    private final BigDecimal SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
+    //private final BigDecimal FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.05"); //5% interest on 50% deposit
+    //private final BigDecimal SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
+
+   private BigDecimal getFivePercentInterestRate(){
+    return customSystemVariableService.getInterestRate("INTEREST_50_PERCENT", null);
+   }
+   private BigDecimal getSevenPointFivePercentInterestRate(){
+    return customSystemVariableService.getInterestRate("INTEREST_75_PERCENT", null);
+   } 
+
+   BigDecimal fivePercentRate = getFivePercentInterestRate();
+   BigDecimal sevenPointFivePercentRate = getSevenPointFivePercentInterestRate();
 
     //1. CHECK IF INTEREST HAS BEEN EARNED
     public boolean hasInterestBeenAwarded(UUID planUuid, InterestType interestType){
@@ -63,9 +73,9 @@ public class InterestEarnedService {
 
         //a. CHECK 75% THRESHOLD
         if(percentageCompleted >= 75.00 && !hasInterestBeenAwarded(planUuid, InterestType.INTEREST_75_PERCENT)){
-            interestAmount = targetAmount.multiply(SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE);
+            interestAmount = targetAmount.multiply(sevenPointFivePercentRate);
             interestType = InterestType.INTEREST_75_PERCENT;
-            message = "Congratulations! 75% target reached. " + SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
+            message = "Congratulations! 75% target reached. " + sevenPointFivePercentRate.multiply(new BigDecimal("100")) + "% interest awarded.";
 
             //ADD 7.5% INTEREST AS PAYMENT
             applyInterestAsPayment(savingsPlan, interestAmount, interestType);
@@ -75,9 +85,9 @@ public class InterestEarnedService {
         }
         //b. CHECK 50% THRESHOLD
         else if(percentageCompleted >= 50.00 && ! hasInterestBeenAwarded(planUuid, InterestType.INTEREST_50_PERCENT)){
-            interestAmount = targetAmount.multiply(FIVE_PERCENT_INTEREST_RATE);
+            interestAmount = targetAmount.multiply(fivePercentRate);
             interestType = InterestType.INTEREST_50_PERCENT;
-            message = "Congratulations! 50% target reached. " + FIVE_PERCENT_INTEREST_RATE.multiply(new BigDecimal("100")) + "% interest awarded.";
+            message = "Congratulations! 50% target reached. " + fivePercentRate.multiply(new BigDecimal("100")) + "% interest awarded.";
 
             //ADD 5% INTEREST EARNED AS PAYMENT
             applyInterestAsPayment(savingsPlan, interestAmount, interestType);

@@ -9,8 +9,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity
-@Data
-public class Model {
+@Data  
+public class CustomSystemVariables {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
