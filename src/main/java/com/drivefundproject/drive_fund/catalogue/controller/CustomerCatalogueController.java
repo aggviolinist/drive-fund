@@ -22,10 +22,10 @@ import com.drivefundproject.drive_fund.exception.ResponseHandler;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/v1/customer/product")
 @PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
-public class CatalogueController {
+public class CustomerCatalogueController {
 
     private final CatalogueService catalogueService;
 
