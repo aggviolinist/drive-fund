@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 public class CustomSystemVariablesRequest {
 
     @NotBlank(message = "Interest name is required")
-    private String interest_name;
+    private String interestName;
     
     @NotNull(message = "Interest value is required")
-    private String interest_value;
+    private String interestValue;
     
 }

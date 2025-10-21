@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomSystemVariablesResponse {
 
-    private String interest_name;
-    private BigDecimal interest_value;
-    private String interest_update_message;
+    private String interestName;
+    private BigDecimal interestValue;
+    private String interestUpdateMessage;
 }
