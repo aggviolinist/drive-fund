@@ -16,8 +16,8 @@ public class CustomSystemVariables {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String interest_name;
+    private String interestName;
 
-    private BigDecimal interest_value;
+    private BigDecimal interestValue;
     
 }

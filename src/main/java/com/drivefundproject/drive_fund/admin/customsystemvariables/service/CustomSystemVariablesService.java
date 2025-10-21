@@ -2,6 +2,7 @@ package com.drivefundproject.drive_fund.admin.customsystemvariables.service;
 
 import java.math.BigDecimal;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.admin.customsystemvariables.model.CustomSystemVariables;
@@ -15,10 +16,26 @@ public class CustomSystemVariablesService {
 
     private final CustomSystemVariablesRepository customSystemVariablesRepository;
 
-    public BigDecimal getInterestRate(String key, BigDecimal defaultValue){
+    // @param
+    // @param
+    // @return
+    public BigDecimal getSystemVariable(String key, BigDecimal defaultValue){
         return customSystemVariablesRepository.findByKey(key)
-              .map(CustomSystemVariables::getValue)
+              .map(CustomSystemVariables::getInterestValue)
               .orElse(defaultValue);
+    }
+
+    // @param
+    // @param
+    // @return
+    public CustomSystemVariables saveOrUpdateVariable(String interestName, BigDecimal interestValue){
+      CustomSystemVariables variable = customSystemVariablesRepository.findByKey(interestName)
+           .orElse(new CustomSystemVariables());
+      variable.setInterestName(interestName);
+      variable.setInterestValue(interestValue);
+
+      return customSystemVariablesRepository.save(variable);
+
     }
     
 }
