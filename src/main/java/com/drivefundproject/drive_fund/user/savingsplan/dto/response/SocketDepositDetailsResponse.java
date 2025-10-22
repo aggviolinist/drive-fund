@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.user.savingsplan.dto;
+package com.drivefundproject.drive_fund.user.savingsplan.dto.response;
 
 import lombok.Setter;
 

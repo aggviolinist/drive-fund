@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.drivefundproject.drive_fund.user.savingsplan.dto.SocketDepositDetailsResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.dto.response.SocketDepositDetailsResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.service.SavingsDisplayService;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.dto.response.InterestResponse;
