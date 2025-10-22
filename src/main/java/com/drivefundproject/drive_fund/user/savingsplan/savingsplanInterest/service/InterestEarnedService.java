@@ -19,6 +19,7 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.mode
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.repository.InterestEarnedRepository;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.repository.PaymentRepository;
+import com.drivefundproject.drive_fund.admin.customsystemvariables.service.CustomSystemVariablesService; 
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,19 +30,21 @@ public class InterestEarnedService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final InterestEarnedRepository interestEarnedRepository;
     private final PaymentRepository paymentRepository;
+    private final CustomSystemVariablesService  customSystemVariableService;
 
-    //private final BigDecimal FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.05"); //5% interest on 50% deposit
-    //private final BigDecimal SEVEN_POINT_FIVE_PERCENT_INTEREST_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
+    //Default values if DB is empty/admin hasn't set rate yet
+    private final BigDecimal DEFAULT_50_PERCENT_RATE = new BigDecimal("0.05"); //5% interest on 50% deposit
+    private final BigDecimal DEFAULT_75_PERCENT_RATE = new BigDecimal("0.075"); //7.5% interest on 75% deposit
 
-   private BigDecimal getFivePercentInterestRate(){
-    return customSystemVariableService.getInterestRate("INTEREST_50_PERCENT", null);
+   private BigDecimal getRateFor50PercentThreshold(){
+    return customSystemVariableService.getSystemVariable("RATE_FOR_50_PERCENT_THRESHOLD", DEFAULT_50_PERCENT_RATE);
    }
-   private BigDecimal getSevenPointFivePercentInterestRate(){
-    return customSystemVariableService.getInterestRate("INTEREST_75_PERCENT", null);
+   private BigDecimal getRateFor75PercentThreshold(){
+    return customSystemVariableService.getSystemVariable("RATE_FOR_75_PERCENT_THRESHOLD", DEFAULT_75_PERCENT_RATE);
    } 
 
-   BigDecimal fivePercentRate = getFivePercentInterestRate();
-   BigDecimal sevenPointFivePercentRate = getSevenPointFivePercentInterestRate();
+   //BigDecimal fivePercentRate = getFivePercentInterestRate();
+   //BigDecimal sevenPointFivePercentRate = getSevenPointFivePercentInterestRate();
 
     //1. CHECK IF INTEREST HAS BEEN EARNED
     public boolean hasInterestBeenAwarded(UUID planUuid, InterestType interestType){
@@ -51,6 +54,8 @@ public class InterestEarnedService {
     }
     //2. CALCULATE INTEREST 50% AND 75% 
     public InterestResponse calculateAndApplyInterest(UUID planUuid, double percentageCompleted){
+        BigDecimal fivePercentRate = getRateFor50PercentThreshold();
+        BigDecimal sevenPointFivePercentRate = getRateFor75PercentThreshold();
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(!retrievedSavingsPlan.isPresent()){
