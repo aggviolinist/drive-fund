@@ -8,6 +8,6 @@ import com.drivefundproject.drive_fund.admin.customsystemvariables.model.CustomS
 
 public interface CustomSystemVariablesRepository extends JpaRepository <CustomSystemVariables, Long> {
 
-    Optional<CustomSystemVariables> findByInterestName(String InterestName);
+    Optional<CustomSystemVariables> findTopByInterestNameOrderByCreatedAtDesc(String InterestName);
     
 }

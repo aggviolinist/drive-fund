@@ -65,13 +65,16 @@ public class InterestEarnedService {
 
         SavingsPlan savingsPlan =  retrievedSavingsPlan.get();
         BigDecimal targetAmount = savingsPlan.getAmount();
-        BigDecimal paidTillToday = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid) //Fetch all payments for a given plan, already sorted by date.
-                    .stream() 
-                    .map(Payment::getPaymentAmount)//Extracts just the paymentAmount from each payment.
-                    .reduce(BigDecimal.ZERO,BigDecimal::add)//Sums all payment amounts
-                    .add(calculateTotalInterest(planUuid));//Adds any previously awarded interest from your InterestEarnedRepository
-
+        // BigDecimal paidTillToday = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid) //Fetch all payments for a given plan, already sorted by date.
+        //             .stream() 
+        //             .map(Payment::getPaymentAmount)//Extracts just the paymentAmount from each payment.
+        //             .reduce(BigDecimal.ZERO,BigDecimal::add)//Sums all payment amounts
+        //             .add(calculateTotalInterest(planUuid));//Adds any previously awarded interest from your InterestEarnedRepository
+        BigDecimal totalInterest = calculateTotalInterest(planUuid);
+        BigDecimal totalDeposits = paymentRepository.findTotalPaymentAmountBySavingsPlan_PlanUuid(planUuid);
+        BigDecimal paidTillToday = totalDeposits.add(totalInterest);
                     
+    
         BigDecimal interestAmount = BigDecimal.ZERO;
         String message = "No interest Awarded!";
         InterestType interestType = null;
@@ -127,10 +130,11 @@ public class InterestEarnedService {
         }
     }
     public BigDecimal calculateTotalInterest(UUID planUuid){
-         List<InterestEarned> interests = interestEarnedRepository.findBySavingsPlan_PlanUuid(planUuid);
-             return interests.stream()
-                       .map(InterestEarned::getInterestAmount)
-                       .reduce(BigDecimal.ZERO, BigDecimal::add);
+        //  List<InterestEarned> interests = interestEarnedRepository.findBySavingsPlan_PlanUuid(planUuid);
+        //      return interests.stream()
+        //                .map(InterestEarned::getInterestAmount)
+        //                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            return interestEarnedRepository.findTotalInterestAmountBySavingsPlan_PlanUuid(planUuid);
     }
 
 

@@ -1,6 +1,7 @@
 package com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.repository;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,4 +15,5 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee
 public interface WithdrawalFeeRepository extends JpaRepository<WithdrawalFee, Long> {
 
     List<WithdrawalFee> findBySavingsPlan_PlanUuid(UUID planUuid);
+    BigDecimal findTotalFeeAmountBySavingsPlan_PlanUuid(UUID planUuid);
 }

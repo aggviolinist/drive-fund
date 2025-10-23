@@ -1,7 +1,9 @@
 package com.drivefundproject.drive_fund.admin.customsystemvariables.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,5 +21,8 @@ public class CustomSystemVariables {
     private String interestName;
 
     private BigDecimal interestValue;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
     
 }

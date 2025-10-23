@@ -90,22 +90,25 @@ public class PaymentService {
     //Total deposited amount
     public BigDecimal calculateTotalDeposit(UUID planUuid){
         //1.Get total from user deposits(Payments table)
-            List<Payment> deposits = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
-            BigDecimal totalDeposits = deposits.stream()
-                      .map(Payment::getPaymentAmount)
-                      .reduce(BigDecimal.ZERO, BigDecimal::add);
+            // List<Payment> deposits = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
+            // BigDecimal totalDeposits = deposits.stream()
+            //           .map(Payment::getPaymentAmount)
+            //           .reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalDeposits = paymentRepository.findTotalPaymentAmountBySavingsPlan_PlanUuid(planUuid);
         //2. Get total from earned interest (InterestEarned table)
            BigDecimal totalInterest = interestEarnedService.calculateTotalInterest(planUuid);
         //TOTAL WITHDRAWS FROM WITHDRAWALS TABLE
-           List<Withdrawals> withdrawals = withdrawalsRepository.findBySavingsPlan_PlanUuid(planUuid);
-           BigDecimal totalWithdrawn = withdrawals.stream()
-                      .map(Withdrawals::getWithdrawalAmount)
-                      .reduce(BigDecimal.ZERO,BigDecimal::add);
+        //    List<Withdrawals> withdrawals = withdrawalsRepository.findBySavingsPlan_PlanUuid(planUuid);
+        //    BigDecimal totalWithdrawn = withdrawals.stream()
+        //               .map(Withdrawals::getWithdrawalAmount)
+        //               .reduce(BigDecimal.ZERO,BigDecimal::add);
+          BigDecimal totalWithdrawn = withdrawalsRepository.findTotalWithdrawalAmountBySavingsPlan_PlanUuid(planUuid);
         //TOTAL WITHDRAWAL FEE FROM THE WITHDRAWAL FEE TABLE
-            List<WithdrawalFee> withdrawalFees = withdrawalFeeRepository.findBySavingsPlan_PlanUuid(planUuid);
-            BigDecimal totalfee = withdrawalFees.stream()
-                      .map(WithdrawalFee::getFeeAmount)
-                      .reduce(BigDecimal.ZERO,BigDecimal::add);
+            // List<WithdrawalFee> withdrawalFees = withdrawalFeeRepository.findBySavingsPlan_PlanUuid(planUuid);
+            // BigDecimal totalfee = withdrawalFees.stream()
+            //           .map(WithdrawalFee::getFeeAmount)
+            //           .reduce(BigDecimal.ZERO,BigDecimal::add);
+            BigDecimal totalfee = withdrawalFeeRepository.findTotalFeeAmountBySavingsPlan_PlanUuid(planUuid);
 
             BigDecimal grossSavings = totalDeposits.add(totalInterest);
             BigDecimal totalDeductions = totalWithdrawn.add(totalfee);
