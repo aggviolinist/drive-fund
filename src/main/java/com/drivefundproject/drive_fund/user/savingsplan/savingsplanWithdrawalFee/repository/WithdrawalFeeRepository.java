@@ -12,8 +12,8 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee
 
 
 @Repository
-public interface WithdrawalFeeRepository extends JpaRepository<WithdrawalFee, Long> {
+public interface WithdrawalFeeRepository extends JpaRepository<WithdrawalFee, Long>, WithdrawalFeeRepositoryCustom {
 
     List<WithdrawalFee> findBySavingsPlan_PlanUuid(UUID planUuid);
-    BigDecimal findTotalFeeAmountBySavingsPlan_PlanUuid(UUID planUuid);
+    //BigDecimal findTotalFeeAmountBySavingsPlan_PlanUuid(UUID planUuid);
 }

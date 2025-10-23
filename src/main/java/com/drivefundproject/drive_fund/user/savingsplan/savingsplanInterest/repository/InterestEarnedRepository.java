@@ -13,10 +13,10 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.mode
 
 
 
-public interface InterestEarnedRepository extends JpaRepository<InterestEarned, Long> {
+public interface InterestEarnedRepository extends JpaRepository<InterestEarned, Long>, InterestEarnedRepositoryCustom {
     //Get all interest earned by specific savings plan
     List<InterestEarned> findBySavingsPlan_PlanUuid(UUID planUuid);
     //Check if interest of specific type has been earned for a specific savings plan
     long  countBySavingsPlan_PlanUuidAndInterestType(UUID planUuid, InterestType interestType);
-    BigDecimal findTotalInterestAmountBySavingsPlan_PlanUuid(UUID planUuid);    
+    //BigDecimal findTotalInterestAmountBySavingsPlan_PlanUuid(UUID planUuid);    
 }

@@ -13,11 +13,12 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model
 
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, Long>, PaymentRepositoryCustom{
      List<Payment> findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(UUID planUuid);
      Optional<Payment> findTopBySavingsPlan_PlanUuidOrderByPaymentDateDesc(UUID planUUid);  
      long countBySavingsPlan_PlanUuid(UUID planUuid); 
 
-     BigDecimal findTotalPaymentAmountBySavingsPlan_PlanUuid(UUID planUuid);
+     //we removed the payment from here and created a custom JPA file
+     //BigDecimal findTotalPaymentAmountBySavingsPlan_PlanUuid(UUID planUuid);
 
 }

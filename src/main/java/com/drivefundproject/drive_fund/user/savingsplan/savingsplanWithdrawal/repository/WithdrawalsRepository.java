@@ -13,8 +13,8 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.mo
 
 
 @Repository
-public interface WithdrawalsRepository extends JpaRepository<Withdrawals, Long> {
+public interface WithdrawalsRepository extends JpaRepository<Withdrawals, Long>, WithdrawalsRepositoryCustom {
     //Get all cash from the withdrals table
     List<Withdrawals> findBySavingsPlan_PlanUuid(UUID planUuid);   
-    BigDecimal findTotalWithdrawalAmountBySavingsPlan_PlanUuid(UUID planUuid); 
+    //BigDecimal findTotalWithdrawalAmountBySavingsPlan_PlanUuid(UUID planUuid); 
 }
