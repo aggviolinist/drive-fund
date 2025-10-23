@@ -19,6 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://localhost:4200")
+                .setAllowedOriginPatterns("https://drive-fund.onrender.com")
                 .withSockJS();
     }
 

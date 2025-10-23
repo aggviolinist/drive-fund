@@ -45,7 +45,7 @@
         document.getElementById('plan-id-display').textContent = planUuid;
         //const SOCKET_URL = '/web/sockets'; //for connnecting with Angular
         //const SOCKET_URL = 'http://localhost:8080/ws'; // for local testing
-        const SOCKET_URL = 'https://drive-fund.onrender.com:8081/ws';
+        const SOCKET_URL = 'https://drive-fund.onrender.com/ws';
         const PROGRESS_TOPIC = `/topic/progress/${planUuid}`; // Matches @SendTo to enable Subscription
         const DEPOSIT_DESTINATION = `/app/deposit/${planUuid}`; // Matches /app prefix + @MessageMapping destination where data is sent to
         const WITHDRAW_DESTINATION = `/app/withdrawal/${planUuid}`; //Destination data is sent
