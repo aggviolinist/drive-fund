@@ -52,47 +52,47 @@ public class SavingsDisplayWebSocketController {
     } //To be Deleted
     
     @MessageMapping("/deposit/{planUuid}")
-    @SendTo("/topic/progress/{planUuid}")
-    public String handleDepositAndCalculateProgress(@DestinationVariable UUID planUuid, @Payload SocketPaymentRequest depositRequest) throws JsonProcessingException{
+    //@SendTo("/topic/progress/{planUuid}")
+    public void handleDepositAndCalculateProgress(@DestinationVariable UUID planUuid, @Payload SocketPaymentRequest depositRequest) throws JsonProcessingException{
         BigDecimal depositAmount = depositRequest.getPaymentAmount();
         System.out.println("Received deposit of:" + depositAmount + " for Plan:" + planUuid);
         
         try{
             // 1. Record User deposit
-            Payment newPayment = paymentService.recordPaymentDeposit(planUuid, depositAmount);
+            paymentService.recordPaymentDeposit(planUuid, depositAmount);
             
             // 2. Get progress response BEFORE interest logic
-            SavingsProgressResponse savingsProgressResponse = savingsDisplayService.getSavingsProgress(planUuid);
+            // SavingsProgressResponse savingsProgressResponse = savingsDisplayService.getSavingsProgress(planUuid);
 
-            PaymentResponse paymentResponse = savingsDisplayService.createPaymentResponse(newPayment);
+            //PaymentResponse paymentResponse = savingsDisplayService.createPaymentResponse(newPayment);
  
             // 3. Check for Interest using current percentage
-            double percentageCompleted = savingsProgressResponse.getPercentageCompleted();
-            InterestResponse interestResponse = paymentService.calculateInterest(planUuid, percentageCompleted);
+           // double percentageCompleted = savingsProgressResponse.getPercentageCompleted();
+            // InterestResponse interestResponse = paymentService.calculateInterest(planUuid, percentageCompleted);
 
             // 4. Get progress AFTER interest has been applied
-            if(interestResponse.getInterestAmount().compareTo(BigDecimal.ZERO) > 0){
+           // if(interestResponse.getInterestAmount().compareTo(BigDecimal.ZERO) > 0){
                 //We want to refresh the progress response after interest was applied
-                savingsProgressResponse = savingsDisplayService.getSavingsProgress(planUuid);
-            }
+              //  savingsProgressResponse = savingsDisplayService.getSavingsProgress(planUuid);
+            //}
             //5. Build and return combined DTO
-            SocketDepositDetailsResponse combinedDTO = new SocketDepositDetailsResponse(
-                paymentResponse,
-                savingsProgressResponse,
-                interestResponse,
-                "Deposit of $" + depositAmount + "recorded successfully. Progress updated in real-time." + interestResponse.getMessage());
+            // SocketDepositDetailsResponse combinedDTO = new SocketDepositDetailsResponse(
+            //     paymentResponse,
+            //     savingsProgressResponse,
+            //     interestResponse,
+            //     "Deposit of $" + depositAmount + "recorded successfully. Progress updated in real-time." + interestResponse.getMessage());
 
-            return objectMapper.writeValueAsString(combinedDTO);
+            //return objectMapper.writeValueAsString(combinedDTO);
         }
         catch(IllegalArgumentException e){
+            e.printStackTrace();
             System.err.println("Error processing savings logic: " + e.getMessage());
-
-            return "{\"error\": \"" + e.getMessage() + "\"}";
+            //return "{\"error\": \"" + e.getMessage() + "\"}";
         }
         catch(Exception e){
             e.printStackTrace();
             System.err.println("Internal Server Error" + e.getMessage());
-            return "{\"error\": \"Internal server error during savings calculation.\"}";
+            //return "{\"error\": \"Internal server error during savings calculation.\"}";
         }
     }
     @MessageMapping("/withdrawal/{planUuid}")

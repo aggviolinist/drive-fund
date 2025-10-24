@@ -8,6 +8,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.user.addsavingsplan.model.Frequency;
@@ -23,6 +25,7 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.mo
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.repository.WithdrawalsRepository;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.model.WithdrawalFee;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.repository.WithdrawalFeeRepository;
+import com.drivefundproject.drive_fund.user.savingsplan.service.SavingsPlanWebSocketAsyncService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,8 +38,14 @@ public class PaymentService {
     private final InterestEarnedService interestEarnedService;
     private final WithdrawalFeeRepository withdrawalFeeRepository;
     private final WithdrawalsRepository withdrawalsRepository;
+    private final SavingsPlanWebSocketAsyncService savingsPlanWebSocketAsyncService;
 
-
+    @CacheEvict(value = {
+        "totalDeposit",
+        "remainingAmount",
+        "percentageCompleted",
+        "dynamicExpectedPayment"
+    }, key = "#planUuid")
     public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
         //We want to avoid overpayment of the target amount
@@ -74,6 +83,8 @@ public class PaymentService {
                 savingsPlan.setStatus(Status.COMPLETED);
                 savingsPlanRepository.save(savingsPlan);
             }
+            //Trigger ASYNCHRONOUS UPDATE
+            savingsPlanWebSocketAsyncService.handleDepositAndPushUpdates(planUuid, savedPayment, paymentAmount);
             return savedPayment;
         }
         else{
@@ -87,6 +98,7 @@ public class PaymentService {
     }
   
     //Total deposited amount
+    @Cacheable(value = "totalDeposit", key = "#planUuid")
     public BigDecimal calculateTotalDeposit(UUID planUuid){
         //1.Get total from user deposits(Payments table)
             // List<Payment> deposits = paymentRepository.findBySavingsPlan_PlanUuidOrderByPaymentDateAsc(planUuid);
@@ -120,6 +132,8 @@ public class PaymentService {
         //3. TotalDeposits - Totalinterest - Totalwithdrawals(fee/penalty)
         return netAmountPaidSoFar;
         }
+    
+    @Cacheable(value = "remainingAmount", key = "#planUuid")
     public BigDecimal calculateRemainingAmount(UUID planUuid){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
@@ -138,6 +152,8 @@ public class PaymentService {
         }
         throw new IllegalArgumentException("Savings Plan not found");        
     }
+
+    @Cacheable(value = "percentageCompleted", key = "#planUuid")
     public double calculatePercentageCompleted(UUID planUuid){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
@@ -155,8 +171,10 @@ public class PaymentService {
         }
         return 0.0;
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////
-    public BigDecimal calculateInitialExpectedPayment(SavingsPlan savingsPlan){
+//////////////////////////////////////////////////////////////////////////////////////////////
+    
+     @Cacheable(value = "initialExpectedPayment", key = "#savingsPlan.planUuid")
+      public BigDecimal calculateInitialExpectedPayment(SavingsPlan savingsPlan){
         BigDecimal totalAmount = savingsPlan.getAmount();
         Frequency frequency = savingsPlan.getFrequency();
         long numberOfPeriods;
@@ -185,7 +203,8 @@ public class PaymentService {
     }
 
      //Calculates new expected payment on time basis and not on period basis. Self adjust every month
-    public BigDecimal calculateDynamicExpectedPayment(UUID planUuid, BigDecimal remainingAmount){
+    @Cacheable(value = "dynamicExpectedPayment", key = "#planUuid")
+     public BigDecimal calculateDynamicExpectedPayment(UUID planUuid, BigDecimal remainingAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
 
         if(retrievedSavingsPlan.isPresent()){
