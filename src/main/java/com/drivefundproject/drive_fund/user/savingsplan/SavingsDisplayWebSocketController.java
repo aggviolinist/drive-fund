@@ -90,6 +90,7 @@ public class SavingsDisplayWebSocketController {
             return "{\"error\": \"" + e.getMessage() + "\"}";
         }
         catch(Exception e){
+            e.printStackTrace();
             System.err.println("Internal Server Error" + e.getMessage());
             return "{\"error\": \"Internal server error during savings calculation.\"}";
         }
