@@ -20,6 +20,7 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.r
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.repository.PaymentRepository;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.service.PaymentService;
+import com.drivefundproject.drive_fund.user.savingsplan.service.SavingsCalculationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +31,9 @@ public class SavingsDisplayService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final PaymentRepository paymentRepository;
     private final PaymentService paymentService;
+    private final SavingsCalculationService savingsCalculationService;
+    
+
 
     public List<SavingsPlan>getSavingsPlanByUserId(Integer userId){
         return savingsPlanRepository.findByUserId(userId);
@@ -42,12 +46,12 @@ public class SavingsDisplayService {
             SavingsPlan savingsPlan = retrievedSavingsPlan.get();
 
             BigDecimal targetAmount = savingsPlan.getAmount();
-            BigDecimal totalDeposited = paymentService.calculateTotalDeposit(planUuid);
+            BigDecimal totalDeposited = savingsCalculationService.calculateTotalDeposit(planUuid);
             BigDecimal balanceAmount = savingsPlan.getAmount().subtract(totalDeposited);
-            double percentageCompleted = paymentService.calculatePercentageCompleted(planUuid);
+            double percentageCompleted = savingsCalculationService.calculatePercentageCompleted(planUuid);
             long roundedPecentage = (long) Math.min(percentageCompleted,100.0);
 
-            BigDecimal newExpectedPayment = paymentService.calculateDynamicExpectedPayment(planUuid,balanceAmount);
+            BigDecimal newExpectedPayment = savingsCalculationService.calculateDynamicExpectedPayment(planUuid,balanceAmount);
             String note;
 
             ChronoUnit unit;
@@ -74,7 +78,7 @@ public class SavingsDisplayService {
             }
 
             //Inital expected contribution per period
-            BigDecimal initialAmountPerPeriod = paymentService.calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
+            BigDecimal initialAmountPerPeriod = savingsCalculationService.calculateInitialExpectedPayment(savingsPlan);//targetAmount.divide(new BigDecimal(totalPeriods), 0, RoundingMode.HALF_UP);
 
             //Expected till now
             BigDecimal TotalExpectedSavingsTillTodayAsPerYourSavingsFrequency = initialAmountPerPeriod.multiply(new BigDecimal(elapsedPeriods));
