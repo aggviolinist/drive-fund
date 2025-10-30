@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.drivefundproject.drive_fund.user.savingsplan.service.SavingsCalculationService;
+
+
 
 
 @RestController
@@ -42,6 +45,8 @@ public class SavingsDisplayController {
     private final SavingsPlanRepository savingsPlanRepository;
     private final SavingsDisplayService savingsDisplayService;
     private final PaymentService paymentService;
+    private final SavingsCalculationService savingsCalculationService;
+
 
     // SavingsDetailsController(SavingsPlanRepository savingsPlanRepository) {
     //     this.savingsPlanRepository = savingsPlanRepository;
@@ -80,7 +85,7 @@ public class SavingsDisplayController {
             return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Access Denied", null);
         }
         //Display the expected amount from the service method
-        BigDecimal expectedPayment = paymentService.calculateInitialExpectedPayment(savingsPlan);
+        BigDecimal expectedPayment = savingsCalculationService.calculateInitialExpectedPayment(savingsPlan);
 
         //Map data from SavingsPlan and expected amount from the new DTO
         SavingsPlanCheckoutResponse checkoutResponse = new SavingsPlanCheckoutResponse(
