@@ -19,7 +19,6 @@ import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.re
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.model.WithdrawalFee;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.model.WithdrawalType;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawalFee.repository.WithdrawalFeeRepository;
-import com.drivefundproject.drive_fund.user.savingsplan.service.SavingsCalculationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +31,6 @@ public class WithdrawalService {
     private final SavingsPlanRepository savingsPlanRepository;
     private final WithdrawalsRepository withdrawalRepository;
     private final WithdrawalFeeRepository withdrawalFeeRepository;
-    private final SavingsCalculationService savingsCalculationService;
     
 
 
@@ -75,7 +73,7 @@ public class WithdrawalService {
         //2. Calculate Costs and Validate Balance
         BigDecimal feeAmount = withdrawnAmount.multiply(feeRate).setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalWithdrawalCost = withdrawnAmount.add(feeAmount);
-        BigDecimal TotalDeposits = savingsCalculationService.calculateTotalDeposit(planUuid);
+        BigDecimal TotalDeposits = paymentService.calculateTotalDeposit(planUuid);
         BigDecimal maxAllowableWithdrawal = TotalDeposits.divide(BigDecimal.ONE.add(feeRate), 2, RoundingMode.HALF_UP);
 
         if(TotalDeposits.compareTo(totalWithdrawalCost) < 0){
