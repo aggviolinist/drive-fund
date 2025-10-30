@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: savings-app
+  labels:
+    app: savings-app
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: savings-app # Match pods with this label
+
+  template:
+    metadata:
+      labels:
+        app: savings-app # Template defines what each Pod looks like
+
+    spec:
+      containers:
+        - name: savings-app   # Our image lives here
+          image: violinist999/ripper:replaceThisImageTag
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: savings-app-service
+spec:
+  selector:
+    app: savings-app # Matches the label in Deployment
+  ports:
+    - name: HTTP
+      protocol: TCP
+      port: 80        # Port exposed by the Service (public-facing)
+      targetPort: 8081 # Port inside the container
+  type: NodePort       # Exposes app via Minikube/Node IP

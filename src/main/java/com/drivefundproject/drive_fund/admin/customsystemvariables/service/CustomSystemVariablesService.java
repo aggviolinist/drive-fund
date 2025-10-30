@@ -16,18 +16,12 @@ public class CustomSystemVariablesService {
 
     private final CustomSystemVariablesRepository customSystemVariablesRepository;
 
-    // @param
-    // @param
-    // @return
     public BigDecimal getSystemVariable(String key, BigDecimal defaultValue){
         return customSystemVariablesRepository.findTopByInterestNameOrderByCreatedAtDesc(key)
               .map(CustomSystemVariables::getInterestValue)
               .orElse(defaultValue);
     }
 
-    // @param
-    // @param
-    // @return
     public CustomSystemVariables saveOrUpdateVariable(String interestName, BigDecimal interestValue){
       CustomSystemVariables variable = customSystemVariablesRepository.findTopByInterestNameOrderByCreatedAtDesc(interestName)
            .orElse(new CustomSystemVariables());
