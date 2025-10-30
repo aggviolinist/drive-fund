@@ -15,13 +15,13 @@ pipeline{
         stage('Build and Test'){
             steps{
                 sh 'ls -ltr'
-
                 // build the project and create a JAR file
                 sh 'mvn clean package'
             }
         }
         stage('Static Code Analysis'){
             steps{
+                sh 'Echo SonarQube'
                 //Gonna add here once I see the Pipeline is working
                 sh 'Echo "This stage will come back to it later"'
             }
@@ -49,8 +49,17 @@ pipeline{
                 GIT_USER_NAME = "aggviolinist"
             }
             steps{
-                
-
+                withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUBTOKEN' )]){
+                    sh ''' 
+                        git cofing user.email "mulandimaei76@gmail.com"
+                        git config user.name "aggviolinist"
+                        BUILD_NUMBER=${BUILD_NUMBER}
+                        sed -i "s/replaceThisImageTag/${BUILD_NUMBER}/g" kubernetes/deployment.yml
+                        git add kubernetes/deployment.yml
+                        git commit -m "Updated with the latest docker image version ${BUILD_NUMBER}"
+                        git push https://${GITHUBTOKEN}@github.com/${GIT_USER_NAME}/$GIT_REPO_NAME} HEAD:main
+                    '''
+                }                
             }
         }
     }
