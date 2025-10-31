@@ -1,45 +1,30 @@
 pipeline {
     agent {
         docker {
-            image 'violinist999/maven-aws:latest' // has AWS CLI preinstalled
+            image 'maven:3.9.3-eclipse-temurin-17'
             args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 sh 'echo "passed"'
-                // git branch: 'main', url: 'https://github.com/aggviolinist/drive-fund'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh 'ls -ltr'
+                sh 'mvn -B clean package'
             }
         }
 
         stage('AWS Validation') {
             steps {
                 withAWS(credentials: 'aws-jenkins-creds', region: 'us-east-1') {
-                    sh '''
-                        aws --version
-                        aws sts get-caller-identity
-                    '''
-                }
-            }
-        }
-
-        stage('Build and Test') {
-            steps {
-                withAWS(credentials: 'aws-jenkins-creds', region: 'us-east-1') {
                     sh 'aws sts get-caller-identity'
                 }
-                sh 'ls -ltr'
-                sh 'mvn -B clean package'
-            }
-        }
-
-        stage('Static Code Analysis') {
-            steps {
-                sh 'echo "SonarQube analysis placeholder"'
-                sh 'echo "This stage will be updated later"'
             }
         }
 
