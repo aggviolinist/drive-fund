@@ -4,6 +4,7 @@ pipeline {
             image 'maven:3.9.3-eclipse-temurin-17'
             args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
+
     }
 
     stages {
@@ -20,6 +21,13 @@ pipeline {
                 sh 'ls -ltr'
                 sh 'mvn -B clean package'
             }
+        }
+        stage('AWS Validation'){
+             steps{
+             withAWS(credential: 'aws-jenkins-creds', region: 'us-east-1'){
+             sh 'aws sts get-caller-identity'
+             }
+           }
         }
 
         stage('Static Code Analysis') {
