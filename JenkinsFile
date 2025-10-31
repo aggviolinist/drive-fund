@@ -17,19 +17,13 @@ pipeline {
 
         stage('Build and Test') {
             steps {
+                  withAWS(credentials: 'aws-jenkins-creds', region: 'us-east-1') {
+                    sh 'aws sts get-caller-identity'
+                }
                 sh 'ls -ltr'
                 sh 'mvn -B clean package'
             }
         }
-
-        stage('AWS Validation') {
-            steps {
-                withAWS(credentials: 'aws-jenkins-creds', region: 'us-east-1') {
-                    sh 'aws sts get-caller-identity'
-                }
-            }
-        }
-
         stage('Static Code Analysis') {
             steps {
                 sh 'echo "SonarQube analysis placeholder"'
