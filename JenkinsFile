@@ -24,8 +24,9 @@ pipeline {
                 aws sts get-caller-identity
                     '''
                 sh 'aws sts get-caller-identity'
-                }
                 sh 'mvn clean install'
+
+                }
             }
         }
 
