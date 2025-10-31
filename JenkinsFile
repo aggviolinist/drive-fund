@@ -17,7 +17,13 @@ pipeline {
             steps {
                 sh 'ls -ltr'
                 withAWS(credentials: 'aws-jenkins-creds', region: 'us-east-1') {
-                    sh 'aws sts get-caller-identity'
+                 sh '''
+                apt-get update
+                apt-get install -y awscli
+                aws --version
+                aws sts get-caller-identity
+                    '''
+                sh 'aws sts get-caller-identity'
                 }
                 sh 'mvn -B clean package'
             }
