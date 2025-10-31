@@ -31,6 +31,12 @@ pipeline {
         }
 
         stage('Build and Push Docker Image') {
+            agent{
+                docker{
+                image 'docker:latest'
+                args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             environment {
                 DOCKER_IMAGE = "violinist999/ripper:${BUILD_NUMBER}"
                 REGISTRY_CREDENTIALS = credentials('dockerhub-creds')
