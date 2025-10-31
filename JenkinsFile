@@ -24,7 +24,7 @@ pipeline {
         }
         stage('AWS Validation'){
              steps{
-             withAWS(credential: 'aws-jenkins-creds', region: 'us-east-1'){
+             withAWS(credentials: 'aws-jenkins-creds', region: 'us-east-1'){
              sh 'aws sts get-caller-identity'
              }
            }
