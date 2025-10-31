@@ -25,6 +25,12 @@ pipeline {
                     '''
                 sh 'aws sts get-caller-identity'
                 }
+                sh '''
+                 apt-get update
+                 apt-get install -y openjdk-17-jdk
+                 java -version
+                 mvn -v
+                 '''
                 sh 'mvn clean install'
             }
         }
