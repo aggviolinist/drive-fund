@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CatalogueRequest {
 
+    @NotNull(message = "Product image is required")
+    private MultipartFile productImage;
+
     @NotBlank(message = "Product name is required")
     private String productname;
 

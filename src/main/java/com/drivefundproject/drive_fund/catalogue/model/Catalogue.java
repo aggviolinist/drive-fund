@@ -36,6 +36,8 @@ public class Catalogue {
 
     private String productdesc;
 
+    private 
+
      //Automatically generates uuid before product is created
     @PrePersist
     public void generateUuid(){
