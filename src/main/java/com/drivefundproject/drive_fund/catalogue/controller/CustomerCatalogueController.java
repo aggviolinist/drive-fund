@@ -30,13 +30,14 @@ public class CustomerCatalogueController {
     private final CatalogueService catalogueService;
 
     @PostMapping("/add-products")
-    public ResponseEntity<Object> addProduct(@Valid @RequestBody CatalogueRequest catalogueAddition) {
+    public ResponseEntity<Object> addProduct(@Valid @ModelAttribute CatalogueRequest catalogueAddition) {
         try{
         // Delegate all logic to the service layer
         Catalogue newProduct = catalogueService.addProduct(catalogueAddition);
         //mapping out exactly the data w want displayed
         CatalogueResponse catalogueResponse = CatalogueResponse.builder()
          .catUuid(newProduct.getCatUuid())
+         .productImageUrl(newProduct.getProductImageUrl())
          .productname(newProduct.getProductname())
          .productdesc(newProduct.getProductdesc())
          .build();
@@ -56,6 +57,7 @@ public class CustomerCatalogueController {
        List<CatalogueViewAll> catalogueViewAllResponse = allProducts.stream()
          .map(product -> CatalogueViewAll.builder()
           .catUuid(product.getCatUuid())
+          .productImageUrl(product.getProductImageUrl())
           .productname(product.getProductname())
           .productdesc(product.getProductdesc())
           .build())

@@ -15,4 +15,5 @@ public class CatalogueResponse {
     private UUID catUuid;
     private String productname; 
     private String productdesc;   
+    private String productImageUrl;
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.drivefundproject.drive_fund.catalogue.dto.request.CatalogueRequest;
 import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
 import com.drivefundproject.drive_fund.catalogue.repository.CatalogueRepository;
+import com.drivefundproject.drive_fund.utilities.profileImages.S3Service;
 
 
 @Service
@@ -19,13 +20,18 @@ import com.drivefundproject.drive_fund.catalogue.repository.CatalogueRepository;
 public class CatalogueService {
 
     private final CatalogueRepository catalogueRepository;
+    private final S3Service s3Service;
+
 //Adding the product. Both Admin and user can add a product
     public Catalogue addProduct(CatalogueRequest request) {
         if(catalogueRepository.findByProductname(request.getProductname()).isPresent()){
             throw new RuntimeException("This product already exists. Please enter another product.");
         }
         // 1. Create the Admin object
+        String productImageUrl = s3Service.uploadFile(request.getProductImage());
+
         Catalogue newProduct = Catalogue.builder()
+                .productImageUrl(productImageUrl)
                 .productname(request.getProductname())
                 .productdesc(request.getProductdesc())
                 .build();

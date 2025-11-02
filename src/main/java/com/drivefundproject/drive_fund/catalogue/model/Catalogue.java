@@ -4,6 +4,8 @@ package com.drivefundproject.drive_fund.catalogue.model;
 
 import java.util.UUID;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +38,8 @@ public class Catalogue {
 
     private String productdesc;
 
-    private 
+    private String productImageUrl;
+
 
      //Automatically generates uuid before product is created
     @PrePersist

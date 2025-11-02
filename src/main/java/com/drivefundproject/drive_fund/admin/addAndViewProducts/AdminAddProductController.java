@@ -1,7 +1,10 @@
-package com.drivefundproject.drive_fund.admin.addproducts;
+package com.drivefundproject.drive_fund.admin.addAndViewProducts;
 
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.drivefundproject.drive_fund.catalogue.dto.request.CatalogueRequest;
 import com.drivefundproject.drive_fund.catalogue.dto.response.CatalogueResponse;
+import com.drivefundproject.drive_fund.catalogue.dto.response.CatalogueViewAll;
 import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
 import com.drivefundproject.drive_fund.catalogue.service.CatalogueService;
 import com.drivefundproject.drive_fund.exception.ResponseHandler;
@@ -17,7 +21,7 @@ import com.drivefundproject.drive_fund.exception.ResponseHandler;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/admin/addproducts")
+@RequestMapping("/api/v1/admin/products")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class AdminAddProductController {
@@ -32,6 +36,7 @@ public class AdminAddProductController {
         //mapping out exactly the data w want displayed
         CatalogueResponse catalogueResponse = CatalogueResponse.builder()
          .catUuid(newProduct.getCatUuid())
+         .productImageUrl(newProduct.getProductImageUrl())
          .productname(newProduct.getProductname())
          .productdesc(newProduct.getProductdesc())
          .build();
@@ -43,4 +48,19 @@ public class AdminAddProductController {
 
     }
 }
+@GetMapping("/view-all-products")
+    public ResponseEntity<Object> viewAllProducts() { 
+        List<Catalogue> allProducts = catalogueService.viewAllProducts();
+
+       List<CatalogueViewAll> catalogueViewAllResponse = allProducts.stream()
+         .map(product -> CatalogueViewAll.builder()
+          .catUuid(product.getCatUuid())
+          .productImageUrl(product.getProductImageUrl())
+          .productname(product.getProductname())
+          .productdesc(product.getProductdesc())
+          .build())
+        .collect(Collectors.toList());
+
+        return ResponseHandler.generateResponse(HttpStatus.OK,"Begin to save now!",catalogueViewAllResponse);
+   }
 }
