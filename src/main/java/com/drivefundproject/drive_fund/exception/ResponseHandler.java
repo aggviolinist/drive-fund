@@ -7,12 +7,13 @@ import java.util.Map;
 
 public class ResponseHandler {
 
-    public static <T> ResponseEntity<Object> generateResponse(HttpStatus status, String message, T responseObj) {
+    public static <T> ResponseEntity<Object> generateResponse(HttpStatus httpStatus, String message, T responseObj) {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("status", status.value());
+        int statusFlag = httpStatus.is2xxSuccessful() ? 1 : 0;
+        map.put("status", statusFlag);
         map.put("message", message);
         map.put("data", responseObj);
 
-        return new ResponseEntity<>(map, status);
+        return new ResponseEntity<>(map, httpStatus);
     }
 }
