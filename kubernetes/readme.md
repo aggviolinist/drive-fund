@@ -76,10 +76,10 @@ Architecture
    ./sonar.sh start
    ``
 ## 2. Create a new Jenkins pipeline:
-   2.1 In Jenkins, create a new pipeline job and configure it with the Git repository URL for the Java application.
-   2.2 Add a Jenkinsfile to the Git repository to define the pipeline stages.
-   2.3 Add dependencies like AWS Credentials, Docker pipeline, Sonar Qube
-   2.4 Configure Sonar, Github, docker, AWS secret variables
+   2.1: In Jenkins, create a new pipeline job and configure it with the Git repository URL for the Java application.
+   2.2: Add a Jenkinsfile to the Git repository to define the pipeline stages.
+   2.3: Add dependencies like AWS Credentials, Docker pipeline, Sonar Qube
+   2.4: Configure Sonar, Github, docker, AWS secret variables
  
 ## 3. Define the pipeline stages:
     Stage 1: Build the Java application using Maven.
