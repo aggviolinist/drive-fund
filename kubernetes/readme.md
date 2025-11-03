@@ -4,7 +4,7 @@
 ## Docker
 ## ArgoCD $ Kubernetes
 Architecture
-![Architecture Design](drive-fund/kubernetes/images/architecture.png)
+![Architecture Design](/kubernetes/images/architecture.png)
 ## 1. EC2
 ### 1.1 Install Java to the server
    ```sh
