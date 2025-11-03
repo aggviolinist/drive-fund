@@ -94,5 +94,24 @@ Architecture
    echo bas64enxryptedtextdjjfjkfkrjffjfjf= | base64 -d
    kubectl get deploy
    ```
+   Getting pod endpoints
+   ```sh
+   kubectl get endpoints savings-app-service
+   ```
+   Getting the nodeIPs
+   ```sh
+   minikube service savings-app-service
+   ```
+   Getting replica set
+   ```sh
+   kubectl get rs
+   ```
+   Adding creds on K8s
+   ```sh
+   kubectl create secret generic aws-credentials \
+  --from-literal=AWS_ACCESS_KEY_ID=your-access-key \
+  --from-literal=AWS_SECRET_ACCESS_KEY=your-secret-key \
+  --from-literal=AWS_REGION=us-east-1
+  ```
 
 
