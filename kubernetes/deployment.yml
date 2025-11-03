@@ -31,7 +31,7 @@ spec:
   selector:
     app: savings-app # Matches the label in Deployment
   ports:
-    - name: HTTP
+    - name: http
       protocol: TCP
       port: 80        # Port exposed by the Service (public-facing)
       targetPort: 8081 # Port inside the container
