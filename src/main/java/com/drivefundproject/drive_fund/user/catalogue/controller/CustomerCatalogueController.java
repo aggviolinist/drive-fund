@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/customer/product")
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class CustomerCatalogueController {
 
