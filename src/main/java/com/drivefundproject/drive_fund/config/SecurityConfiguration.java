@@ -46,18 +46,11 @@ public class SecurityConfiguration {
        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        http
         // 1. New, functional way to disable CSRF
-        .cors(withDefaults()) 
-        .csrf(csrf -> csrf.disable())
+        .cors(withDefaults())  //backend accept requests from another origin
+        .csrf(csrf -> csrf.disable()) //we are stateless so no need of csrf 
         .authorizeHttpRequests(auth -> auth
             // 2. Clearer way to define public and protected endpoints
             .requestMatchers(
-        // "/swagger-ui.html", 
-        // "/swagger-ui/**", 
-        // "/v3/api-docs/**", 
-        // "/api/v1/auth/**",
-        // "/v3/api-docs.yaml",
-        // "/swagger-resources/**", 
-        // "/webjars/**"
         "/v3/api-docs","/api/v1/auth/**", "/api/v1/auth/register", "/api/v1/auth/login","/v2/api-docs",
 			"/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 			"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html",
