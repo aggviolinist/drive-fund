@@ -49,6 +49,7 @@ public class CatalogueService {
         return catalogueRepository.findAll()
                .stream()
                .map(product -> Catalogue.builder()
+                    .catUuid(product.getCatUuid()) 
                     .productname(product.getProductname())
                     .productImageUrl(product.getProductImageUrl())
                     .productdesc(product.getProductdesc())

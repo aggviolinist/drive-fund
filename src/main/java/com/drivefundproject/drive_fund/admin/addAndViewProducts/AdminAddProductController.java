@@ -28,8 +28,8 @@ public class AdminAddProductController {
     private final CatalogueService catalogueService;
 
     @PreAuthorize("hasRole('ADMIN')")  
-    @PostMapping("/add-products")
-    public ResponseEntity<Object> addProduct(@Valid @RequestBody CatalogueRequest catalogueAddition) {
+    @PostMapping("/add-products" )
+    public ResponseEntity<Object> addProduct(@Valid @ModelAttribute CatalogueRequest catalogueAddition) {
         try{
         // Delegate all logic to the service layer
         Catalogue newProduct = catalogueService.addProduct(catalogueAddition);
