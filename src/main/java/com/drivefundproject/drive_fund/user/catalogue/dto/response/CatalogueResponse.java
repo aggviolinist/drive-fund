@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class CatalogueResponse {
+    private String productImageUrl;
     private UUID catUuid;
     private String productname; 
     private String productdesc;   
-    private String productImageUrl;
 }

@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CatalogueViewAll {
+    private String productImageUrl;
     private UUID catUuid;
     private String productname; 
     private String productdesc;
-    private String productImageUrl;
 
 }

@@ -46,6 +46,14 @@ public class CatalogueService {
     }
 //Viewing all products
     public List<Catalogue> viewAllProducts(){
-        return catalogueRepository.findAll();
+        return catalogueRepository.findAll()
+               .stream()
+               .map(product -> Catalogue.builder()
+                    .productname(product.getProductname())
+                    .productImageUrl(product.getProductImageUrl())
+                    .productdesc(product.getProductdesc())
+
+                    .build())
+            .toList();
     }
 }
