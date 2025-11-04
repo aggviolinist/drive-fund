@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.catalogue.repository;
+package com.drivefundproject.drive_fund.user.catalogue.repository;
 
 
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.user.catalogue.model.Catalogue;
 
 import java.util.UUID;
     

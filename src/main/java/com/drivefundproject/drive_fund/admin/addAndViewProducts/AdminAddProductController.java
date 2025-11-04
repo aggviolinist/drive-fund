@@ -11,12 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.drivefundproject.drive_fund.catalogue.dto.request.CatalogueRequest;
-import com.drivefundproject.drive_fund.catalogue.dto.response.CatalogueResponse;
-import com.drivefundproject.drive_fund.catalogue.dto.response.CatalogueViewAll;
-import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
-import com.drivefundproject.drive_fund.catalogue.service.CatalogueService;
 import com.drivefundproject.drive_fund.exception.ResponseHandler;
+import com.drivefundproject.drive_fund.user.catalogue.dto.request.CatalogueRequest;
+import com.drivefundproject.drive_fund.user.catalogue.dto.response.CatalogueResponse;
+import com.drivefundproject.drive_fund.user.catalogue.dto.response.CatalogueViewAll;
+import com.drivefundproject.drive_fund.user.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.user.catalogue.service.CatalogueService;
 
 import jakarta.validation.Valid;
 

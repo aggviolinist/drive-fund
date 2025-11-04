@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.catalogue.model;
+package com.drivefundproject.drive_fund.user.catalogue.model;
 
 
 

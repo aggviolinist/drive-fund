@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.catalogue.dto.response;
+package com.drivefundproject.drive_fund.user.catalogue.dto.response;
 
 import java.util.UUID;
 

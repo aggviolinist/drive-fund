@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.drivefundproject.drive_fund.auth.model.User;
 import com.drivefundproject.drive_fund.auth.repository.UserRepository;
-import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
-import com.drivefundproject.drive_fund.catalogue.repository.CatalogueRepository;
 import com.drivefundproject.drive_fund.user.addsavingsplan.dto.request.SavingsPlanRequest;
 import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
 import com.drivefundproject.drive_fund.user.addsavingsplan.model.Status;
 import com.drivefundproject.drive_fund.user.addsavingsplan.repository.SavingsPlanRepository;
+import com.drivefundproject.drive_fund.user.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.user.catalogue.repository.CatalogueRepository;
 
 import lombok.RequiredArgsConstructor;
 

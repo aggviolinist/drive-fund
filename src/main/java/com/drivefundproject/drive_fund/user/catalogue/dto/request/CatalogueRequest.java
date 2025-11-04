@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.catalogue.dto.request;
+package com.drivefundproject.drive_fund.user.catalogue.dto.request;
 
 import org.springframework.web.multipart.MultipartFile;
 

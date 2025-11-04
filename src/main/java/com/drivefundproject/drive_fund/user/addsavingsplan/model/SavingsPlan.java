@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import com.drivefundproject.drive_fund.auth.model.User;
-import com.drivefundproject.drive_fund.catalogue.model.Catalogue;
+import com.drivefundproject.drive_fund.user.catalogue.model.Catalogue;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
