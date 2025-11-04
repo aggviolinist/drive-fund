@@ -22,12 +22,12 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/admin/products")
-@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class AdminAddProductController {
 
     private final CatalogueService catalogueService;
-
+    
+    @PreAuthorize("hasRole('ADMIN')")  
     @PostMapping("/add-products")
     public ResponseEntity<Object> addProduct(@Valid @RequestBody CatalogueRequest catalogueAddition) {
         try{
@@ -48,6 +48,7 @@ public class AdminAddProductController {
 
     }
 }
+@PreAuthorize("isAuthenticated()")
 @GetMapping("/view-all-products")
     public ResponseEntity<Object> viewAllProducts() { 
         List<Catalogue> allProducts = catalogueService.viewAllProducts();
