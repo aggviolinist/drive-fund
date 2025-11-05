@@ -78,7 +78,12 @@ pipeline {
         }
 
         stage('Update Deployment File') {
-            agent any
+            agent{
+                docker{
+                    image 'alpine/git:latest'
+                    args '--user root'
+                }
+            }
             environment {
                 GIT_REPO_NAME = "drive-fund"
                 GIT_USER_NAME = "aggviolinist"

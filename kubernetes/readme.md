@@ -55,23 +55,25 @@ Architecture
 ### 2.1 Download the server
 ```sh
 sudo apt update && sudo apt install unzip -y
+cd /opt/ # change directory to this opt folder
 wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.4.1.88267.zip
 unzip *
 ```
 ### 2.2 SonarQube should not run as root. Make sure you have a dedicated sonarqube user
 ```sh
-sudo useradd -r -d /opt/sonarqube -s /bin/false sonarqube
+sudo useradd -r -d sonarqube -s /bin/false sonarqube
 sudo chown -R sonarqube:sonarqube /opt/sonarqube
 sudo chown -R sonarqubez:sonarqubez /opt/sonarqube
 ```
 ### 2.3 Start the server
 ```sh 
 sudo -u sonarqube ./sonar.sh start
+sudo -u sonarqubez sonarqube/bin/linux-x86-64/sonar.sh start
 ```
 ### 2.4 Debug the server
 ```sh
-sudo rm -rf /opt/sonarqube/logs/*
-sudo rm -f /opt/sonarqube/bin/linux-x86-64/SonarQube.pid
+sudo rm -rf sonarqube/logs/*
+sudo rm -f sonarqube/bin/linux-x86-64/SonarQube.pid
 ```
 ### 2.5 Access it on browser
 ```sh
