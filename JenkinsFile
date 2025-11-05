@@ -81,7 +81,6 @@ pipeline {
             agent{
                 docker{
                     image 'alpine/git:latest'
-                    args '--user root'
                 }
             }
             environment {
