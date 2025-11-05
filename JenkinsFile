@@ -85,9 +85,10 @@ pipeline {
                 GIT_BRANCH = "main"
             }
             steps {
-                script {
-                    sh "git checkout ${GIT_BRANCH}" 
-                }
+                script{
+                    sh "sh git checkout ${GIT_BRANCH} "
+                }
+        
                 withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUBTOKEN')]) {
                     sh '''
                         git config user.email "mulandimaei76@gmail.com"
