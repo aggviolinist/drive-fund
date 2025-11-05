@@ -80,8 +80,8 @@ pipeline {
         stage('Update Deployment File') {
             agent{
                 docker{
-                    image 'bitnami/git:latest'
-                    args 'cat'
+                    image 'ubuntu:latest'
+                    args '--user root'
                 }
             }
             environment {
