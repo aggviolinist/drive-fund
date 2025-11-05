@@ -1,6 +1,7 @@
 # Deployment on Kubernetes
 ## EC2
 ## Jenkins 
+## SonarQube
 ## Docker
 ## ArgoCD $ Kubernetes
 Architecture
@@ -45,41 +46,53 @@ Architecture
    ```sh
    sudo apt install git
    ```
-### 1.5 Install Sonar Qube
-   - System Requirements
+## 2. Configure and Install Sonar
+ - System Requirements
    - Java 17+ (Oracle JDK, OpenJDK, or AdoptOpenJDK)
    - Hardware Recommendations:
    - Minimum 2 GB RAM
    - 2 CPU cores
-   ```sh
-   sudo apt update && sudo apt install unzip -y
-   adduser sonarqube
-   wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.4.1.88267.zip
-   unzip *
-   chown -R sonarqube:sonarqube /opt/sonarqube
-   chmod -R 775 /opt/sonarqube
-   cd /opt/sonarqube/bin/linux-x86-64
-   ./sonar.sh start
-   ```
-## 2. Create a new Jenkins pipeline:
-### 2.1: In Jenkins, create a new pipeline job and configure it with the Git repository URL for the Java application.
-### 2.2: Add a Jenkinsfile to the Git repository to define the pipeline stages.
-### 2.3: Add dependencies like AWS Credentials, Docker pipeline, Sonar Qube
-### 2.4: Configure Sonar, Github, docker, AWS secret variables
+### 2.1 Download the server
+```sh
+sudo apt update && sudo apt install unzip -y
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.4.1.88267.zip
+unzip *
+```
+### 2.2 SonarQube should not run as root. Make sure you have a dedicated sonarqube user
+```sh
+sudo useradd -r -d /opt/sonarqube -s /bin/false sonarqube
+sudo chown -R sonarqube:sonarqube /opt/sonarqube
+```
+### 2.3 Start the server
+```sh 
+sudo -u sonarqube ./sonar.sh start
+```
+### 2.4 Access it on browser
+```sh
+http://<ip-address>:9000
+```
+
+## 3. Create a new Jenkins pipeline:
+### 3.1: In Jenkins, create a new pipeline job and configure it with the Git repository URL for the Java application.
+### 3.2: Add a Jenkinsfile to the Git repository to define the pipeline stages.
+### 3.3: Add dependencies like AWS Credentials, Docker pipeline, Sonar Qube
+### 3.4: Configure Sonar, Github, docker, AWS secret variables
  
-## 3. Define the pipeline stages:
+
+## 4. Define the pipeline stages:
     Stage 1: Build the Java application using Maven.
     Stage 2: Run SonarQube analysis to check the code quality.
     Stage 3: Package the application into a docker file.
     Stage 4: Upload the docker file in docker hub.
     Stage 5: Update Kuberrnetes Deployment File with image tag
     Stage 6: Promote the application to a production environment using Argo CD.
-## 4. Argo CD
-### 4.1 Install docker 
-###  4.1.1 Install MInikube
-###  4.1.2 Install Kubectl
-###  4.2 ```sh Install the Controllers using ArgoCD operator``` https://operatorhub.io/operator/argocd-operator to manage the lifecycle of K8s controllers and comes with default configs
-###  4.3 How to use the operator https://argocd-operator.readthedocs.io/en/latest/usage/basics/
+
+## 5. Argo CD Locally
+### 5.1 Install docker 
+###  5.1.1 Install Minikube
+###  5.1.2 Install Kubectl
+###  5.2 ```sh Install the Controllers using ArgoCD operator``` https://operatorhub.io/operator/argocd-operator to manage the lifecycle of K8s controllers and comes with default configs
+###  5.3 How to use the operator https://argocd-operator.readthedocs.io/en/latest/usage/basics/
    ```sh
    kubectl get pods -n operators
    kubectl apply -f kubernetes/argoCD/argocd-basic.yml
