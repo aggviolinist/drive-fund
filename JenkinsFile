@@ -80,7 +80,7 @@ pipeline {
         stage('Update Deployment File') {
             agent{
                 docker{
-                    image 'alpine/git:latest'
+                    image 'bitnami/git:latest'
                 }
             }
             environment {
