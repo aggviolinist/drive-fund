@@ -28,6 +28,7 @@ pipeline {
         }
 
         stage('Static Code analysis'){
+            agent any
             environment{
                 SONAR_URL = "http://98.88.32.108:9000"
             }
