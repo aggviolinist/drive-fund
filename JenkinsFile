@@ -81,7 +81,7 @@ pipeline {
             agent{
                 docker{
                     image 'bitnami/git:latest'
-                    command 'cat'
+                    args 'cat'
                 }
             }
             environment {
