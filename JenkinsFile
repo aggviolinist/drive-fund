@@ -92,6 +92,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUBTOKEN')]) {
                     sh '''
+                        apt-get update && apt-get install -y git
                         git checkout ${GIT_BRANCH}
                         git config user.email "mulandimaei76@gmail.com"
                         git config user.name "aggviolinist"
