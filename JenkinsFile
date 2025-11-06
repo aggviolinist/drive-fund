@@ -93,7 +93,8 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'github-creds', variable: 'GITHUBTOKEN')]) {
                     sh '''
-                        apt-get update && apt-get install -y git
+                        apt-get update -y
+                        apt-get install -y git
                         git config --global --add safe.directory /var/lib/jenkins/workspace/Jenkins-Learning-Path
                         git checkout ${GIT_BRANCH}
                         git config user.email "mulandimaei76@gmail.com"
