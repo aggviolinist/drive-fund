@@ -96,13 +96,20 @@ pipeline {
                         apt-get update -y
                         apt-get install -y git
                         git config --global --add safe.directory /var/lib/jenkins/workspace/Jenkins-Learning-Path
+                        git clean -fd
+                        git pull origin ${GIT_BRANCH}
                         git checkout ${GIT_BRANCH}
                         git config user.email "mulandimaei76@gmail.com"
                         git config user.name "aggviolinist"
-                        sed -i "s/replaceThisImageTag/${BUILD_NUMBER}/g" kubernetes/deployment.yml
+                        if [ -f "kubernetes/deployment.yml"]; then
+                            sed -i "s/replaceThisImageTag/${BUILD_NUMBER}/g" kubernetes/deployment.yml
+                        else
+                            echo "ERROR: kubernetes/deployment.yml not found!"
+                            exit 1
+                        fi
                         git add kubernetes/deployment.yml
-                        git commit -m "Updated with latest Docker image tag ${BUILD_NUMBER}"
-                        git push https://${GITHUBTOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+                        git diff --cached --exit-code || git commit -m "Updated with latest Docker image tag ${BUILD_NUMBER}"
+                        git push https://${GITHUBTOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:${GIT_BRANCH}
                     '''
                 }
             }

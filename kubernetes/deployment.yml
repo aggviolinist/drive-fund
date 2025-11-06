@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: savings-app   # Our image lives here
-          image: violinist999/ripper:10
+          image: violinist999/ripper:replaceThisImageTag
           ports:
             - containerPort: 8081
           envFrom:
