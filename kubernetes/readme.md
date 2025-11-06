@@ -111,9 +111,10 @@ http://<ip-address>:9000
    minikube service argo-cd-server
    minikube service list
    kubectl get secret
-   kubectl edit secret argo-cd-server
+   kubectl edit secret savings-app-argocd-cluster
    echo bas64enxryptedtextdjjfjkfkrjffjfjf= | base64 -d
    kubectl get deploy
+   minikube service savings-app-argocd-server
    ```
    Getting pod endpoints
    ```sh
