@@ -109,6 +109,7 @@ pipeline {
                         fi
                         git add kubernetes/deployment.yml
                         git diff --cached --exit-code || git commit -m "Updated with latest Docker image tag ${BUILD_NUMBER}"
+                        git pull --rebase origin ${GIT_BRANCH} 
                         git push https://${GITHUBTOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:${GIT_BRANCH}
                     '''
                 }
