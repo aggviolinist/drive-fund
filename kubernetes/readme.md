@@ -69,6 +69,7 @@ sudo chown -R sonarqubez:sonarqubez /opt/sonarqube
 ```sh 
 sudo -u sonarqube ./sonar.sh start
 sudo -u sonarqubez sonarqube/bin/linux-x86-64/sonar.sh start
+sudo -u sonarqubez sonarqube/bin/linux-x86-64/sonar.sh stop
 ```
 ### 2.4 Debug the server
 ```sh
