@@ -16,7 +16,7 @@ import com.drivefundproject.drive_fund.auth.model.User;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/admin/users")
+@RequestMapping("/api/v1/admin/getusers")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class FetchUserController {
