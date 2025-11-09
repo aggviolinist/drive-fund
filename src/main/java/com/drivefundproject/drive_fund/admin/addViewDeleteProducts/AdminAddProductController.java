@@ -1,9 +1,10 @@
-package com.drivefundproject.drive_fund.admin.addAndViewProducts;
+package com.drivefundproject.drive_fund.admin.addViewDeleteProducts;
 
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,28 @@ public class AdminAddProductController {
 
     }
 }
+
+   @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{catUuid}") // Maps to DELETE /api/v1/admin/products/{catUuid}
+    public ResponseEntity<Object> deleteProduct(@PathVariable UUID catUuid) {
+        try {
+            // Delegate the deletion logic to the service layer
+            catalogueService.deleteProductByCatUuid(catUuid);
+            
+            // HTTP 200 OK or 204 No Content are appropriate for successful deletion.
+            return ResponseHandler.generateResponse(
+                HttpStatus.OK, 
+                "Product with UUID " + catUuid + " deleted successfully", 
+                null);
+            
+        } catch (RuntimeException e) {
+            // Handle case where product might not be found or other deletion errors
+            return ResponseHandler.generateResponse(
+                HttpStatus.NOT_FOUND, 
+                "Product deletion failed: " + e.getMessage(), 
+                null);
+        }
+    }
 //@PreAuthorize("isAuthenticated()")
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 @GetMapping("/view-all-products")

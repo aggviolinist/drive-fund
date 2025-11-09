@@ -4,7 +4,7 @@ package com.drivefundproject.drive_fund.user.catalogue.service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-
+import java.util.UUID;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -44,6 +44,16 @@ public class CatalogueService {
         throw new RuntimeException("A product with this name already exists.",e);
     }
     }
+
+public void deleteProductByCatUuid(UUID catUuid) {
+    // 1. Check if the product exists
+    Catalogue productToDelete = catalogueRepository.findByCatUuid(catUuid)
+        .orElseThrow(() -> new RuntimeException("Product not found with UUID: " + catUuid));
+
+    // 2. Delete the product
+    catalogueRepository.delete(productToDelete); 
+    
+}
 //Viewing all products
     public List<Catalogue> viewAllProducts(){
         return catalogueRepository.findAll()
