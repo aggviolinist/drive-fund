@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,11 @@ public class CustomSystemVariablesController {
         return ResponseEntity.ok(updatedVariables);
 
         
+    }
+    @GetMapping("/getsystemvariables") 
+    public ResponseEntity<List<CustomSystemVariables>> getAllSystemVariables(){
+        List<CustomSystemVariables> variables = customSystemVariablesService.getAllSystemVariables();
+        return ResponseEntity.ok(variables);
     }
     
 }
