@@ -12,6 +12,7 @@ import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndChe
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.service.SavingsDisplayService;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.request.RestPaymentRequest;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.response.PaymentAndInterest;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.response.PaymentResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.service.PaymentService;
@@ -110,17 +111,27 @@ public class SavingsDisplayController {
                 return ResponseHandler.generateResponse(HttpStatus.FORBIDDEN,"Acess Denied or The Savings plan was not found" , null);
             }
             try{
-              Payment newpaymentResponse = paymentService.recordPaymentDeposit(planUuid, paymentRequest.getAmount());
-              PaymentResponse paymentResponse = new PaymentResponse(
-                newpaymentResponse.getSavingsPlan().getPlanUuid(),
-                newpaymentResponse.getPaymentUuid(),
-                newpaymentResponse.getPaymentAmount(),
-                newpaymentResponse.getPaymentDate(),
-                //newpaymentResponse.getSystemMessage(),
-                //newpaymentResponse.getTransactionId(),
-                newpaymentResponse.getSavingsPlan().getStatus());
+            //   Payment newpaymentResponse = paymentService.recordPaymentDeposit(planUuid, paymentRequest.getAmount());
+            //   PaymentResponse paymentResponse = new PaymentResponse(
+            //     newpaymentResponse.getSavingsPlan().getPlanUuid(),
+            //     newpaymentResponse.getPaymentUuid(),
+            //     newpaymentResponse.getPaymentAmount(),
+            //     newpaymentResponse.getPaymentDate(),
+            //     //newpaymentResponse.getSystemMessage(),
+            //     //newpaymentResponse.getTransactionId(),
+            //     newpaymentResponse.getSavingsPlan().getStatus());
+            PaymentAndInterest combinedResponse = paymentService.recordPaymentDeposit(
+            planUuid, 
+            paymentRequest.getAmount()
+        );
 
-                return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", paymentResponse);
+        // Generate a success message that mentions interest if it was awarded
+        String message = "Payment recorded successfully.";
+        if (combinedResponse.getInterestResponse().getInterestAmount().compareTo(BigDecimal.ZERO) > 0) {
+            message += " " + combinedResponse.getInterestResponse().getMessage();
+        }
+
+                return ResponseHandler.generateResponse(HttpStatus.OK, "Payment recorded successfully", combinedResponse);
             }
             catch(IllegalArgumentException e){
                 return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST,e.getMessage(), null);

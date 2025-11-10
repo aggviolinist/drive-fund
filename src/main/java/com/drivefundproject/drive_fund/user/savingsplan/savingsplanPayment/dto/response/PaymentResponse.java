@@ -7,17 +7,19 @@ import java.util.UUID;
 import com.drivefundproject.drive_fund.user.addsavingsplan.model.Status;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class PaymentResponse {
     private UUID planUuid;
     private UUID paymentUuid;
     private BigDecimal paymentAmount;
-    private LocalDate payment_date;
+    private LocalDate paymentDate;
     //private String payment_method;
    // private String transaction_id;
     private Status status;    

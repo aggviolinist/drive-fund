@@ -16,6 +16,8 @@ import com.drivefundproject.drive_fund.user.addsavingsplan.model.Status;
 import com.drivefundproject.drive_fund.user.addsavingsplan.repository.SavingsPlanRepository;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.dto.response.InterestResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanInterest.service.InterestEarnedService;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.response.PaymentAndInterest;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.response.PaymentResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.Payment;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.model.TransactionType;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.repository.PaymentRepository;
@@ -41,7 +43,7 @@ public class PaymentService {
     //     "percentageCompleted",
     //     "dynamicExpectedPayment"
     // }, key = "#planUuid")
-    public Payment recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
+    public PaymentAndInterest recordPaymentDeposit( UUID planUuid, BigDecimal paymentAmount){
         Optional<SavingsPlan> retrievedSavingsPlan = savingsPlanRepository.findByPlanUuid(planUuid);
         //We want to avoid overpayment of the target amount
         if(retrievedSavingsPlan.isPresent()){
@@ -72,8 +74,13 @@ public class PaymentService {
 
             Payment savedPayment = paymentRepository.save(payment);
 
+            //double percentageCompleted = calculatePercentageCompleted(planUuid);
+            double percentageCompleted = Math.max(0.0, Math.min(calculateTotalDeposit(planUuid).multiply(new BigDecimal("100")).divide(savingsPlan.getAmount(), 1, RoundingMode.HALF_UP).doubleValue(), 100.0));
+            InterestResponse interestResponse = calculateInterest(planUuid, percentageCompleted);
+            BigDecimal finalTotalDeposits = calculateTotalDeposit(planUuid);
+
            // Change the status from COMPLETED to IN-PROGRESS after savings reach 100%
-           if (netAmountPaidSoFar.compareTo(targetAmount) < 0) {
+           if (finalTotalDeposits.compareTo(targetAmount) < 0) {
             // If the net amount is now LESS THAN the target amount, the status cannot be COMPLETED.
             if (savingsPlan.getStatus() == Status.COMPLETED || savingsPlan.getStatus() == Status.PENDING) {
                 // Change status from COMPLETED to IN_PROGRESS
@@ -82,8 +89,7 @@ public class PaymentService {
             }
         }
 
-           double percentageCompleted = calculatePercentageCompleted(planUuid);
-           InterestResponse interestResponse = calculateInterest(planUuid, percentageCompleted);
+           
 
             //COMPLETE status logic once the total deposits are more than the targetamount
             BigDecimal updatedTotalDeposits = calculateTotalDeposit(planUuid);
@@ -92,7 +98,19 @@ public class PaymentService {
                 savingsPlanRepository.save(savingsPlan);
             }
             //return new PaymentResponseWrapper(savedPayment, interestResponse);
-            return savedPayment;
+            //return savedPayment;
+            PaymentResponse paymentResponse = PaymentResponse.builder()
+            .planUuid(savedPayment.getSavingsPlan().getPlanUuid())
+            .paymentUuid(savedPayment.getPaymentUuid())
+            .paymentAmount(savedPayment.getPaymentAmount())
+            .paymentDate(savedPayment.getPaymentDate())
+            .status(savedPayment.getSavingsPlan().getStatus())
+            .build();
+
+            return PaymentAndInterest.builder()
+            .paymentResponse(paymentResponse)
+            .interestResponse(interestResponse)
+            .build();
         }
         else{
             throw new IllegalArgumentException("Savings Plan not found");
