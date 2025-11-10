@@ -1,4 +1,4 @@
-package com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.controller;
+package com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

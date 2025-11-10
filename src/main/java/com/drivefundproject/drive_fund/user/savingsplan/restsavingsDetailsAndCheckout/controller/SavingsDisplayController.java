@@ -8,6 +8,7 @@ import com.drivefundproject.drive_fund.exception.ResponseHandler;
 import com.drivefundproject.drive_fund.user.addsavingsplan.model.SavingsPlan;
 import com.drivefundproject.drive_fund.user.addsavingsplan.repository.SavingsPlanRepository;
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.ConciseSavingsDisplayResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.SavingsPlanCheckoutResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.SavingsProgressResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.service.SavingsDisplayService;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanPayment.dto.request.RestPaymentRequest;

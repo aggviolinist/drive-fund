@@ -57,6 +57,7 @@ public class WithdrawalService {
         BigDecimal feeRate;
         WithdrawalType feeType;
         String feeReason;
+        boolean wasCompleted = savingsPlan.getStatus() == Status.COMPLETED; 
 
         if(savingsPlan.getStatus() == Status.PENDING || savingsPlan.getStatus() == Status.IN_PROGRESS){
             feeRate = WITHDRAWALPENALTY_FEE_RATE;
@@ -100,6 +101,13 @@ public class WithdrawalService {
         withdrawalFee.setSystemMessage(feeReason);
         withdrawalFee.setTransactionId(feeType.name() + "-" + UUID.randomUUID().toString().substring(0,8));
         withdrawalFeeRepository.save(withdrawalFee);
+
+        if(wasCompleted) {
+            // A withdrawal means the account balance is now below the target, 
+            // so the goal is no longer 'COMPLETED'.
+            savingsPlan.setStatus(Status.IN_PROGRESS); // Set status to active saving
+            savingsPlanRepository.save(savingsPlan);
+        }
 
         System.out.println("Successful withdrawal of:" + withdrawnAmount.setScale(2,RoundingMode.HALF_UP) + ". " + feeReason + " of " + feeAmount.setScale(2, RoundingMode.HALF_UP) + " applied.");
     }

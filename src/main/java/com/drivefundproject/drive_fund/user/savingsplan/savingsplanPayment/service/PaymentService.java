@@ -72,16 +72,27 @@ public class PaymentService {
 
             Payment savedPayment = paymentRepository.save(payment);
 
-            
+           // Change the status from COMPLETED to IN-PROGRESS after savings reach 100%
+           if (netAmountPaidSoFar.compareTo(targetAmount) < 0) {
+            // If the net amount is now LESS THAN the target amount, the status cannot be COMPLETED.
+            if (savingsPlan.getStatus() == Status.COMPLETED || savingsPlan.getStatus() == Status.PENDING) {
+                // Change status from COMPLETED to IN_PROGRESS
+                savingsPlan.setStatus(Status.IN_PROGRESS); 
+                savingsPlanRepository.save(savingsPlan);
+            }
+        }
 
-            //COMPLETE status logic
+           double percentageCompleted = calculatePercentageCompleted(planUuid);
+           InterestResponse interestResponse = calculateInterest(planUuid, percentageCompleted);
+
+            //COMPLETE status logic once the total deposits are more than the targetamount
             BigDecimal updatedTotalDeposits = calculateTotalDeposit(planUuid);
             if(updatedTotalDeposits.compareTo(targetAmount) >=0 ){
                 savingsPlan.setStatus(Status.COMPLETED);
                 savingsPlanRepository.save(savingsPlan);
             }
-            return new PaymentResponseWrapper(savedPayment, interestResponse);
-            //return savedPayment;
+            //return new PaymentResponseWrapper(savedPayment, interestResponse);
+            return savedPayment;
         }
         else{
             throw new IllegalArgumentException("Savings Plan not found");
@@ -89,9 +100,7 @@ public class PaymentService {
     }
     //CALCULATING INTEREST 50% AND 75% INTEREST
     public InterestResponse calculateInterest(UUID planUuid, double percentageCompleted){
-             return interestEarnedService
-                     .calculateAndApplyInterest(planUuid, percentageCompleted);
-
+             return interestEarnedService.calculateAndApplyInterest(planUuid, percentageCompleted);
     }
   
     //Total deposited amount
