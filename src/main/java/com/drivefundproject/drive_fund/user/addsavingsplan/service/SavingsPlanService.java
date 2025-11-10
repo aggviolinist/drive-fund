@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.drivefundproject.drive_fund.auth.model.User;
 import com.drivefundproject.drive_fund.auth.repository.UserRepository;

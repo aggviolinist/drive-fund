@@ -1,11 +1,10 @@
+package com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.controller;
 
-
-
+import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.dto.response.SavingsProgressResponse;
+import com.drivefundproject.drive_fund.user.savingsplan.restsavingsDetailsAndCheckout.service.SavingsDisplayService;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.dto.request.SocketWithdrawalRequest;
+import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.dto.response.SocketWithdrawalResponse;
 import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.service.WithdrawalService;
-import com.drivefundproject.drive_fund.user.savingsplan.savingsplanDisplay.dto.SavingsProgressResponse;
-import com.drivefundproject.drive_fund.user.savingsplan.savingsplanDisplay.service.SavingsDisplayService;
-import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.dto.WithdrawalRequest;
-import com.drivefundproject.drive_fund.user.savingsplan.savingsplanWithdrawal.dto.WithdrawalResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,22 +17,16 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/savings-plans")
+@RequestMapping("/api/v1/savings")
 @RequiredArgsConstructor
 public class WithdrawalController {
 
     private final WithdrawalService withdrawalService;
-    private final SavingsDisplayService savingsDisplayService; // Assumed service for progress
+    private final SavingsDisplayService savingsDisplayService;
 
-    /**
-     * Handles a withdrawal request for a specific savings plan.
-     * @param planUuid The UUID of the savings plan.
-     * @param request DTO containing the withdrawal amount.
-     * @return ResponseEntity with the withdrawal details and updated progress.
-     */
-    @PostMapping("/{planUuid}/withdraw")
+    @PostMapping("/withdraw/{planUuid}")
     public ResponseEntity<?> withdraw(@PathVariable UUID planUuid, 
-                                      @RequestBody WithdrawalRequest request) {
+                                      @RequestBody SocketWithdrawalRequest request) {
         
         BigDecimal withdrawnAmount = request.getWithdrawnAmount();
 
@@ -56,7 +49,7 @@ public class WithdrawalController {
                 withdrawnAmount.setScale(2, RoundingMode.HALF_UP) + 
                 " processed successfully.";
             
-            WithdrawalResponse response = new WithdrawalResponse(
+            SocketWithdrawalResponse response = new SocketWithdrawalResponse(
                 savingsProgressResponse,
                 withdrawnAmount,
                 LocalDate.now(),

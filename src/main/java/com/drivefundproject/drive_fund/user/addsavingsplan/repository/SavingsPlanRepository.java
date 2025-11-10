@@ -20,7 +20,6 @@ public interface SavingsPlanRepository extends JpaRepository<SavingsPlan, Intege
         Optional<SavingsPlan> findByPlanUuid(UUID planUuid);
 
         @Query("SELECT s FROM SavingsPlan s LEFT JOIN FETCH s.catalogue WHERE s.planUuid = :planUuid")
-        
         Optional<SavingsPlan> findByPlanUuidWithCatalogueFetch(UUID planUuid);
          //Server Error: Error in the Catalogue#25] - no session
 
