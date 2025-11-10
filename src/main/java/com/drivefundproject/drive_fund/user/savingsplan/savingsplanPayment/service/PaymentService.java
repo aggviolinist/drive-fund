@@ -72,13 +72,16 @@ public class PaymentService {
 
             Payment savedPayment = paymentRepository.save(payment);
 
+            
+
             //COMPLETE status logic
             BigDecimal updatedTotalDeposits = calculateTotalDeposit(planUuid);
             if(updatedTotalDeposits.compareTo(targetAmount) >=0 ){
                 savingsPlan.setStatus(Status.COMPLETED);
                 savingsPlanRepository.save(savingsPlan);
             }
-            return savedPayment;
+            return new PaymentResponseWrapper(savedPayment, interestResponse);
+            //return savedPayment;
         }
         else{
             throw new IllegalArgumentException("Savings Plan not found");
