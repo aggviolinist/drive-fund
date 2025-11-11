@@ -47,7 +47,7 @@ public class SecurityConfiguration {
        http
         // 1. New, functional way to disable CSRF
         //.cors(withDefaults())  //backend accept requests from another origin
-        .cors().disable()
+        //.cors().disable()
         .csrf(csrf -> csrf.disable()) //we are stateless so no need of csrf 
         .authorizeHttpRequests(auth -> auth
             // 2. Clearer way to define public and protected endpoints
