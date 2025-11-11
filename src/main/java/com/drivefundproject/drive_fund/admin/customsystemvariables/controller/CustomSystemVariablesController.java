@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drivefundproject.drive_fund.admin.customsystemvariables.dto.request.CustomSystemVariablesRequest;
+import com.drivefundproject.drive_fund.admin.customsystemvariables.dto.response.CustomSystemVariablesResponse;
 import com.drivefundproject.drive_fund.admin.customsystemvariables.model.CustomSystemVariables;
 import com.drivefundproject.drive_fund.admin.customsystemvariables.service.CustomSystemVariablesService;
+import com.drivefundproject.drive_fund.exception.ResponseHandler;
+import com.drivefundproject.drive_fund.profile.dto.response.UserProfileResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,9 +52,12 @@ public class CustomSystemVariablesController {
         
     }
     @GetMapping("/getsystemvariables") 
-    public ResponseEntity<List<CustomSystemVariables>> getAllSystemVariables(){
-        List<CustomSystemVariables> variables = customSystemVariablesService.getAllSystemVariables();
-        return ResponseEntity.ok(variables);
-    }
+    public ResponseEntity<Object> getAllSystemVariables(){
+            List<CustomSystemVariablesResponse> response = customSystemVariablesService.getAllSystemVariables();
+    return ResponseHandler.generateResponse(HttpStatus.OK, "System Variables fetched successfully", response);
+}
+    
+
+    
     
 }
