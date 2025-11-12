@@ -1,12 +1,12 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: load-generator
-spec:
-  containers:
-  - name: load-generator-container
-    image: busybox
-    command: ["/bin/sh", "-c"]
-    args:
-    - while true; do wget -q -O - http://savings-app-service:80/; done
-    restartPolicy: Always
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: load-generator
+# spec:
+#   containers:
+#   - name: load-generator-container
+#     image: busybox
+#     command: ["/bin/sh", "-c"]
+#     args:
+#     - while true; do wget -q -O - http://savings-app-service:80/; done
+#     restartPolicy: Always
