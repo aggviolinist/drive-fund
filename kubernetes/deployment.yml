@@ -25,9 +25,9 @@ spec:
             - containerPort: 8081
           resources:
            requests:
-             cpu: "100m"
+             cpu: "190m"
            limits:
-             cpu: "150m"
+             cpu: "200m"
           envFrom:
             - secretRef:
                 name: aws-credentials
