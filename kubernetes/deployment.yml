@@ -23,6 +23,11 @@ spec:
           image: violinist999/ripper:42
           ports:
             - containerPort: 8081
+          resources:
+           requests:
+            - cpu: "180"
+           limits:
+            - cpu: "200"
           envFrom:
             - secretRef:
                 name: aws-credentials
