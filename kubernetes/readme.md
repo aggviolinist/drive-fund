@@ -137,4 +137,11 @@ http://<ip-address>:9000
   --from-literal=AWS_REGION=us-east-1
   ```
 
+  My K8s command notes
+  ```sh
+   kubectl run redis --image=redis123 --dry-run=client -o yaml > redis2.yaml
+   kubectl get pods -o wide
+  ```
+
+
 
