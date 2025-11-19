@@ -139,8 +139,31 @@ http://<ip-address>:9000
 
   My K8s command notes
   ```sh
-   kubectl run redis --image=redis123 --dry-run=client -o yaml > redis2.yaml
-   kubectl get pods -o wide
+   -------------------------------------------------------------------------------
+   cReAtE pOdS
+   -------------------------------------------------------------------------------
+   -------------------------------------------------------------------------------
+   kubectl run redis --image=redis123 --dry-run=client -o yaml > redis2.yaml - create a yaml from a dry run
+   kubectl get pods -o wide - All pods descibed
+   ----------------------------------------------------------------------------
+   cReAtE replicaset
+   -------------------------------------------------------------------------------
+   kubectl create -f replicaset-file.yml
+   kubectl get replicaset - replicaset
+   ----------------------------------------------------------------------------------
+   RePlAcInG replicaset
+   -------------------------------------------------------------------------------
+   kubectl replace -f replicaset-file.yml - update after manually updating yml file
+   kubectl scale -replicas=6 -f replicaset-file.yml - updating using the CLI
+   -------------------------------------------------------------------------------
+   dElEtE replicaset
+   -------------------------------------------------------------------------------
+   kubectl delete replicaset app-replicaset
+   -------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
+   CrEaTE deployment
+   -------------------------------------------------------------------------------
+
   ```
 
 
