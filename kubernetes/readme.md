@@ -154,7 +154,8 @@ http://<ip-address>:9000
    RePlAcInG replicaset
    -------------------------------------------------------------------------------
    kubectl replace -f replicaset-file.yml - update after manually updating yml file
-   kubectl scale -replicas=6 -f replicaset-file.yml - updating using the CLI
+   kubectl scale replicaset mycustomreplicaset --replicas=6 - updating using the CLI
+   kubectl scale -f new-replica-set.yaml --replicas=9 - updating using the CLI
    -------------------------------------------------------------------------------
    dElEtE replicaset
    -------------------------------------------------------------------------------
