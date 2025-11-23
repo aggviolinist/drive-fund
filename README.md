@@ -5,7 +5,7 @@ A savings app to help our users achieve their multiple financial goals....
 ```sh
 docker build -t ripper:v1 .
 docker run -d -p 8010:8080 -t ripper:v1
-http://<ip-address>:8010
+http://<localhost>:8010
 ```
 
 
