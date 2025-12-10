@@ -164,11 +164,18 @@ http://<ip-address>:9000
    ------------------------------------------------------------------------------
    CrEaTE deployment
    -------------------------------------------------------------------------------
-
   ```
+## Vim commands
   ```sh
   Copy entire file in vi :%y+
   ```
+## Listing pods and selecting exact namespace we want
+```sh
+kubectl get pods -l env=prod -n staging
+```
+```sh
+kubectl get pods -l 'tier in (frontend,backend)' -n dev --field-selector=status.phase=Running
+```
 
 
 
