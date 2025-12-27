@@ -166,9 +166,18 @@ http://<ip-address>:9000
    -------------------------------------------------------------------------------
   ```
 ## Vim commands
-  ```sh
-  Copy entire file in vi :%y+
-  ```
+Copy entire file
+```sh
+:%y+
+```
+Undo
+```sh
+:u
+```
+Redo
+```sh
+ctrl+r
+```
 ## Listing pods and selecting exact namespace we want
 ```sh
 kubectl get pods -l env=prod -n staging
