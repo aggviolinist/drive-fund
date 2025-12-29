@@ -178,6 +178,10 @@ Redo
 ```sh
 ctrl+r
 ```
+Select all and delete
+```sh
+:%d
+```
 ## Linux error handling
 | Name   | File descriptor | Purpose                                      |
 |--------|------------------|---------------------------------------------|
