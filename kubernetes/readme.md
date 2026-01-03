@@ -182,12 +182,17 @@ Select all and delete
 ```sh
 :%d
 ```
+##Linux
 ## Linux error handling
 | Name   | File descriptor | Purpose                                      |
 |--------|------------------|---------------------------------------------|
 | stdin  | 0                | Input to the program (keyboard, file, pipe) |
 | stdout | 1                | Normal output (results, messages)           |
 | stderr | 2                | Error messages                              |
+##Greping and ignore case sensitive stuff
+```sh
+kubectl describe node minikube | grep -i taints
+```
 ## Listing pods and selecting exact namespace we want
 ```sh
 kubectl get pods -l env=prod -n staging
