@@ -189,6 +189,10 @@ Select all and delete
 | stdin  | 0                | Input to the program (keyboard, file, pipe) |
 | stdout | 1                | Normal output (results, messages)           |
 | stderr | 2                | Error messages                              |
+## Searching for a file with exact content `configmap`
+```sh
+grep -l "kind:ConfigMap" *
+```
 ##Greping and ignore case sensitive stuff
 ```sh
 kubectl describe node minikube | grep -i taints
