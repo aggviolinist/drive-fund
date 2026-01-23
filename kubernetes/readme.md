@@ -205,5 +205,17 @@ kubectl get pods -l env=prod -n staging
 kubectl get pods -l 'tier in (frontend,backend)' -n dev --field-selector=status.phase=Running
 ```
 
+## Helm 
+```sh
+helm version
+helm search hub wordpress
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm search repo wordpress
+helm install release-1 bitnami/wordpress
+helm install release-2 bitnami/wordpress
+helm list
+helm uninstall release-2
+```
+
 
 
