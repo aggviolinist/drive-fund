@@ -220,6 +220,11 @@ helm uninstall release-2
 ## Kustomize
 Building and applying the changes via Kustomize
 ```sh
-kubectl build k8s/ | kubectl apply -f -`.
+kubectl build k8s/ | kubectl apply -f -. or kubectl apply -k k8s/
+```
+Always verify that the correct configurations are being applied or deleted by reviewing the Kustomize output before proceeding.
+Deleting resources
+```sh
+kubectl build k8s/ | kubectl delete -f -. or kubectl delete -k k8s/
 ```
 
