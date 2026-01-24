@@ -217,6 +217,9 @@ helm list
 helm repo update
 helm uninstall release-2
 ```
-
-
+## Kustomize
+Building and applying the changes via Kustomize
+```sh
+kubectl build k8s/ | kubectl apply -f -`.
+```
 
