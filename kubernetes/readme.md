@@ -193,6 +193,10 @@ Select all and delete
 ```sh
 grep -l "kind:ConfigMap" *
 ```
+## Watching processes using ps
+```sh
+watch crictl ps
+```
 ##Greping and ignore case sensitive stuff
 ```sh
 kubectl describe node minikube | grep -i taints
