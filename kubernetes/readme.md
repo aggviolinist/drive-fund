@@ -233,9 +233,11 @@ kubectl build k8s/ | kubectl delete -f -. or kubectl delete -k k8s/
 ```
 
 ## Docker
+putting files into a box
 ```sh
-docker save -o myimage.tar myimage:v1
+docker save -o myimage.tar myimage:v1 
 ```
+shrinking the box
 ```sh
 docker save myimage:v1 | gzip > myimage.tar.gz
 ```
