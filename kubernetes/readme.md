@@ -232,3 +232,12 @@ Deleting resources
 kubectl build k8s/ | kubectl delete -f -. or kubectl delete -k k8s/
 ```
 
+## Docker
+```sh
+docker save -o myimage.tar myimage:v1
+```
+```sh
+docker save myimage:v1 | gzip > myimage.tar.gz
+```
+
+
